@@ -8,6 +8,9 @@ import DiseaseScreen from 'app/disease_detection.tsx';
 import FeedPage from 'app/feed.tsx';
 import ProfileScreen from 'app/profile.tsx';
 import PostPage from 'app/post.tsx';
+import Homepage from 'app/homepage.tsx';
+import Plant from 'app/plant.tsx';
+import MyGarden from 'app/mygarden.tsx';
 
 
 const Stack = createStackNavigator();
@@ -22,6 +25,9 @@ export default function App() {
         <Stack.Screen name="Disease" component={DiseaseScreen} />
         <Stack.Screen name="Feed" component={FeedPage} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="Homepage" component={Homepage} />
+        <Stack.Screen name="Plant" component={Plant} />
+        <Stack.Screen name="MyGraden" component={MyGarden} />
         <Stack.Screen name="Post" component={PostPage} />
 
 
