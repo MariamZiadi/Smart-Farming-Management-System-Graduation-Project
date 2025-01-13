@@ -27,15 +27,12 @@ export default function PostPage() {
       quality: 1,
     });
 
-    // if (!result.canceled) {
-    //   setPhoto(result.assets[0].uri); // Use the URI of the selected photo
-    // }
   };
 
   const handlePost = () => {
     console.log('Description:', description);
     console.log('Photo URI:', photo);
-    // Logic for posting the experience
+    
   };
 
   return (
@@ -60,7 +57,7 @@ export default function PostPage() {
             <Image source={{ uri: photo }} style={styles.photoPreview} />
           ) : (
             <Image
-              source={require('../assets/images/imageupload.png')} // Replace with your placeholder image
+              source={require('../assets/images/imageupload.png')} 
               style={styles.imagePlaceholder}
             />
           )}
