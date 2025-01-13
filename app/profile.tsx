@@ -3,31 +3,25 @@ import {
   View,
   Text,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   ImageBackground,
   Image,
-  ScrollView // Import ScrollView
+  ScrollView
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import { Picker } from '@react-native-picker/picker'; // Import the Picker component
+import { Picker } from '@react-native-picker/picker'; 
 import poster from '../assets/images/poster.jpg';
 
 const ProfileScreen = () => {
   const [profile, setProfile] = useState({
-    name: 'Maryam Ziadi',
-    email: 'm@hotmail.com',
+    name: 'John Doe',
+    email: 'J@hotmail.com',
     phone: '01234567844',
     image: poster,
-    farms: 'Farm 1', // Initial farm value
+    farms: 'Farm 1', 
   });
 
   const handleEdit = (key, value) => {
     setProfile({ ...profile, [key]: value });
-  };
-
-  const handleImagePicker = () => {
-    // Logic to pick image from the library (if necessary)
   };
 
   return (
@@ -45,17 +39,20 @@ const ProfileScreen = () => {
           {renderField('Email', profile.email, 'email', handleEdit)}
 
           {/* Farms as a Dropdown List */}
-          <View style={styles.field}>
+          <View style={[styles.pickerContainer, styles.field]}>
             <Text style={styles.inputLabel}>Farms</Text>
-            <Picker
-
-              style={styles.picker}>
-              <Picker.Item label="Farm 1" value="Farm 1" />
-              <Picker.Item label="Farm 2" value="Farm 2" />
-              <Picker.Item label="Farm 3" value="Farm 3" />
-              <Picker.Item label="Farm 4" value="Farm 4" />
-              <Picker.Item label="Farm 5" value="Farm 5" />
-            </Picker>
+            <View style={styles.pickerWrapper}>
+              <Picker
+                selectedValue={profile.farms}
+                onValueChange={(itemValue) => handleEdit('farms', itemValue)}
+                style={styles.picker}>
+                <Picker.Item label="Farm 1" value="Farm 1" />
+                <Picker.Item label="Farm 2" value="Farm 2" />
+                <Picker.Item label="Farm 3" value="Farm 3" />
+                <Picker.Item label="Farm 4" value="Farm 4" />
+                <Picker.Item label="Farm 5" value="Farm 5" />
+              </Picker>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -81,10 +78,10 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent black overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', 
   },
   scrollContainer: {
-    padding: 10, // Adding padding to the scroll view
+    padding: 10, 
   },
   imageContainer: {
     top: 40,
@@ -123,23 +120,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
+  pickerContainer: {
+    marginBottom: 15,
+  },
+  pickerWrapper: {
+    backgroundColor: '#f5f5f5', 
+    borderRadius: 12, 
+    overflow: 'hidden', 
+  },
   picker: {
     height: 55,
-    borderRadius: 10,
-    backgroundColor: '#f5f5f5',
     color: '#333',
-  },
-  nextButton: {
-    marginTop: 20,
-    backgroundColor: '#4CAF50',
-    padding: 15,
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  nextButtonText: {
-    color: '#fff',
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
 
