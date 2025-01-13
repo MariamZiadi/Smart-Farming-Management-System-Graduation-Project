@@ -1,150 +1,147 @@
 import React from 'react';
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, Image, ScrollView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import HomePage from './homepage';
 
 const screenWidth = Dimensions.get('window').width; // Get the screen width
 
 const MyGarden = ({ navigation }: any) => {
   return (
-    <View style={styles.container}>
+    <ImageBackground 
+      source={require('../assets/images/BG2.jpg')} 
+      style={styles.backgroundImage}
+    >
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View>
-          <Image 
-            source={require('../assets/images/post2 - Copy.jpg')} 
-            style={styles.plantimg} 
-          />
-          <Ionicons
-            name="arrow-back"
-            size={24}
-            color="white"
-            style={styles.backIcon}
-            onPress={() => navigation.goBack(HomePage)}
-          />
+        <Ionicons
+          name="arrow-back"
+          size={24}
+          color="white"
+          style={styles.backIcon}
+          onPress={() => navigation.goBack()}
+        />
+
+        <Text style={styles.title}>My Garden</Text>
+
+        <View style={styles.filterContainer}>
+          <TouchableOpacity style={styles.filterButton}><Text style={styles.filterText}>All</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}><Text style={styles.filterText}>Next Watering</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.filterButton}><Text style={styles.filterText}>Date Added</Text></TouchableOpacity>
         </View>
 
-        <View style={styles.topBar}>
-          <Text style={styles.plantName}>Corn Plant</Text>
-          <Text style={styles.plantTag}>Indoor Plant</Text>
-
-          <View style={styles.infoBoxContainer}>
-            <View style={styles.infoBox}>
-              <Ionicons name="sunny" size={20} color="black" />
-              <Text style={styles.infoText}>Sunlight</Text>
-              <Text style={styles.infoDetail}>Medium</Text>
+        <View style={styles.card}>
+          <Image source={require('../assets/images/apple.png')} style={styles.cardImage} />
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Apple Plant</Text>
+            <View style={styles.cardIconsContainer}>
+              <Ionicons name="sunny" size={18} color="black" style={styles.cardIcon} />
+              <Ionicons name="thermometer" size={18} color="black" style={styles.cardIcon} />
+              <Ionicons name="water" size={18} color="black" style={styles.cardIcon} />
             </View>
-            <View style={styles.infoBox}>
-              <Ionicons name="water" size={20} color="black" />
-              <Text style={styles.infoText}>Watering</Text>
-              <Text style={styles.infoDetail}>0.25lt/week</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <Ionicons name="thermometer" size={20} color="black" />
-              <Text style={styles.infoText}>Temperature</Text>
-              <Text style={styles.infoDetail}>15-20C</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <Ionicons name="leaf" size={20} color="black" />
-              <Text style={styles.infoText}>Fertilizer</Text>
-              <Text style={styles.infoDetail}>Organic</Text>
-            </View>
+            <Text style={styles.cardSubtitle}>Water in 7 days</Text>
           </View>
-
-          <Text style={styles.informationHeader}>Information</Text>
-          <Text style={styles.informationText}>
-            Corn is an annual C4 grass plant. It has large, elongated, narrow leaves that grow alternately in opposite sites around the stems.
-          </Text>
         </View>
+
+        <View style={styles.card}>
+          <Image source={require('../assets/images/orange.png')} style={styles.cardImage} />
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Orange Plant</Text>
+            <View style={styles.cardIconsContainer}>
+              <Ionicons name="sunny" size={18} color="black" style={styles.cardIcon} />
+              <Ionicons name="thermometer" size={18} color="black" style={styles.cardIcon} />
+              <Ionicons name="water" size={18} color="black" style={styles.cardIcon} />
+            </View>
+            <Text style={styles.cardSubtitle}>Water in 3 days</Text>
+          </View>
+        </View>
+
+        <View style={styles.card}>
+          <Image source={require('../assets/images/grape.jpeg')} style={styles.cardImage} />
+          <View style={styles.cardContent}>
+            <Text style={styles.cardTitle}>Grape Plant</Text>
+            <View style={styles.cardIconsContainer}>
+              <Ionicons name="sunny" size={18} color="black" style={styles.cardIcon} />
+              <Ionicons name="thermometer" size={18} color="black" style={styles.cardIcon} />
+              <Ionicons name="water" size={18} color="black" style={styles.cardIcon} />
+            </View>
+            <Text style={styles.cardSubtitle}>Water in 5 days</Text>
+          </View>
+        </View>
+
       </ScrollView>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  backgroundImage: {
     flex: 1,
-    backgroundColor: 'white',
+    resizeMode: 'cover', // Ensures the background image covers the entire screen
   },
   scrollContainer: {
     paddingBottom: 20,
-  },
-  plantimg: {
-    width: screenWidth,
-    height: 400,
-    resizeMode: 'cover',
+    paddingHorizontal: 15,
   },
   backIcon: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
+    marginTop: 40,
+    marginLeft: 10,
   },
-  topBar: {
-    marginTop: -50,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    padding: 20,
-    marginBottom: 20, // Add space between containers
-  },
-  plantName: {
+  title: {
     fontSize: 28,
     fontWeight: 'bold',
-    color: 'black',
+    color: 'white',
+    textAlign: 'left',
+    marginTop: 20,
+    marginBottom: 10,
   },
-  plantTag: {
-    backgroundColor: 'rgb(200, 255, 200)',
-    alignSelf: 'flex-start',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginTop: 10,
-    fontSize: 14,
-    color: 'black',
-    position:'relative',
-    top:-45,
-    left:280,
-  },
-  infoBoxContainer: {
+  filterContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
     justifyContent: 'space-between',
-    marginVertical: 20,
-    position:'relative',
-    top:-45,
+    marginBottom: 20,
+    marginRight:20,
   },
-  infoBox: {
-    width: '48%',
-    backgroundColor: 'rgb(240, 240, 240)',
-    borderRadius: 10,
-    padding: 15,
-    alignItems: 'center',
-    marginBottom: 10, // Add space between info boxes
+  filterButton: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 15,
   },
-  infoText: {
+  filterText: {
     fontSize: 14,
-    fontWeight: '600',
-    color: 'black',
-    marginTop: 5,
-  },
-  infoDetail: {
-    fontSize: 14,
-    color: 'gray',
-    marginTop: 2,
-  },
-  informationHeader: {
-    fontSize: 18,
     fontWeight: 'bold',
     color: 'black',
-    marginBottom: 10,
-    position:'relative',
-    top:-55,
   },
-  informationText: {
+  card: {
+    backgroundColor: 'white',
+    borderRadius: 20,
+    flexDirection: 'row',
+    overflow: 'hidden',
+    marginBottom: 30,
+  },
+  cardImage: {
+    width: 140,
+    height: 125,
+    resizeMode: 'cover',
+  },
+  cardContent: {
+    flex: 1,
+    padding: 10,
+    justifyContent: 'center',
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'black',
+    marginBottom: 5,
+  },
+  cardIconsContainer: {
+    flexDirection: 'row',
+    marginBottom: 5,
+  },
+  cardIcon: {
+    marginRight: 10,
+  },
+  cardSubtitle: {
     fontSize: 14,
     color: 'gray',
-    lineHeight: 20,
-    position:'relative',
-    top:-55,
   },
 });
 
