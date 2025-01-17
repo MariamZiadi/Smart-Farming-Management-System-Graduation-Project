@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
+
 import {
   View,
   Text,
@@ -9,6 +11,7 @@ import {
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For arrow icons
+import { Ionicons } from '@expo/vector-icons';
 
 import plant1 from 'assets/images/babys-breath.jpg';
 import plant2 from '../assets/images/Hyacinth.jpg';
@@ -55,6 +58,8 @@ const plants = [
 ];
 
 const PlantAllergyPage = () => {
+    const router = useRouter();
+  
   const [expandedPlantId, setExpandedPlantId] = useState(null);
 
   const toggleDropdown = (plantId) => {
@@ -71,6 +76,13 @@ const PlantAllergyPage = () => {
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
+        <Ionicons
+          name="arrow-back"
+          size={27}
+          color="white"
+          style={styles.backIcon}
+          onPress={() => router.push('./homepage')} 
+        />
         <Text style={styles.title}>Allergenic Plants</Text>
         {plants.map((plant) => (
           <View
@@ -124,6 +136,9 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
+  backIcon: {
+    marginLeft: 10,
+  },
   title: {
     fontSize: 35,
     fontWeight: 'bold',
@@ -132,7 +147,7 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   scrollContainer: {
-    top:50,
+    top:40,
     paddingBottom: 20,
     paddingHorizontal: 16,
   },

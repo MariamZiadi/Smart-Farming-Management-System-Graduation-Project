@@ -8,11 +8,17 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
+import { useRouter } from 'expo-router';
+
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
+
 
 export default function PostPage() {
+
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState(null);
+  const router = useRouter();
 
   const handleChoosePhoto = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -37,6 +43,12 @@ export default function PostPage() {
 
   return (
     <ScrollView style={styles.container}>
+      <Ionicons
+          name="arrow-back"
+          size={27}
+          style={styles.backIcon}
+          onPress={() => router.push('./feed')} 
+        />
       <Text style={styles.title}>Share Your Experience With Us!</Text>
       <View style={styles.form}>
         {/* Description Input */}
@@ -77,8 +89,12 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
+  backIcon: {
+    color:'rgb(9, 71, 10)',
+    marginTop: 30,
+    marginLeft: 10,
+  },
   title: {
-    top:17,
     marginTop: 25,
     fontSize: 35,
     fontWeight: 'bold',
@@ -94,10 +110,8 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
     fontWeight: 'bold',
-    top:12,
   },
   input: {
-    top:12,
     height: 100,
     backgroundColor: 'rgb(241, 241, 241)',
     borderRadius: 10,
@@ -113,7 +127,6 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   photoButton: {
-    top:15,
     height: 200,
     justifyContent: 'center',
     alignItems: 'center',

@@ -1,4 +1,7 @@
-import React from 'react';
+import { Link, Stack } from 'expo-router';
+import { useRouter } from 'expo-router';
+
+
 import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import HomePage from './homepage';
@@ -6,6 +9,8 @@ import HomePage from './homepage';
 const screenWidth = Dimensions.get('window').width; // Get the screen width
 
 const Plant = ({ navigation }: any) => {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -15,12 +20,12 @@ const Plant = ({ navigation }: any) => {
             style={styles.plantimg} 
           />
           <Ionicons
-            name="arrow-back"
-            size={24}
-            color="white"
-            style={styles.backIcon}
-            onPress={() => navigation.goBack(HomePage)}
-          />
+  name="arrow-back"
+  size={27}
+  color="white"
+  style={styles.backIcon}
+  onPress={() => router.push('./homepage')} 
+/>
         </View>
 
         <View style={styles.topBar}>
@@ -76,7 +81,7 @@ const styles = StyleSheet.create({
   backIcon: {
     position: 'absolute',
     top: 40,
-    left: 20,
+    left: 15,
   },
   topBar: {
     marginTop: -50,

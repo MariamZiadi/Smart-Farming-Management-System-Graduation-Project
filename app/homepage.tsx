@@ -32,7 +32,7 @@ const HomePage = ({ navigation }: any) => {
 
         <View style={styles.garden}>
           <Text style={styles.yourgarden}>Your Garden</Text>
-        <Link href ="/mygarden" style={styles.viewall}>
+        <Link href ="./mygarden" style={styles.viewall}>
           View All
           </Link>
         </View>
@@ -43,7 +43,7 @@ const HomePage = ({ navigation }: any) => {
             style={styles.cornImage} 
           />
           <Text style={styles.cornplant}>Corn Plant</Text>
-          <Link href ="/plant" style={styles.moreinfo}>
+          <Link href ="./plant" style={styles.moreinfo}>
           More Info
           </Link>
           
@@ -78,13 +78,13 @@ const HomePage = ({ navigation }: any) => {
             style={styles.diseaseimg} 
           />
           
-            <Link href ="/disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
+            <Link href ="./disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
           
         </View>
 
         <View>
           <Text style={styles.allergies}>Plants For Allergies</Text>
-          <Link href="/allergies_plants" style={styles.viewallallergies}>View All</Link>
+          <Link href="./allergies_plants" style={styles.viewallallergies}>View All</Link>
         </View>
 
         <View style={styles.allergyContainer}>
@@ -211,7 +211,7 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/blog.jpg')} 
             style={styles.blogimg} 
           />
-            <Link href="/feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
+            <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
          
         </View>
 
