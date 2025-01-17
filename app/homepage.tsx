@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link, Stack } from 'expo-router';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -32,7 +32,9 @@ const HomePage = ({ navigation }: any) => {
 
         <View style={styles.garden}>
           <Text style={styles.yourgarden}>Your Garden</Text>
-          <Text style={styles.viewall}>View All</Text>
+        <Link href ="/mygarden" style={styles.viewall}>
+          View All
+          </Link>
         </View>
 
         <View style={styles.gardencontainers}>
@@ -41,7 +43,10 @@ const HomePage = ({ navigation }: any) => {
             style={styles.cornImage} 
           />
           <Text style={styles.cornplant}>Corn Plant</Text>
-          <Text style={styles.moreinfo}>More Info</Text>
+          <Link href ="/plant" style={styles.moreinfo}>
+          More Info
+          </Link>
+          
           <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
             <Ionicons name="leaf" size={20} color="black" style={styles.icon} />
@@ -72,17 +77,14 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/diseasehome.jpg')} 
             style={styles.diseaseimg} 
           />
-          <TouchableOpacity 
-            style={styles.buttondisease}
-            onPress={() => navigation.navigate('NextPage')}
-          >
-            <Text style={styles.buttonText}>Disease Detection</Text>
-          </TouchableOpacity>
+          
+            <Link href ="/disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
+          
         </View>
 
         <View>
           <Text style={styles.allergies}>Plants For Allergies</Text>
-          <Text style={styles.viewallallergies}>View All</Text>
+          <Link href="/allergies_plants" style={styles.viewallallergies}>View All</Link>
         </View>
 
         <View style={styles.allergyContainer}>
@@ -209,12 +211,8 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/blog.jpg')} 
             style={styles.blogimg} 
           />
-          <TouchableOpacity 
-            style={styles.buttonblogs}
-            onPress={() => navigation.navigate('NextPage')}
-          >
-            <Text style={styles.buttonText}>Blogs Feed</Text>
-          </TouchableOpacity>
+            <Link href="/feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
+         
         </View>
 
       </ScrollView>

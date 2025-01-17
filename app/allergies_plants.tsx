@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For arrow icons
 
-import plant1 from '../assets/images/babys-breath.jpg';
+import plant1 from 'assets/images/babys-breath.jpg';
 import plant2 from '../assets/images/Hyacinth.jpg';
 import plant3 from '../assets/images/poision oak.jpg';
 import plant4 from '../assets/images/ragweed.jpg';

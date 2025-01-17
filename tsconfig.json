@@ -4,9 +4,9 @@
     "strict": true,
     "jsx": "react-jsx",  // This is needed for JSX support
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "assets/*": ["./assets/*"],
+      "@/*": ["./app/*"],
+      "@/components/*": ["./components/*"],
     }
   },
   "include": [
@@ -15,8 +15,10 @@
     ".expo/types/**/*.ts",
     "expo-env.d.ts",
     "app/index.tsx",
-    "app.js",
+    "app.tsx",
     "app/login.tsx",
-    "app/signup.tsx"
+    "app/signup.tsx",
+    "app/profile.jsx",
+    "app/allergies_plants.tsx"
   ]
 }

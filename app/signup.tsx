@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Link, Stack } from 'expo-router';
+
 import {
   View,
   Text,
@@ -61,12 +63,12 @@ export default function LoginScreen() {
 
 
       <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginButtonText}>Sign Up</Text>
+        <Link href="/homepage" style={styles.loginButtonText}>Sign Up</Link>
       </TouchableOpacity>
 
       <Text style={styles.registerText}>
         Already have an account?{' '}
-        <Text style={styles.registerLink}>Sign In</Text>
+        <Link href="/login" style={styles.registerLink}>Sign In</Link>
       </Text>
     </ImageBackground>
   );

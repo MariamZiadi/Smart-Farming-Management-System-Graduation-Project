@@ -1,4 +1,4 @@
-import React from 'react';
+import { Link, Stack } from 'expo-router';
 import {
   View,
   Text,
@@ -44,10 +44,6 @@ const posts = [
 ];
 
 export default function FeedPage() {
-  const handleAddPost = () => {
-    console.log('Add Post button clicked!');
-  };
-
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -69,9 +65,9 @@ export default function FeedPage() {
           </View>
         ))}
       </ScrollView>
-      <TouchableOpacity style={styles.addButton} onPress={handleAddPost}>
+      <Link href="/post" style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
-      </TouchableOpacity>
+      </Link>
     </View>
   );
 }
@@ -152,8 +148,10 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   addButtonText: {
-    color: '#fff',
     fontSize: 30,
     fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center', // Ensure text is centered
+    lineHeight: 60, // Matches the button height for vertical centering
   },
 });

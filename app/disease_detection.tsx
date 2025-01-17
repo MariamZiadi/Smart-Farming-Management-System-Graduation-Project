@@ -1,5 +1,4 @@
 
-
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
