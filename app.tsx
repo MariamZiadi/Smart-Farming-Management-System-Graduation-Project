@@ -11,7 +11,7 @@ import PostPage from './app/post.js';
 import Homepage from './app/homepage.js';
 import Plant from './app/plant.js';
 import MyGarden from './app/mygarden.js';
-
+import AddFarmPage from './app/add_farm.js';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +29,8 @@ export default function App() {
         <Stack.Screen name="Plant" component={Plant} />
         <Stack.Screen name="MyGraden" component={MyGarden} />
         <Stack.Screen name="Post" component={PostPage} />
+        <Stack.Screen name="addfarm" component={AddFarmPage} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -9,6 +9,9 @@ const HomePage = ({ navigation }: any) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.topBar}>
+          <Link href="./add_farm" style={styles.addButton}>
+                  <Text style={styles.addButtonText}>+</Text>
+                </Link>
           <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
           <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
           <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
@@ -459,6 +462,7 @@ const styles = StyleSheet.create({
     top: 25,
     left: 370,
   },
+
   topBarText: {
     position: 'absolute',
     top: 75,
@@ -493,6 +497,30 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  addButton: 
+  {
+      position: 'absolute',
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
+      elevation: 5,
+  },
+  addButtonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center', 
+    lineHeight: 60,
+    position: 'absolute',
+    top: 25,
+    left: 300, 
   },
 });
 
