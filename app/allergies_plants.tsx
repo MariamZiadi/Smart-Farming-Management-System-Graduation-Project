@@ -13,45 +13,46 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons'; // For arrow icons
 import { Ionicons } from '@expo/vector-icons';
 
-import plant1 from 'assets/images/babys-breath.jpg';
+/*import plant1 from '../assets/images/babys-breath.jpg';
 import plant2 from '../assets/images/Hyacinth.jpg';
 import plant3 from '../assets/images/poision oak.jpg';
 import plant4 from '../assets/images/ragweed.jpg';
-import plant5 from '../assets/images/nettle.jpg';
+import plant5 from '../assets/images/nettle.jpg';*/
+
 
 const plants = [
   {
     id: 1,
     name: "Baby's-breath",
-    image: plant1,
+    image: require('../assets/images/babys-breath.jpg'),
     details: 'Circumstances: Sunny areas\nAvoidance: Wear gloves while handling.',
     watering: 'Water in 7 days',
   },
   {
     id: 2,
     name: 'Hyacinth',
-    image: plant2,
+    image: require('../assets/images/Hyacinth.jpg'),
     details: 'Circumstances: Requires watering twice a week\nAvoidance: Keep it out of reach.',
     watering: 'Water in 3 days',
   },
   {
     id: 3,
     name: 'Poison Oak',
-    image: plant3,
+    image: require('../assets/images/poision oak.jpg'),
     details: 'Circumstances: Sunny areas\nAvoidance: Wear gloves while handling.',
     watering: 'Water in 7 days',
   },
   {
     id: 4,
     name: 'Ragweed',
-    image: plant4,
+    image: require('../assets/images/ragweed.jpg'),
     details: 'Circumstances: Requires watering twice a week\nAvoidance: Keep it out of reach.',
     watering: 'Water in 3 days',
   },
   {
     id: 5,
     name: 'Nettle',
-    image: plant5,
+    image: require('../assets/images/nettle.jpg'),
     details: 'Circumstances: Requires watering twice a week\nAvoidance: Keep it out of reach.',
     watering: 'Water in 3 days',
   },

@@ -2,11 +2,17 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
-    "jsx": "react-jsx",  // This is needed for JSX support
+    "jsx": "react-jsx",
     "paths": {
-      "assets/": ["./assets/"],
-      "@/": ["./app/"],
-      "@/components/": ["./components/"],
+      "assets/": [
+        "./assets/"
+      ],
+      "@/": [
+        "./app/"
+      ],
+      "@/components/": [
+        "./components/"
+      ]
     }
   },
   "include": [
@@ -23,6 +29,6 @@
     "app/chatbot.tsx",
     "app/groupchat.tsx",
     "app/allplants.tsx",
-
-]
+    ".expo/types/**/*.ts"
+  ]
 }

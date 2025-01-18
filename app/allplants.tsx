@@ -2,28 +2,28 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
 const plants = {
   fruits: [
-    { id: '1', name: 'Apple Plant', image: require('assets/images/apple.png') },
-    { id: '2', name: 'Orange Plant', image: require('assets/images/orange.png') },
-    { id: '3', name: 'Blueberry Plant', image: require('assets/images/blueberry.jpg') },
-    { id: '4', name: 'Peach Plant', image: require('assets/images/fruit home page image.jpeg') },
+    { id: '1', name: 'Apple Plant', image: require('../assets/images/apple.png')    },
+    { id: '2', name: 'Orange Plant', image: require('../assets/images/orange.png') },
+    { id: '3', name: 'Blueberry Plant', image: require('../assets/images/blueberry.jpg') },
+    { id: '4', name: 'Peach Plant', image: require('../assets/images/fruit home page image.jpeg') },
   ],
   vegetables: [
-    { id: '5', name: 'Pepper bell Plant', image: require('assets/images/pepper.jpg') },
-    { id: '6', name: 'Tomato Plant', image: require('assets/images/tomato.jpg') },
-    { id: '7', name: 'Cucumber Plant', image: require('assets/images/cucumber.jpg') },
-    { id: '8', name: 'Lettuce Plant', image: require('assets/images/lettuce.jpg') },
+    { id: '5', name: 'Pepper bell Plant', image: require('../assets/images/pepper.jpg') },
+    { id: '6', name: 'Tomato Plant', image: require('../assets/images/tomato.jpg') },
+    { id: '7', name: 'Cucumber Plant', image: require('../assets/images/cucumber.jpg') },
+    { id: '8', name: 'Lettuce Plant', image: require('../assets/images/lettuce.jpg') },
   ],
   herbs: [
-    { id: '9', name: 'Basil Plant', image: require('assets/images/basil.jpg') },
-    { id: '10', name: 'Mint Plant', image: require('assets/images/mint.jpg') },
-    { id: '11', name: 'Thyme Plant', image: require('assets/images/thyme.jpg') },
-    { id: '12', name: 'Rosemary Plant', image: require('assets/images/rosemary.jpg') },
+    { id: '9', name: 'Basil Plant', image: require('../assets/images/basil.jpg') },
+    { id: '10', name: 'Mint Plant', image: require('../assets/images/mint.jpg') },
+    { id: '11', name: 'Thyme Plant', image: require('../assets/images/thyme.jpg') },
+    { id: '12', name: 'Rosemary Plant', image: require('../assets/images/rosemary.jpg') },
   ],
   grains: [
-    { id: '13', name: 'Wheat Plant', image: require('assets/images/wheat.jpg') },
-    { id: '14', name: 'Rice Plant', image: require('assets/images/rice.jpg') },
-    { id: '15', name: 'Barley Plant', image: require('assets/images/barley.jpeg') },
-    { id: '16', name: 'Oats Plant', image: require('assets/images/oats.jpg') },
+    { id: '13', name: 'Wheat Plant', image: require('../assets/images/wheat.jpg') },
+    { id: '14', name: 'Rice Plant', image: require('../assets/images/rice.jpg') },
+    { id: '15', name: 'Barley Plant', image: require('../assets/images/barley.jpeg') },
+    { id: '16', name: 'Oats Plant', image: require('../assets/images/oats.jpg') },
   ],
 };
 

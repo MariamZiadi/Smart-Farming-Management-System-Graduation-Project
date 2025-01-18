@@ -15,7 +15,7 @@ const HomePage = ({ navigation }: any) => {
           <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
           <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
           <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
-          <Link href="/chatbot" asChild>
+          <Link href="./chatbot" asChild>
             <TouchableOpacity style={styles.chatbotIcon}>
             <Ionicons name="chatbubble" size={24} color="white" />
             </TouchableOpacity>
@@ -40,7 +40,6 @@ const HomePage = ({ navigation }: any) => {
         <Link href ="./mygarden" style={styles.viewall}>
           View All
           </Link>
-          <Link href="/mygarden" style={styles.viewall}>View All</Link>
         </View>
 
         <View style={styles.gardencontainers}>
@@ -49,7 +48,7 @@ const HomePage = ({ navigation }: any) => {
             style={styles.cornImage} 
           />
           <Text style={styles.cornplant}>Corn Plant</Text>
-          <Link href="/plant" style={styles.moreinfo}>More Info</Link>
+          <Link href="./plant" style={styles.moreinfo}>More Info</Link>
           
           <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
@@ -81,7 +80,7 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/diseasehome.jpg')} 
             style={styles.diseaseimg} 
           />
-          <Link href="/disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
+          <Link href="./disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
         </View>
 
         <View>
@@ -149,7 +148,7 @@ const HomePage = ({ navigation }: any) => {
 
         <View>
           <Text style={styles.allergies}>Plants Types</Text>
-          <Link href="/allplants" style={styles.viewallallergies}>View All</Link>
+          <Link href="./allplants" style={styles.viewallallergies}>View All</Link>
         </View>
 
         <View style={styles.allergyContainer}>
@@ -215,16 +214,14 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/blog.jpg')} 
             style={styles.blogimg} 
           />
-          <Link href="/feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
             <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
-         
         </View>
 
         <View style={styles.joinFarmContainer}>
   <View style={styles.joinFarmCard}>
     <Text style={styles.cardTitle}>Ready to Join the Farm?</Text>
     <Text style={styles.cardSubtitle}>Connect with the community and manage your farm effectively.</Text>
-    <Link href="/groupchat" asChild>
+    <Link href="./groupchat" asChild>
       <TouchableOpacity style={styles.joinFarmButton}>
         <Text style={styles.buttonText}>Join Farm</Text>
       </TouchableOpacity>
