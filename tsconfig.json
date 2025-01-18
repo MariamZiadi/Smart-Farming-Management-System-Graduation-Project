@@ -4,21 +4,25 @@
     "strict": true,
     "jsx": "react-jsx",  // This is needed for JSX support
     "paths": {
-      "assets/*": ["./assets/*"],
-      "@/*": ["./app/*"],
-      "@/components/*": ["./components/*"],
+      "assets/": ["./assets/"],
+      "@/": ["./app/"],
+      "@/components/": ["./components/"],
     }
   },
   "include": [
-    "**/*.ts",
-    "**/*.tsx",
-    ".expo/types/**/*.ts",
+    "/*.ts",
+    "/*.tsx",
+    ".expo/types//*.ts",
     "expo-env.d.ts",
     "app/index.tsx",
     "app.tsx",
     "app/login.tsx",
     "app/signup.tsx",
     "app/profile.tsx",
-    "app/allergies_plants.tsx"
-  ]
+    "app/allergies_plants.tsx",
+    "app/chatbot.tsx",
+    "app/groupchat.tsx",
+    "app/allplants.tsx",
+
+]
 }
