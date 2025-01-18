@@ -12,6 +12,11 @@ const HomePage = ({ navigation }: any) => {
           <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
           <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
           <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
+          <Link href="/chatbot" asChild>
+            <TouchableOpacity style={styles.chatbotIcon}>
+            <Ionicons name="chatbubble" size={24} color="white" />
+            </TouchableOpacity>
+          </Link>
         </View>
 
         <View style={styles.boxontopbar}>
@@ -21,20 +26,15 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/homeplant.png')}
             style={styles.plantImage} 
           />
-          <TouchableOpacity 
-            style={styles.button}
-            onPress={() => navigation.navigate('NextPage')}
-          >
-            <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
-            <Text style={styles.buttonText}>30min Next Watering</Text>
-          </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
+              <Text style={styles.buttonTextt}>30min Next Watering</Text>
+            </TouchableOpacity>
         </View>
 
         <View style={styles.garden}>
           <Text style={styles.yourgarden}>Your Garden</Text>
-        <Link href ="/mygarden" style={styles.viewall}>
-          View All
-          </Link>
+          <Link href="/mygarden" style={styles.viewall}>View All</Link>
         </View>
 
         <View style={styles.gardencontainers}>
@@ -43,9 +43,7 @@ const HomePage = ({ navigation }: any) => {
             style={styles.cornImage} 
           />
           <Text style={styles.cornplant}>Corn Plant</Text>
-          <Link href ="/plant" style={styles.moreinfo}>
-          More Info
-          </Link>
+          <Link href="/plant" style={styles.moreinfo}>More Info</Link>
           
           <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
@@ -77,9 +75,7 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/diseasehome.jpg')} 
             style={styles.diseaseimg} 
           />
-          
-            <Link href ="/disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
-          
+          <Link href="/disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
         </View>
 
         <View>
@@ -88,132 +84,146 @@ const HomePage = ({ navigation }: any) => {
         </View>
 
         <View style={styles.allergyContainer}>
-  <View style={styles.allergyRow}>
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/ragweed.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttonallergy}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Ragweed</Text>
-      </TouchableOpacity>
-    </View>
+          <View style={styles.allergyRow}>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/ragweed.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttonallergy}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Ragweed</Text>
+              </TouchableOpacity>
+            </View>
 
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/poision oak.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttonallergy}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Poison Oak</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/poision oak.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttonallergy}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Poison Oak</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-  <View style={styles.allergyRow}>
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/poison ivy.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttonallergy}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Poison Ivy</Text>
-      </TouchableOpacity>
-    </View>
+          <View style={styles.allergyRow}>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/poison ivy.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttonallergy}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Poison Ivy</Text>
+              </TouchableOpacity>
+            </View>
 
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/nettle.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttonallergy}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Nettle Plant</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</View>
-
-<View>
-        <Text style={styles.allergies}>Plants Types</Text>
-        <Text style={styles.viewallallergies}>View All</Text>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/nettle.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttonallergy}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Nettle Plant</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
+
+        <View>
+          <Text style={styles.allergies}>Plants Types</Text>
+          <Link href="/allplants" style={styles.viewallallergies}>View All</Link>
+        </View>
+
         <View style={styles.allergyContainer}>
-        <View style={styles.allergyRow}>
-        <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/fruit home page image.jpeg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttontypes}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Fruits</Text>
-      </TouchableOpacity>
-    </View>
+          <View style={styles.allergyRow}>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/fruit home page image.jpeg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttontypes}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Fruits</Text>
+              </TouchableOpacity>
+            </View>
 
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/vegetatbles home img.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttontypes}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Vegetables</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/vegetatbles home img.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttontypes}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Vegetables</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
 
-  <View style={styles.allergyRow}>
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/herbs home img.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttontypes}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Herbs</Text>
-      </TouchableOpacity>
-    </View>
+          <View style={styles.allergyRow}>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/herbs home img.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttontypes}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Herbs</Text>
+              </TouchableOpacity>
+            </View>
 
-    <View style={styles.allergyItem}>
-      <Image 
-        source={require('../assets/images/grains home img.jpg')} 
-        style={styles.allergy} 
-      />
-      <TouchableOpacity 
-        style={styles.buttontypes}
-        onPress={() => navigation.navigate('NextPage')}
-      >
-        <Text style={styles.buttonText}>Grains</Text>
-      </TouchableOpacity>
-    </View>
-  </View>
-</View>
-<View>
+            <View style={styles.allergyItem}>
+              <Image 
+                source={require('../assets/images/grains home img.jpg')} 
+                style={styles.allergy} 
+              />
+              <TouchableOpacity 
+                style={styles.buttontypes}
+                onPress={() => navigation.navigate('NextPage')}
+              >
+                <Text style={styles.buttonText}>Grains</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+
+        <View>
           <Image 
             source={require('../assets/images/blog.jpg')} 
             style={styles.blogimg} 
           />
-            <Link href="/feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
-         
+          <Link href="/feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
         </View>
+
+        <View style={styles.joinFarmContainer}>
+  <View style={styles.joinFarmCard}>
+    <Text style={styles.cardTitle}>Ready to Join the Farm?</Text>
+    <Text style={styles.cardSubtitle}>Connect with the community and manage your farm effectively.</Text>
+    <Link href="/groupchat" asChild>
+      <TouchableOpacity style={styles.joinFarmButton}>
+        <Text style={styles.buttonText}>Join Farm</Text>
+      </TouchableOpacity>
+    </Link>
+  </View>
+</View>
+
 
       </ScrollView>
     </View>
@@ -221,6 +231,60 @@ const HomePage = ({ navigation }: any) => {
 };
 
 const styles = StyleSheet.create({
+  chatbotIcon: {
+    position: 'absolute',
+    top: 14,
+    right: 50,
+    padding: 10,
+  },
+  joinFarmContainer: {
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  
+  joinFarmCard: {
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 15,
+    padding: 20,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  
+  cardTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'rgb(34, 70, 34)',
+    marginBottom: 10,
+  },
+  
+  cardSubtitle: {
+    fontSize: 14,
+    color: 'gray',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  
+  joinFarmButton: {
+    backgroundColor: 'rgb(75, 134, 75)',
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '60%',
+  },
+  
+  buttonTextt: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  
   scrollContainer: {
     paddingBottom: 20, // Ensures there's space at the bottom when scrolling
   },

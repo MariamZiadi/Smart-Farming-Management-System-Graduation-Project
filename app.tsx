@@ -11,6 +11,8 @@ import PostPage from './app/post.js';
 import Homepage from './app/homepage.js';
 import Plant from './app/plant.js';
 import MyGarden from './app/mygarden.js';
+import GroupChat from './app/groupchat.js';
+import ChatBot from './app/chatbot.js';
 
 
 const Stack = createStackNavigator();
@@ -29,6 +31,9 @@ export default function App() {
         <Stack.Screen name="Plant" component={Plant} />
         <Stack.Screen name="MyGraden" component={MyGarden} />
         <Stack.Screen name="Post" component={PostPage} />
+        <Stack.Screen name="GroupChat" component={GroupChat} />
+        <Stack.Screen name="ChatBot" component={ChatBot} />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
