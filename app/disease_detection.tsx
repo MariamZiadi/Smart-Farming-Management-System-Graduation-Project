@@ -1,9 +1,14 @@
-
 import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
+
 import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, ActivityIndicator } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { Ionicons } from '@expo/vector-icons';
+
 
 const PlantDiseaseDetection = () => {
+  const router = useRouter();
+
   const [imageUri, setImageUri] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -22,11 +27,18 @@ const PlantDiseaseDetection = () => {
   };
 
   return (
+    
     <ImageBackground
       source={require('../assets/images/BG2.jpg')}
       style={styles.background}
     >
-        
+        <Ionicons
+          name="arrow-back"
+          size={27}
+          color="white"
+          style={styles.backIcon}
+          onPress={() => router.push('./homepage')} 
+        />
       <Text style={styles.header}>Plant Disease </Text>
       <Text style={styles.header2}>Detection </Text>
       <View style={styles.container}>
@@ -62,19 +74,13 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  backButton: {
-    position: 'absolute',
-    top: 4,
-    left: 10,
-    zIndex: 10,
-  },
   backIcon: {
-    fontSize: 50,
-    color: 'white',
+    marginTop: 30,
+    marginLeft: 10,
   },
   header: {
     position: 'absolute',
-    top: 45,
+    top: 50,
     left: 62,
     color: 'white',
     fontSize: 45,
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
   },
   header2: {
     position: 'absolute',
-    top: 100,
+    top: 105,
     left: 106,
     color: 'white',
     fontSize: 45,

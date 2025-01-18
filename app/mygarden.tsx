@@ -1,10 +1,12 @@
-import React from 'react';
+import { useRouter } from 'expo-router';
 import { View, Text, StyleSheet, Image, ScrollView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 const screenWidth = Dimensions.get('window').width; // Get the screen width
 
 const MyGarden = ({ navigation }: any) => {
+  const router = useRouter();
+
   return (
     <ImageBackground 
       source={require('../assets/images/BG2.jpg')} 
@@ -13,10 +15,10 @@ const MyGarden = ({ navigation }: any) => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Ionicons
           name="arrow-back"
-          size={24}
+          size={27}
           color="white"
           style={styles.backIcon}
-          onPress={() => navigation.goBack()}
+          onPress={() => router.push('./homepage')} 
         />
 
         <Text style={styles.title}>My Garden</Text>

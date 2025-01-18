@@ -58,11 +58,11 @@ export default function LoginScreen() {
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
     
-      <Link href="/homepage" style={[styles.loginButton]}>
+      <Link href="./homepage" style={[styles.loginButton]}>
         <Text style={styles.loginButtonText}>Login</Text>
       </Link>
 
-      <Link href="/signup">
+      <Link href="./signup">
       <Text style={styles.registerText}>
         Don't have an account?{' '}
         <Text style={styles.registerLink}>Sign Up</Text>

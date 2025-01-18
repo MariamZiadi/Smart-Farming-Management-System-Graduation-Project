@@ -11,7 +11,7 @@ import PostPage from './app/post.js';
 import Homepage from './app/homepage.js';
 import Plant from './app/plant.js';
 import MyGarden from './app/mygarden.js';
-import GroupChat from './app/groupchat.js';
+import AddFarmPage from './app/add_farm.js';import GroupChat from './app/groupchat.js';
 import ChatBot from './app/chatbot.js';
 
 

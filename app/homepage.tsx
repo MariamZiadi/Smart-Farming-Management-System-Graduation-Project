@@ -9,6 +9,9 @@ const HomePage = ({ navigation }: any) => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.topBar}>
+          <Link href="./add_farm" style={styles.addButton}>
+                  <Text style={styles.addButtonText}>+</Text>
+                </Link>
           <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
           <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
           <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
@@ -34,6 +37,9 @@ const HomePage = ({ navigation }: any) => {
 
         <View style={styles.garden}>
           <Text style={styles.yourgarden}>Your Garden</Text>
+        <Link href ="./mygarden" style={styles.viewall}>
+          View All
+          </Link>
           <Link href="/mygarden" style={styles.viewall}>View All</Link>
         </View>
 
@@ -80,7 +86,7 @@ const HomePage = ({ navigation }: any) => {
 
         <View>
           <Text style={styles.allergies}>Plants For Allergies</Text>
-          <Link href="/allergies_plants" style={styles.viewallallergies}>View All</Link>
+          <Link href="./allergies_plants" style={styles.viewallallergies}>View All</Link>
         </View>
 
         <View style={styles.allergyContainer}>
@@ -210,6 +216,8 @@ const HomePage = ({ navigation }: any) => {
             style={styles.blogimg} 
           />
           <Link href="/feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
+            <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
+         
         </View>
 
         <View style={styles.joinFarmContainer}>
@@ -523,6 +531,7 @@ const styles = StyleSheet.create({
     top: 25,
     left: 370,
   },
+
   topBarText: {
     position: 'absolute',
     top: 75,
@@ -557,6 +566,30 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+  },
+  addButton: 
+  {
+      position: 'absolute',
+      width: 60,
+      height: 60,
+      borderRadius: 30,
+      justifyContent: 'center',
+      alignItems: 'center',
+      shadowColor: '#000',
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.3,
+      shadowRadius: 3,
+      elevation: 5,
+  },
+  addButtonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#fff',
+    textAlign: 'center', 
+    lineHeight: 60,
+    position: 'absolute',
+    top: 25,
+    left: 300, 
   },
 });
 

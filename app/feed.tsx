@@ -65,7 +65,7 @@ export default function FeedPage() {
           </View>
         ))}
       </ScrollView>
-      <Link href="/post" style={styles.addButton}>
+      <Link href="./post" style={styles.addButton}>
         <Text style={styles.addButtonText}>+</Text>
       </Link>
     </View>

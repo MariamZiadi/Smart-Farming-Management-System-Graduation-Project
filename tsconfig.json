@@ -18,7 +18,7 @@
     "app.tsx",
     "app/login.tsx",
     "app/signup.tsx",
-    "app/profile.jsx",
+    "app/profile.tsx",
     "app/allergies_plants.tsx"
   ]
 }
