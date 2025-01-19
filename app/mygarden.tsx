@@ -1,6 +1,10 @@
 import { useRouter } from 'expo-router';
 import { View, Text, StyleSheet, Image, ScrollView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import { Link, Stack } from 'expo-router';
+
 
 const screenWidth = Dimensions.get('window').width; // Get the screen width
 
@@ -67,8 +71,24 @@ const MyGarden = ({ navigation }: any) => {
             <Text style={styles.cardSubtitle}>Water in 5 days</Text>
           </View>
         </View>
-
       </ScrollView>
+<View style={styles.bottomNav}>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </ImageBackground>
   );
 };
@@ -144,6 +164,16 @@ const styles = StyleSheet.create({
   cardSubtitle: {
     fontSize: 14,
     color: 'gray',
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#D7E9D4',
+    paddingVertical: 10,
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 

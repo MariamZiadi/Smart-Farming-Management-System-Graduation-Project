@@ -4,15 +4,11 @@
     "strict": true,
     "jsx": "react-jsx",
     "paths": {
-      "assets/": [
-        "./assets/"
-      ],
-      "@/": [
-        "./app/"
-      ],
-      "@/components/": [
-        "./components/"
-      ]
+      "assets/*": ["./assets/*"],
+      "@/*": ["./app/*"],
+      "@/components/*": ["./components/*"],
+      "@/constants/*": ["./constants/*"],
+      "@/hooks/*": ["./hooks/*"],
     }
   },
   "include": [

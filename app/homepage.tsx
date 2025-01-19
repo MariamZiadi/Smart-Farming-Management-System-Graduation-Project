@@ -1,17 +1,21 @@
 import { Link, Stack } from 'expo-router';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+
+
+//import TabLayout from './_layout'; // Adjust the import path as per your project structure
+
 
 const screenWidth = Dimensions.get('window').width; // Get the screen width
 
 const HomePage = ({ navigation }: any) => {
+  
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.topBar}>
-          <Link href="./add_farm" style={styles.addButton}>
-                  <Text style={styles.addButtonText}>+</Text>
-                </Link>
           <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
           <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
           <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
@@ -29,15 +33,18 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/homeplant.png')}
             style={styles.plantImage} 
           />
-            <TouchableOpacity style={styles.button}>
-              <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
-              <Text style={styles.buttonTextt}>30min Next Watering</Text>
-            </TouchableOpacity>
+          <TouchableOpacity 
+            style={styles.button}
+            //onPress={() => navigation.navigate('NextPage')}
+          >
+            <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
+            <Text style={styles.buttonText}>30min Next Watering</Text>
+          </TouchableOpacity>
         </View>
 
         <View style={styles.garden}>
-          <Text style={styles.yourgarden}>Your Garden</Text>
-        <Link href ="./mygarden" style={styles.viewall}>
+          <Text style={styles.yourgarden}>Your Farms</Text>
+        <Link href ="./allFarms" style={styles.viewall}>
           View All
           </Link>
         </View>
@@ -47,16 +54,18 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/cornhomeplant.jpg')} 
             style={styles.cornImage} 
           />
-          <Text style={styles.cornplant}>Corn Plant</Text>
-          <Link href="./plant" style={styles.moreinfo}>More Info</Link>
+          <Text style={styles.cornplant}>Farm 1</Text>
+          <Link href ="./mygarden" style={styles.moreinfo}>
+          More Info
+          </Link>
           
-          <View style={styles.iconsContainer}>
+          {/* <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
             <Ionicons name="leaf" size={20} color="black" style={styles.icon} />
             <Ionicons name="sunny" size={20} color="black" style={styles.icon} />
             <Ionicons name="thermometer" size={20} color="black" style={styles.icon} />
           </View>
-          <Text style={styles.cornwater}>Water in 2 Days</Text>
+          <Text style={styles.cornwater}>Water in 2 Days</Text> */}
         </View>
 
         <View style={[styles.gardencontainers, styles.cherryContainer]}>
@@ -64,15 +73,17 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/cherryhomeplant.jpg')}
             style={styles.cornImage} 
           />
-          <Text style={styles.cornplant}>Cherry Plant</Text>
-          <Text style={styles.moreinfo}>More Info</Text>
-          <View style={styles.iconsContainer}>
+          <Text style={styles.cornplant}>Farm 2</Text>
+          <Link href ="./mygarden" style={styles.moreinfo}>
+          More Info
+          </Link>          
+          {/* <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
             <Ionicons name="leaf" size={20} color="black" style={styles.icon} />
             <Ionicons name="sunny" size={20} color="black" style={styles.icon} />
             <Ionicons name="thermometer" size={20} color="black" style={styles.icon} />
           </View>
-          <Text style={styles.cornwater}>Water in 3 Days</Text>
+          <Text style={styles.cornwater}>Water in 3 Days</Text> */}
         </View>
 
         <View>
@@ -216,21 +227,26 @@ const HomePage = ({ navigation }: any) => {
           />
             <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
         </View>
-
-        <View style={styles.joinFarmContainer}>
-  <View style={styles.joinFarmCard}>
-    <Text style={styles.cardTitle}>Ready to Join the Farm?</Text>
-    <Text style={styles.cardSubtitle}>Connect with the community and manage your farm effectively.</Text>
-    <Link href="./groupchat" asChild>
-      <TouchableOpacity style={styles.joinFarmButton}>
-        <Text style={styles.buttonText}>Join Farm</Text>
-      </TouchableOpacity>
-    </Link>
-  </View>
-</View>
-
-
-      </ScrollView>
+        </ScrollView>
+      <View style={styles.bottomNav}>
+        <View style={[styles.iconContainer, styles.shadow]}>
+        <Link href="./homepage"> 
+        <Icon name="home" size={30} color="#000" />
+        </Link>
+        </View>
+        <Link href="./profile"> 
+        <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection"> 
+        <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed"> 
+        <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms"> 
+        <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </View>
   );
 };
@@ -330,7 +346,6 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Align text in the center
     justifyContent: 'center', // Ensure equal space distribution
   },
-
   buttonallergy:{
     flexDirection: 'row',
     alignItems: 'center',
@@ -587,6 +602,27 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 25,
     left: 300, 
+  },
+  bottomNav: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#D7E9D4",
+  },
+  iconContainer: {
+    padding: 10,
+    borderRadius: 40, // To make the icon's background circular
+    backgroundColor: 'white', // Optional, to set a background color
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8, // For Android shadow
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 

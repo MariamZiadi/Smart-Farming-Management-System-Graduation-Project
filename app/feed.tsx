@@ -1,4 +1,7 @@
 import { Link, Stack } from 'expo-router';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+
 import {
   View,
   Text,
@@ -6,7 +9,6 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
-  TouchableOpacity,
 } from 'react-native';
 
 import post1 from '../assets/images/post1.jpg'; 
@@ -15,6 +17,8 @@ import post3 from '../assets/images/post3.png';
 import post from '../assets/images/post.jpg'; 
 import post4 from '../assets/images/sam.png'; 
 import poster from '../assets/images/poster.jpg'; 
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 const posts = [
   {
@@ -44,17 +48,21 @@ const posts = [
 ];
 
 export default function FeedPage() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
-      <ScrollView>
-        <Text style={styles.title}>Feed</Text>
+      <ScrollView style={styles.scrollContainer}>
+        <View style={styles.headerContainer}>
+          <Text style={styles.title}>Feed</Text>
+          <Link href="./post" style={styles.addButton}>
+            <Text style={styles.addButtonText}>+</Text>
+          </Link>
+        </View>
         {posts.map((post) => (
           <View key={post.id} style={styles.postContainer}>
             <View style={styles.header}>
-              <Image
-                source={post.photo}
-                style={styles.avatar}
-              />
+              <Image source={post.photo} style={styles.avatar} />
               <View style={styles.headerText}>
                 <Text style={styles.name}>{post.name}</Text>
                 <Text style={styles.date}>{post.date}</Text>
@@ -65,9 +73,26 @@ export default function FeedPage() {
           </View>
         ))}
       </ScrollView>
-      <Link href="./post" style={styles.addButton}>
-        <Text style={styles.addButtonText}>+</Text>
-      </Link>
+
+      <View style={styles.bottomNav}>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <View style={[styles.iconContainer, styles.shadow]}>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        </View>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </View>
   );
 }
@@ -77,13 +102,43 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#f9f9f9',
   },
-  title: {
+  scrollContainer: {
+    flex: 1,
+  },
+  headerContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginTop: 25,
+    marginBottom: 25,
+    marginLeft: 140,
+    paddingHorizontal: 10,
+  },
+  title: {
     fontSize: 45,
     fontWeight: 'bold',
     color: 'rgb(9, 71, 10)',
-    marginBottom: 25,
+    textAlign: 'left',
+  },
+  addButton: {
+    backgroundColor: 'rgb(9, 71, 10)',
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 3,
+    elevation: 5,
+  },
+  addButtonText: {
+    fontSize: 30,
+    fontWeight: 'bold',
+    color: '#fff',
     textAlign: 'center',
+    lineHeight: 50,
   },
   postContainer: {
     marginBottom: 20,
@@ -131,27 +186,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     marginTop: 10,
   },
-  addButton: {
-    position: 'absolute',
-    right: 20,
-    bottom: 20,
-    backgroundColor: 'rgb(9, 71, 10)',
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: 'center',
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
+    backgroundColor: '#D7E9D4',
   },
-  addButtonText: {
-    fontSize: 30,
-    fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center', // Ensure text is centered
-    lineHeight: 60, // Matches the button height for vertical centering
+  iconContainer: {
+    padding: 10,
+    borderRadius: 40, // To make the icon's background circular
+    backgroundColor: 'white', // Optional, to set a background color
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8, // For Android shadow
+  },
+  navItem: {
+    fontSize: 24,
   },
 });

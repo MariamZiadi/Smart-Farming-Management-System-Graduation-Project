@@ -1,4 +1,8 @@
 import React, { useState } from 'react';
+import { Link, Stack } from 'expo-router';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+
 import {
   View,
   Text,
@@ -49,13 +53,31 @@ const ProfileScreen = () => {
                 <Picker.Item label="Farm 1" value="Farm 1" />
                 <Picker.Item label="Farm 2" value="Farm 2" />
                 <Picker.Item label="Farm 3" value="Farm 3" />
-                <Picker.Item label="Farm 4" value="Farm 4" />
-                <Picker.Item label="Farm 5" value="Farm 5" />
               </Picker>
             </View>
           </View>
         </View>
       </ScrollView>
+<View style={styles.bottomNav}>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <View style={[styles.iconContainer, styles.shadow]}>
+  <Link href="./profile">
+    <Icon name="person" size={30} color="#000" />
+  </Link>
+</View>
+
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </ImageBackground>
   );
 };
@@ -131,6 +153,27 @@ const styles = StyleSheet.create({
   picker: {
     height: 55,
     color: '#333',
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#D7E9D4',
+  },
+  iconContainer: {
+    padding: 10,
+    borderRadius: 40, // To make the icon's background circular
+    backgroundColor: 'white', // Optional, to set a background color
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8, // For Android shadow
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 
