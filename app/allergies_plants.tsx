@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import { Link, Stack } from 'expo-router';
 import {
   View,
   Text,
@@ -10,7 +12,6 @@ import {
   ImageBackground,
   ScrollView,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialIcons'; // For arrow icons
 import { Ionicons } from '@expo/vector-icons';
 
 import plant1 from 'assets/images/babys-breath.jpg';
@@ -124,6 +125,23 @@ const PlantAllergyPage = () => {
           </View>
         ))}
       </ScrollView>
+      <View style={styles.bottomNav}>
+              <Link href="./homepage">
+                <Icon name="home" size={30} color="#000" />
+              </Link>
+              <Link href="./profile">
+                <Icon name="person" size={30} color="#000" />
+              </Link>
+              <Link href="./disease_detection">
+                <Icon2 name="leaf" size={30} color="#000" />
+              </Link>
+              <Link href="./feed">
+                <Icon2 name="file-document-outline" size={30} color="#000" />
+              </Link>
+              <Link href="./allFarms">
+                <Icon name="local-florist" size={30} color="#000" />
+              </Link>
+            </View>
     </ImageBackground>
   );
 };
@@ -201,15 +219,26 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 16,
   },
   detailsHeader: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#333',
+    color: 'rgb(9, 71, 10)',
   },
   detailsText: {
     fontSize: 16,
     lineHeight: 20,
-    color: 'black',
+    fontWeight: 'semibold',
+    color: 'rgb(9, 71, 10)',
+  },
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#D7E9D4',
+    paddingVertical: 10,
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 

@@ -1,6 +1,10 @@
 import { Link, Stack } from 'expo-router';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+
+
 //import TabLayout from './_layout'; // Adjust the import path as per your project structure
 
 
@@ -26,7 +30,7 @@ const HomePage = ({ navigation }: any) => {
           />
           <TouchableOpacity 
             style={styles.button}
-            onPress={() => navigation.navigate('NextPage')}
+            //onPress={() => navigation.navigate('NextPage')}
           >
             <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
             <Text style={styles.buttonText}>30min Next Watering</Text>
@@ -219,16 +223,24 @@ const HomePage = ({ navigation }: any) => {
             <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
          
         </View>
-
-      </ScrollView>
-      
-      {/* <View style={styles.bottomNav}>
-        <Text style={styles.navItem}>🏠</Text>
-        <Text style={styles.navItem}>✏️</Text>
-        <Text style={styles.navItem}>🌱</Text>
-        <Text style={styles.navItem}>🤖</Text>
-        <Text style={styles.navItem}>👤</Text>
-      </View> */}
+        </ScrollView>
+      <View style={styles.bottomNav}>
+        <Link href="./homepage"> 
+        <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile"> 
+        <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection"> 
+        <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed"> 
+        <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms"> 
+        <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </View>
   );
 };

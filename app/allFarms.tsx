@@ -10,6 +10,9 @@ import {
   ScrollView,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+
 
 const plants = [
   {
@@ -42,13 +45,6 @@ const allFarmsPage = () => {
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
-        <Ionicons
-          name="arrow-back"
-          size={27}
-          color="white"
-          style={styles.backIcon}
-          onPress={() => router.push('./homepage')} 
-        />
         <Text style={styles.title}>All your farms</Text>
         {plants.map((plant) => (
           <View key={plant.id} style={styles.card}>
@@ -67,6 +63,23 @@ const allFarmsPage = () => {
           <Text style={styles.addFarmButtonText}>Add New Farm</Text>
         </Link>
       </ScrollView>
+      <View style={styles.bottomNav}>
+              <Link href="./homepage">
+                <Icon name="home" size={30} color="#000" />
+              </Link>
+              <Link href="./profile">
+                <Icon name="person" size={30} color="#000" />
+              </Link>
+              <Link href="./disease_detection">
+                <Icon2 name="leaf" size={30} color="#000" />
+              </Link>
+              <Link href="./feed">
+                <Icon2 name="file-document-outline" size={30} color="#000" />
+              </Link>
+              <Link href="./allFarms">
+                <Icon name="local-florist" size={30} color="#000" />
+              </Link>
+            </View>
     </ImageBackground>
   );
 };
@@ -87,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 18,
     textAlign: 'center',
-    color: '#fff',
+    color: 'rgb(254, 254, 253)',
   },
   scrollContainer: {
     top: 40,
@@ -112,7 +125,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   plantName: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
     marginBottom: 8,
     color: 'black',
@@ -136,15 +149,26 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   detailsHeader: {
-    fontSize: 16,
+    fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#333',
+    color: 'rgb(9, 71, 10)',
   },
   detailsText: {
-    fontSize: 16,
+    fontSize: 20,
     lineHeight: 20,
-    color: 'black',
+    color: 'rgb(9, 71, 10)',
+  },
+  
+  bottomNav: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#D7E9D4',
+    paddingVertical: 10,
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 

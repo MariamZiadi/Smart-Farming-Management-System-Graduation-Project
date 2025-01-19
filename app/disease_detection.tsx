@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import { Link } from 'expo-router';
 
 import {
   View,
@@ -10,6 +13,7 @@ import {
   Image,
   ActivityIndicator,
   Alert,
+  ScrollView
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
@@ -36,9 +40,9 @@ const PlantDiseaseDetection = () => {
     });
 
     // If the user selected an image, update the state
-    // if (!result.canceled) {
-    //   setImageUri(result.assets[0].uri); // Set the URI of the selected image
-    // }
+    if (!result.canceled) {
+      setImageUri(result.assets[0].uri); // Set the URI of the selected image
+    }
   };
 
   return (
@@ -83,6 +87,25 @@ const PlantDiseaseDetection = () => {
           </Text>
         )}
       </View>
+
+      {/* Bottom Navigation */}
+      <View style={styles.bottomNav}>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </ImageBackground>
   );
 };
@@ -118,7 +141,7 @@ const styles = StyleSheet.create({
     top: 195,
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 50, // Adjusted for the bottom nav
     backgroundColor: 'white',
   },
   uploadButton: {
@@ -170,6 +193,16 @@ const styles = StyleSheet.create({
   analysisText: {
     fontSize: 20,
     left: 110,
+  },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#D7E9D4',
+    paddingVertical: 10,
   },
 });
 
