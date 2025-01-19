@@ -15,6 +15,9 @@ import post3 from '../assets/images/post3.png';
 import post from '../assets/images/post.jpg'; 
 import post4 from '../assets/images/sam.png'; 
 import poster from '../assets/images/poster.jpg'; 
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+
 
 const posts = [
   {
@@ -44,6 +47,8 @@ const posts = [
 ];
 
 export default function FeedPage() {
+      const router = useRouter();
+  
   return (
     <View style={styles.container}>
       <ScrollView>
@@ -76,6 +81,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f9f9f9',
+  },
+  backIcon: {
+    marginLeft: 20,
   },
   title: {
     marginTop: 25,

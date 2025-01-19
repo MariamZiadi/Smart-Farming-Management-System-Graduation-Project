@@ -1,17 +1,17 @@
 import { Link, Stack } from 'expo-router';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+//import TabLayout from './_layout'; // Adjust the import path as per your project structure
+
 
 const screenWidth = Dimensions.get('window').width; // Get the screen width
 
 const HomePage = ({ navigation }: any) => {
+  
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <View style={styles.topBar}>
-          <Link href="./add_farm" style={styles.addButton}>
-                  <Text style={styles.addButtonText}>+</Text>
-                </Link>
           <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
           <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
           <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
@@ -34,8 +34,8 @@ const HomePage = ({ navigation }: any) => {
         </View>
 
         <View style={styles.garden}>
-          <Text style={styles.yourgarden}>Your Garden</Text>
-        <Link href ="./mygarden" style={styles.viewall}>
+          <Text style={styles.yourgarden}>Your Farms</Text>
+        <Link href ="./allFarms" style={styles.viewall}>
           View All
           </Link>
         </View>
@@ -45,18 +45,18 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/cornhomeplant.jpg')} 
             style={styles.cornImage} 
           />
-          <Text style={styles.cornplant}>Corn Plant</Text>
-          <Link href ="./plant" style={styles.moreinfo}>
+          <Text style={styles.cornplant}>Farm 1</Text>
+          <Link href ="./mygarden" style={styles.moreinfo}>
           More Info
           </Link>
           
-          <View style={styles.iconsContainer}>
+          {/* <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
             <Ionicons name="leaf" size={20} color="black" style={styles.icon} />
             <Ionicons name="sunny" size={20} color="black" style={styles.icon} />
             <Ionicons name="thermometer" size={20} color="black" style={styles.icon} />
           </View>
-          <Text style={styles.cornwater}>Water in 2 Days</Text>
+          <Text style={styles.cornwater}>Water in 2 Days</Text> */}
         </View>
 
         <View style={[styles.gardencontainers, styles.cherryContainer]}>
@@ -64,15 +64,17 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/cherryhomeplant.jpg')}
             style={styles.cornImage} 
           />
-          <Text style={styles.cornplant}>Cherry Plant</Text>
-          <Text style={styles.moreinfo}>More Info</Text>
-          <View style={styles.iconsContainer}>
+          <Text style={styles.cornplant}>Farm 2</Text>
+          <Link href ="./mygarden" style={styles.moreinfo}>
+          More Info
+          </Link>          
+          {/* <View style={styles.iconsContainer}>
             <Ionicons name="water" size={20} color="black" style={styles.icon} />
             <Ionicons name="leaf" size={20} color="black" style={styles.icon} />
             <Ionicons name="sunny" size={20} color="black" style={styles.icon} />
             <Ionicons name="thermometer" size={20} color="black" style={styles.icon} />
           </View>
-          <Text style={styles.cornwater}>Water in 3 Days</Text>
+          <Text style={styles.cornwater}>Water in 3 Days</Text> */}
         </View>
 
         <View>
@@ -219,6 +221,14 @@ const HomePage = ({ navigation }: any) => {
         </View>
 
       </ScrollView>
+      
+      {/* <View style={styles.bottomNav}>
+        <Text style={styles.navItem}>🏠</Text>
+        <Text style={styles.navItem}>✏️</Text>
+        <Text style={styles.navItem}>🌱</Text>
+        <Text style={styles.navItem}>🤖</Text>
+        <Text style={styles.navItem}>👤</Text>
+      </View> */}
     </View>
   );
 };
@@ -264,7 +274,6 @@ const styles = StyleSheet.create({
     alignItems: 'center', // Align text in the center
     justifyContent: 'center', // Ensure equal space distribution
   },
-
   buttonallergy:{
     flexDirection: 'row',
     alignItems: 'center',
@@ -521,6 +530,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 25,
     left: 300, 
+  },
+  bottomNav: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    backgroundColor: "#D7E9D4",
+    paddingVertical: 10,
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 

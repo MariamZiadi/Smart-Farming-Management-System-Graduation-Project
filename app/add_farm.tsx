@@ -12,9 +12,15 @@ import {
   ScrollView,
 } from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
+import { Ionicons } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
+
+
 
 export default function AddFarmPage() {
   const [plants, setPlants] = useState([{ name: '', key: 'Plant 1' }]);
+  const [farmName, setFarmName] = useState('');
+  const [farmPassword, setFarmPassword] = useState('');
   const plantSuggestions = ['Tomato', 'Potato', 'Cucumber', 'Carrot', 'Lettuce'];
 
   const addPlantField = () => {
@@ -32,12 +38,11 @@ export default function AddFarmPage() {
       <Text style={styles.label}>{item.key}</Text>
       <View style={styles.row}>
         <Autocomplete
-          data={
-            item.name
-              ? plantSuggestions.filter((suggestion) =>
-                  suggestion.toLowerCase().includes(item.name.toLowerCase())
-                )
-              : []
+          data={item.name
+            ? plantSuggestions.filter((suggestion) =>
+                suggestion.toLowerCase().includes(item.name.toLowerCase())
+              )
+            : []
           }
           defaultValue={item.name}
           onChangeText={(text) => updatePlantName(index, text)}
@@ -58,6 +63,7 @@ export default function AddFarmPage() {
       </View>
     </View>
   );
+  const router = useRouter();
 
   return (
     <KeyboardAvoidingView
@@ -69,8 +75,41 @@ export default function AddFarmPage() {
         style={styles.background}
       >
         <View style={styles.overlay} />
+        <Ionicons
+          name="arrow-back"
+          size={27}
+          color="white"
+          style={styles.backIcon}
+          onPress={() => router.push('./allFarms')} 
+        />
+
         <Text style={styles.title}>Add Your New Farm</Text>
         <ScrollView contentContainerStyle={styles.scrollContent}>
+          {/* Farm Name Field */}
+          
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Farm Name</Text>
+            <TextInput
+              style={styles.input}
+              value={farmName}
+              onChangeText={setFarmName}
+              placeholder="Enter farm name"
+            />
+          </View>
+
+          {/* Farm Password Field */}
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Farm Password</Text>
+            <TextInput
+              style={styles.input}
+              value={farmPassword}
+              onChangeText={setFarmPassword}
+              placeholder="Enter farm password"
+              secureTextEntry
+            />
+          </View>
+
+          {/* Plant Fields */}
           <FlatList
             data={[...plants, { isFooter: true }]} // Add a dummy footer item
             renderItem={({ item, index }) =>
@@ -102,12 +141,16 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
+  backIcon: {
+    marginTop: 40,
+    marginLeft: 10,
+  },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginTop: 50,
+    marginTop: 30,
     marginBottom: 30,
   },
   inputContainer: {

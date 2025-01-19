@@ -1,10 +1,18 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 
-import { View, Text, StyleSheet, TouchableOpacity, ImageBackground, Image, ActivityIndicator } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  ImageBackground,
+  Image,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
-
 
 const PlantDiseaseDetection = () => {
   const router = useRouter();
@@ -13,50 +21,59 @@ const PlantDiseaseDetection = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const pickImage = async () => {
+    // Request permission to access the media library
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      alert('Permission to access media library is required!');
+      Alert.alert('Permission Required', 'Permission to access media library is required!');
       return;
     }
 
+    // Open the image picker
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
     });
+
+    // If the user selected an image, update the state
+    // if (!result.canceled) {
+    //   setImageUri(result.assets[0].uri); // Set the URI of the selected image
+    // }
   };
 
   return (
-    
     <ImageBackground
       source={require('../assets/images/BG2.jpg')}
       style={styles.background}
     >
-        <Ionicons
-          name="arrow-back"
-          size={27}
-          color="white"
-          style={styles.backIcon}
-          onPress={() => router.push('./homepage')} 
-        />
+      <Ionicons
+        name="arrow-back"
+        size={27}
+        color="white"
+        style={styles.backIcon}
+        onPress={() => router.push('./homepage')}
+      />
       <Text style={styles.header}>Plant Disease </Text>
       <Text style={styles.header2}>Detection </Text>
       <View style={styles.container}>
+        {/* Button to Upload Image */}
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Text style={styles.uploadText}>Upload Your Plant Image</Text>
         </TouchableOpacity>
 
+        {/* Display Uploaded Image */}
         <TouchableOpacity style={styles.imageContainer} onPress={pickImage}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.image} />
           ) : (
             <Image
-              source={require('../assets/images/imageupload.png')} // Replace with your uploaded placeholder image
+              source={require('../assets/images/imageupload.png')} // Placeholder image
               style={styles.imagePlaceholder}
             />
           )}
         </TouchableOpacity>
 
+        {/* Analysis Section */}
         <Text style={styles.analysisHeader}>Analysis</Text>
         {isLoading ? (
           <ActivityIndicator size="large" color="#000" />
@@ -136,14 +153,13 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover', 
+    resizeMode: 'cover',
   },
   imagePlaceholder: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover', 
+    resizeMode: 'cover',
   },
-  
   analysisHeader: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -158,4 +174,3 @@ const styles = StyleSheet.create({
 });
 
 export default PlantDiseaseDetection;
-
