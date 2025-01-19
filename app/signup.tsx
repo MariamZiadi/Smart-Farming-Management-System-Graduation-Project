@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)', // Semi-transparent black overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.4)', 
   },
   title: {
     top: 50,

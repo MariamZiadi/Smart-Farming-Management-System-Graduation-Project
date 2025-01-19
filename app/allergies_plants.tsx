@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Link, Stack } from 'expo-router';
 import {
   View,
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   expandedCard: {
-    marginBottom: 30, // Add extra space when expanded
+    marginBottom: 30, 
   },
   cardContent: {
     flexDirection: 'row',

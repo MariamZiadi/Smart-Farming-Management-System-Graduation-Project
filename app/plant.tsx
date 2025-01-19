@@ -6,7 +6,7 @@ import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-nat
 import { Ionicons } from '@expo/vector-icons';
 import HomePage from './homepage';
 
-const screenWidth = Dimensions.get('window').width; // Get the screen width
+const screenWidth = Dimensions.get('window').width; 
 
 const Plant = ({ navigation }: any) => {
   const router = useRouter();
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
     padding: 20,
-    marginBottom: 20, // Add space between containers
+    marginBottom: 20,
   },
   plantName: {
     fontSize: 28,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 15,
     alignItems: 'center',
-    marginBottom: 10, // Add space between info boxes
+    marginBottom: 10, 
   },
   infoText: {
     fontSize: 14,

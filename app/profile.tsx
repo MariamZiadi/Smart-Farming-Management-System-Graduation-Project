@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, Stack } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 
 import {
   View,
@@ -162,15 +162,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 10,
-    borderRadius: 40, // To make the icon's background circular
-    backgroundColor: 'white', // Optional, to set a background color
+    borderRadius: 40, 
+    backgroundColor: 'white', 
   },
   shadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, // For Android shadow
+    elevation: 8, 
   },
   navItem: {
     fontSize: 24,
