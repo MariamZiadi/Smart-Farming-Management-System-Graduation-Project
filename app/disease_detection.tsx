@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { Link } from 'expo-router';
 
 import {
@@ -25,23 +25,21 @@ const PlantDiseaseDetection = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const pickImage = async () => {
-    // Request permission to access the media library
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
       Alert.alert('Permission Required', 'Permission to access media library is required!');
       return;
     }
 
-    // Open the image picker
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       quality: 1,
     });
 
-    // If the user selected an image, update the state
+    
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri); // Set the URI of the selected image
+      setImageUri(result.assets[0].uri); 
     }
   };
 
@@ -71,7 +69,7 @@ const PlantDiseaseDetection = () => {
             <Image source={{ uri: imageUri }} style={styles.image} />
           ) : (
             <Image
-              source={require('../assets/images/imageupload.png')} // Placeholder image
+              source={require('../assets/images/imageupload.png')} 
               style={styles.imagePlaceholder}
             />
           )}
@@ -143,7 +141,7 @@ const styles = StyleSheet.create({
     top: 195,
     left: 0,
     right: 0,
-    bottom: 50, // Adjusted for the bottom nav
+    bottom: 50, 
     backgroundColor: 'white',
   },
   uploadButton: {
@@ -207,15 +205,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 10,
-    borderRadius: 40, // To make the icon's background circular
-    backgroundColor: 'white', // Optional, to set a background color
+    borderRadius: 40, 
+    backgroundColor: 'white', 
   },
   shadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, // For Android shadow
+    elevation: 8, 
   },
   navItem: {
     fontSize: 24,

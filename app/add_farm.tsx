@@ -111,7 +111,7 @@ export default function AddFarmPage() {
 
           {/* Plant Fields */}
           <FlatList
-            data={[...plants, { isFooter: true }]} // Add a dummy footer item
+            data={[...plants, { isFooter: true }]} 
             renderItem={({ item, index }) =>
               item.isFooter ? (
                 <TouchableOpacity style={styles.addFarmButton}>
@@ -131,7 +131,7 @@ export default function AddFarmPage() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 20, // Extra space at the bottom for the add farm button
+    paddingBottom: 20, 
   },
   background: {
     flex: 1,

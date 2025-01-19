@@ -2,11 +2,11 @@ import { useRouter } from 'expo-router';
 import { View, Text, StyleSheet, Image, ScrollView, Dimensions, ImageBackground, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { Link, Stack } from 'expo-router';
 
 
-const screenWidth = Dimensions.get('window').width; // Get the screen width
+const screenWidth = Dimensions.get('window').width; 
 
 const MyGarden = ({ navigation }: any) => {
   const router = useRouter();
@@ -96,7 +96,7 @@ const MyGarden = ({ navigation }: any) => {
 const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
-    resizeMode: 'cover', // Ensures the background image covers the entire screen
+    resizeMode: 'cover', 
   },
   scrollContainer: {
     paddingBottom: 20,

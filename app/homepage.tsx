@@ -2,13 +2,9 @@ import { Link, Stack } from 'expo-router';
 import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Dimensions } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; // Using MaterialCommunityIcons for a wider icon selection
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 
-
-//import TabLayout from './_layout'; // Adjust the import path as per your project structure
-
-
-const screenWidth = Dimensions.get('window').width; // Get the screen width
+const screenWidth = Dimensions.get('window').width; 
 
 const HomePage = ({ navigation }: any) => {
   
@@ -220,8 +216,7 @@ const HomePage = ({ navigation }: any) => {
             source={require('../assets/images/blog.jpg')} 
             style={styles.blogimg} 
           />
-            <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
-         
+            <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>         
         </View>
         </ScrollView>
       <View style={styles.bottomNav}>
@@ -268,10 +263,10 @@ const styles = StyleSheet.create({
   blogimg:{
     position: 'relative',
     top: -5,
-    left: 15,
-    width: 380, // Dynamically set width to match screen
-    height: 170, // Adjust height if needed
-    resizeMode: 'cover', // Ensure it scales appropriately
+    left: 5,
+    width: 380, 
+    height: 170, 
+    resizeMode: 'cover', 
     borderRadius:10,
   },
   buttontypes: {
@@ -283,10 +278,9 @@ const styles = StyleSheet.create({
     marginTop: 7,
     position: 'absolute',
     top: 82,
-    left: 3,
-    width: 180, // Fixed width for all buttons
-    alignItems: 'center', // Align text in the center
-    justifyContent: 'center', // Ensure equal space distribution
+    width: 180, 
+    alignItems: 'center', 
+    justifyContent: 'center', 
   },
   buttonallergy:{
     flexDirection: 'row',
@@ -305,9 +299,9 @@ const styles = StyleSheet.create({
     position: 'relative',
     top: -5,
     left: 0,
-    width: 180, // Dynamically set width to match screen
-    height: 120, // Adjust height if needed
-    resizeMode: 'cover', // Ensure it scales appropriately
+    width: 180, 
+    height: 120, 
+    resizeMode: 'cover', 
     borderRadius:10,
   },
   viewallallergies:{
@@ -353,10 +347,10 @@ const styles = StyleSheet.create({
   diseaseimg: {
     position: 'relative',
     top: -25,
-    left: 15,
-    width: 380, // Dynamically set width to match screen
-    height: 170, // Adjust height if needed
-    resizeMode: 'cover', // Ensure it scales appropriately
+    left: 5,
+    width: 380, 
+    height: 170, 
+    resizeMode: 'cover', 
     borderRadius:10,
   },
   cornwater: {
@@ -367,8 +361,9 @@ const styles = StyleSheet.create({
   },
   moreinfo: {
     position: 'absolute',
-    top: 20,
-    left: 300,
+    top: 50,
+    left: 145,
+    fontWeight:"semibold",
     color: 'rgb(75, 134, 75)',
   },
   cornplant: {
@@ -397,10 +392,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     zIndex: 10,
     borderRadius: 15,
-    marginBottom: 10, // Added margin for spacing between cards
+    marginBottom: 10, 
   },
   cherryContainer: {
-    marginTop: 5, // Add space between the two containers
+    marginTop: 5, 
   },
   iconsContainer: {
     flexDirection: 'row',
@@ -415,7 +410,7 @@ const styles = StyleSheet.create({
   garden: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 15, // Spacing below
+    marginBottom: 15, 
   },
   viewall: {
     color: 'rgb(75, 134, 75)',
@@ -468,7 +463,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: '#fff', // Background color to cover the entire screen
+    backgroundColor: '#fff', 
   },
   topBar: {
     position: 'relative',
@@ -553,15 +548,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 10,
-    borderRadius: 40, // To make the icon's background circular
-    backgroundColor: 'white', // Optional, to set a background color
+    borderRadius: 40, 
+    backgroundColor: 'white', 
   },
   shadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, // For Android shadow
+    elevation: 8, 
   },
   navItem: {
     fontSize: 24,
