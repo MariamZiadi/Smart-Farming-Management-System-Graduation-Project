@@ -225,9 +225,11 @@ const HomePage = ({ navigation }: any) => {
         </View>
         </ScrollView>
       <View style={styles.bottomNav}>
+        <View style={[styles.iconContainer, styles.shadow]}>
         <Link href="./homepage"> 
         <Icon name="home" size={30} color="#000" />
         </Link>
+        </View>
         <Link href="./profile"> 
         <Icon name="person" size={30} color="#000" />
         </Link>
@@ -548,7 +550,18 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     backgroundColor: "#D7E9D4",
-    paddingVertical: 10,
+  },
+  iconContainer: {
+    padding: 10,
+    borderRadius: 40, // To make the icon's background circular
+    backgroundColor: 'white', // Optional, to set a background color
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8, // For Android shadow
   },
   navItem: {
     fontSize: 24,

@@ -45,6 +45,13 @@ const allFarmsPage = () => {
         contentContainerStyle={styles.scrollContainer}
         keyboardShouldPersistTaps="handled"
       >
+        <Ionicons
+                name="arrow-back"
+                size={27}
+                color="white"
+                style={styles.backIcon}
+                onPress={() => router.push('./homepage')}
+              />
         <Text style={styles.title}>All your farms</Text>
         {plants.map((plant) => (
           <View key={plant.id} style={styles.card}>
@@ -76,9 +83,12 @@ const allFarmsPage = () => {
               <Link href="./feed">
                 <Icon2 name="file-document-outline" size={30} color="#000" />
               </Link>
-              <Link href="./allFarms">
+               <View style={[styles.iconContainer, styles.shadow]}>
+                <Link href="./allFarms">
                 <Icon name="local-florist" size={30} color="#000" />
               </Link>
+              </View>
+              
             </View>
     </ImageBackground>
   );
@@ -93,7 +103,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   backIcon: {
-    marginLeft: 10,
   },
   title: {
     fontSize: 35,
@@ -125,7 +134,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   plantName: {
-    fontSize: 25,
+    fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 8,
     color: 'black',
@@ -149,14 +158,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   detailsHeader: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 8,
     color: 'rgb(9, 71, 10)',
   },
   detailsText: {
-    fontSize: 20,
+    fontSize: 18,
     lineHeight: 20,
+    fontWeight: 'semibold',
     color: 'rgb(9, 71, 10)',
   },
   
@@ -165,7 +175,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#D7E9D4',
-    paddingVertical: 10,
+  },
+  iconContainer: {
+    padding: 10,
+    borderRadius: 40, // To make the icon's background circular
+    backgroundColor: 'white', // Optional, to set a background color
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 8, // For Android shadow
   },
   navItem: {
     fontSize: 24,
