@@ -228,11 +228,7 @@ const HomePage = ({ navigation }: any) => {
   <Text style={styles.joinFarmDescription}>
     Become part of a community of plant lovers and farmers. Connect with like-minded individuals and take part in the joys of farming.
   </Text>
-  <Link href="/groupchat" style={styles.joinFarmLink}>
-    <TouchableOpacity style={styles.joinFarmButton}>
-      <Link href ="./groupchat" style={styles.joinFarmButtonText}>Join Now</Link>
-    </TouchableOpacity>
-  </Link>
+      <Link href ="./groupchat" style={[styles.joinFarmButton, styles.joinFarmButtonText]}>Join Now</Link>
 </View>
         </ScrollView>
       <View style={styles.bottomNav}>
@@ -306,7 +302,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   joinFarmButton: {
-    backgroundColor: '#27ae60',  // Green button matching the farming theme
+    backgroundColor: 'rgb(75, 134, 75)',  
     paddingVertical: 12,
     paddingHorizontal: 40,
     borderRadius: 30,

@@ -15,8 +15,6 @@ import Autocomplete from 'react-native-autocomplete-input';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-
-
 export default function AddFarmPage() {
   const [plants, setPlants] = useState([{ name: '', key: 'Plant 1' }]);
   const [farmName, setFarmName] = useState('');
@@ -38,11 +36,12 @@ export default function AddFarmPage() {
       <Text style={styles.label}>{item.key}</Text>
       <View style={styles.row}>
         <Autocomplete
-          data={item.name
-            ? plantSuggestions.filter((suggestion) =>
-                suggestion.toLowerCase().includes(item.name.toLowerCase())
-              )
-            : []
+          data={
+            item.name
+              ? plantSuggestions.filter((suggestion) =>
+                  suggestion.toLowerCase().includes(item.name.toLowerCase())
+                )
+              : []
           }
           defaultValue={item.name}
           onChangeText={(text) => updatePlantName(index, text)}
@@ -63,6 +62,7 @@ export default function AddFarmPage() {
       </View>
     </View>
   );
+
   const router = useRouter();
 
   return (
@@ -80,13 +80,12 @@ export default function AddFarmPage() {
           size={27}
           color="white"
           style={styles.backIcon}
-          onPress={() => router.push('./allFarms')} 
+          onPress={() => router.push('./allFarms')}
         />
 
         <Text style={styles.title}>Add Your New Farm</Text>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Farm Name Field */}
-          
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Farm Name</Text>
             <TextInput
@@ -111,7 +110,7 @@ export default function AddFarmPage() {
 
           {/* Plant Fields */}
           <FlatList
-            data={[...plants, { isFooter: true }]} 
+            data={[...plants, { isFooter: true }]}
             renderItem={({ item, index }) =>
               item.isFooter ? (
                 <TouchableOpacity style={styles.addFarmButton}>
@@ -131,7 +130,7 @@ export default function AddFarmPage() {
 
 const styles = StyleSheet.create({
   scrollContent: {
-    paddingBottom: 20, 
+    paddingBottom: 20,
   },
   background: {
     flex: 1,

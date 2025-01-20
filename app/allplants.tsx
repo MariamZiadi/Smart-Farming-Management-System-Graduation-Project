@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
 
 import { Ionicons } from '@expo/vector-icons';
-import { Link, Stack } from 'expo-router';
+import { Link } from 'expo-router';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
@@ -37,7 +37,7 @@ const plants = {
 
 const AllPlants = () => {
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string>(''); // Default category to show all
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const renderItem = ({ item }: { item: typeof plants.fruits[0] }) => (
     <View style={styles.card}>
@@ -55,7 +55,6 @@ const AllPlants = () => {
     setSelectedCategory(category);
   };
 
-  // Get the plants based on the selected category or show all if nothing is selected
   const filteredPlants = selectedCategory
     ? plants[selectedCategory as keyof typeof plants]
     : [...plants.fruits, ...plants.vegetables, ...plants.herbs, ...plants.grains];
@@ -71,55 +70,52 @@ const AllPlants = () => {
       />
       <Text style={styles.header}>All plants</Text>
 
-      {/* Scrollable Content */}
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {/* Category filter buttons */}
-        <View style={styles.filterContainer}>
-          <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('fruits')}>
-            <Text style={styles.filterText}>Fruits</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('vegetables')}>
-            <Text style={styles.filterText}>Vegetables</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('herbs')}>
-            <Text style={styles.filterText}>Herbs</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('grains')}>
-            <Text style={styles.filterText}>Grains</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('')}>
-            <Text style={styles.filterText}>Show All</Text>
-          </TouchableOpacity>
-        </View>
+      {/* Category filter buttons */}
+      <View style={styles.filterContainer}>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('fruits')}>
+          <Text style={styles.filterText}>Fruits</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('vegetables')}>
+          <Text style={styles.filterText}>Vegetables</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('herbs')}>
+          <Text style={styles.filterText}>Herbs</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('grains')}>
+          <Text style={styles.filterText}>Grains</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('')}>
+          <Text style={styles.filterText}>Show All</Text>
+        </TouchableOpacity>
+      </View>
 
-        <FlatList
-          data={filteredPlants}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-        />
-      </ScrollView>
+      <FlatList
+        data={filteredPlants}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+      />
 
       {/* Bottom Navigation Bar */}
       <View style={styles.bottomNav}>
-              <View style={[styles.iconContainer, styles.shadow]}>
-              <Link href="./homepage"> 
-              <Icon name="home" size={30} color="#000" />
-              </Link>
-              </View>
-              <Link href="./profile"> 
-              <Icon name="person" size={30} color="#000" />
-              </Link>
-              <Link href="./disease_detection"> 
-              <Icon2 name="leaf" size={30} color="#000" />
-              </Link>
-              <Link href="./feed"> 
-              <Icon2 name="file-document-outline" size={30} color="#000" />
-              </Link>
-              <Link href="./allFarms"> 
-              <Icon name="local-florist" size={30} color="#000" />
-              </Link>
-            </View>
+        <View style={[styles.iconContainer, styles.shadow]}>
+          <Link href="./homepage">
+            <Icon name="home" size={30} color="#000" />
+          </Link>
+        </View>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </View>
   );
 };
@@ -129,9 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     paddingHorizontal: 16,
-  },
-  scrollContent: {
-    paddingBottom: 80, // Adjust padding for bottom navigation
   },
   header: {
     fontSize: 24,
@@ -147,7 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 16,
     justifyContent: 'space-between',
-    flexWrap: 'wrap', // Allow buttons to wrap
+    flexWrap: 'wrap',
   },
   filterButton: {
     padding: 8,
