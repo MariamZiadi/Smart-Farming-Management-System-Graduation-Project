@@ -538,7 +538,7 @@ const styles = StyleSheet.create({
   notificationIcon: {
     position: 'absolute',
     top: 25,
-    left: 370,
+    left: 350,
   },
 
   topBarText: {

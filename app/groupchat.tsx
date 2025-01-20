@@ -1,9 +1,22 @@
 import React from "react";
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
 
+import { Ionicons } from '@expo/vector-icons';
+
+import { useRouter } from 'expo-router';
+
 export default function JoinFarmScreen() {
+  const router = useRouter();
+
   return (
     <View style={styles.container}>
+<Ionicons
+          name="arrow-back"
+          size={27}
+          color="white"
+          //style={styles.backIcon}
+          onPress={() => router.push('./homepage')} 
+        />
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>Join A Farm</Text>
