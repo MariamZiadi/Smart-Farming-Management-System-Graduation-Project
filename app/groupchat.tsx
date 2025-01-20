@@ -1,103 +1,129 @@
 import React from "react";
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 
-import { Ionicons } from '@expo/vector-icons';
-
-import { useRouter } from 'expo-router';
-
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import { Link, Stack } from 'expo-router';
 export default function JoinFarmScreen() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
-<Ionicons
-          name="arrow-back"
-          size={27}
-          color="white"
-          //style={styles.backIcon}
-          onPress={() => router.push('./homepage')} 
+    <ImageBackground
+      source={require("../assets/images/BG2.jpg")} // Replace with your background image path
+      style={styles.background}
+    >
+      <View style={styles.overlay} />
+      <Ionicons
+        name="arrow-back"
+        size={27}
+        color="white"
+        style={styles.backIcon}
+        onPress={() => router.push("./homepage")}
+      />
+      <View style={styles.main}>
+        <Text style={styles.title}>Join Your Farm</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter Farm ID"
+          placeholderTextColor="#888"
         />
-      {/* Header */}
-      <View style={styles.header}>
-        <Text style={styles.headerTitle}>Join A Farm</Text>
-      </View>
-
-      {/* Content */}
-      <View style={styles.content}>
-        <Text style={styles.label}>Join Your Farm</Text>
-        <TextInput style={styles.input} placeholder="Farm ID" placeholderTextColor="#A9A9A9" />
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Join</Text>
         </TouchableOpacity>
       </View>
-
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
-        <Text style={styles.navItem}>🏠</Text>
-        <Text style={styles.navItem}>✏️</Text>
-        <Text style={styles.navItem}>🌱</Text>
-        <Text style={styles.navItem}>🤖</Text>
-        <Text style={styles.navItem}>👤</Text>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
       </View>
-    </View>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  background: {
     flex: 1,
-    backgroundColor: "#F5F5F5",
+    justifyContent: "center",
   },
-  header: {
-    flexDirection: "row",
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+  },
+  backIcon: {
+    position: "absolute",
+    top: 40,
+    left: 10,
+  },
+  main: {
     alignItems: "center",
-    backgroundColor: "black",
-    paddingVertical:85,
-    paddingHorizontal: 10,
+    marginHorizontal: 16,
   },
-
-  headerTitle: {
-    color: "white",
-    fontSize: 25,
+  title: {
+    fontSize: 30,
     fontWeight: "bold",
-    marginLeft: 15,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "white",
-    marginTop: 70,
-  },
-  label: {
-    fontSize: 18,
-    fontWeight: "600",
-    marginBottom: 10,
+    color: "#fff",
+    marginBottom: 20,
+    textAlign: "center",
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#CCCCCC",
+    backgroundColor: "#f5f5f5",
     borderRadius: 8,
-    padding: 10,
+    width: "100%",
+    height: 50,
+    paddingHorizontal: 16,
     fontSize: 16,
-    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 10,
+    elevation: 4,
+    color: "#000",
+    marginVertical: 16,
   },
   button: {
-    backgroundColor: "black",
+    backgroundColor: "rgb(51, 99, 51)",
     paddingVertical: 12,
     borderRadius: 8,
+    width: "70%",
     alignItems: "center",
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 3,
+    marginTop:20,
   },
   buttonText: {
-    color: "white",
-    fontSize: 16,
+    color: "#fff",
+    fontSize: 20,
     fontWeight: "600",
   },
   bottomNav: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    backgroundColor: "#D7E9D4",
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    backgroundColor: '#D7E9D4',
     paddingVertical: 10,
+    top:220,
   },
   navItem: {
     fontSize: 24,

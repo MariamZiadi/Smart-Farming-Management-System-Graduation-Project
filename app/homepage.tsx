@@ -222,8 +222,18 @@ const HomePage = ({ navigation }: any) => {
             style={styles.blogimg} 
           />
             <Link href="./feed" style={[styles.buttonText, styles.buttonblogs]}>Blogs Feed</Link>
-         
         </View>
+        <View style={styles.joinFarmSection}>
+  <Text style={styles.joinFarmTitle}>Join a Farm Today</Text>
+  <Text style={styles.joinFarmDescription}>
+    Become part of a community of plant lovers and farmers. Connect with like-minded individuals and take part in the joys of farming.
+  </Text>
+  <Link href="/groupchat" style={styles.joinFarmLink}>
+    <TouchableOpacity style={styles.joinFarmButton}>
+      <Link href ="./groupchat" style={styles.joinFarmButtonText}>Join Now</Link>
+    </TouchableOpacity>
+  </Link>
+</View>
         </ScrollView>
       <View style={styles.bottomNav}>
         <View style={[styles.iconContainer, styles.shadow]}>
@@ -272,7 +282,49 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
-  
+  joinFarmSection: {
+    marginTop: 20,  // Adjust the margin to ensure it’s positioned correctly
+    padding: 20,
+    backgroundColor: '#f3f3f3',  // Light background color for the section
+    borderRadius: 10,
+    marginBottom: 30,  // Spacing before the navigation bar
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginHorizontal: 10,  // To add some horizontal padding
+  },
+  joinFarmTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#2C3E50',
+    marginBottom: 10,
+    textAlign: 'center',
+  },
+  joinFarmDescription: {
+    fontSize: 16,
+    color: '#7f8c8d',
+    textAlign: 'center',
+    marginBottom: 20,
+  },
+  joinFarmButton: {
+    backgroundColor: '#27ae60',  // Green button matching the farming theme
+    paddingVertical: 12,
+    paddingHorizontal: 40,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+  },
+  joinFarmButtonText: {
+    fontSize: 18,
+    color: 'white',
+    fontWeight: 'bold',
+  },
+  joinFarmLink: {
+    width: '100%',
+   },
   cardTitle: {
     fontSize: 20,
     fontWeight: 'bold',
@@ -285,16 +337,6 @@ const styles = StyleSheet.create({
     color: 'gray',
     textAlign: 'center',
     marginBottom: 20,
-  },
-  
-  joinFarmButton: {
-    backgroundColor: 'rgb(75, 134, 75)',
-    paddingVertical: 15,
-    paddingHorizontal: 30,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '60%',
   },
   
   buttonTextt: {
