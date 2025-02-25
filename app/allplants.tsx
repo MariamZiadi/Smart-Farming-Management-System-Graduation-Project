@@ -1,8 +1,16 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity } from 'react-native';
+
+import { Ionicons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import { useRouter } from 'expo-router';
+
 const plants = {
   fruits: [
-    { id: '1', name: 'Apple Plant', image: require('../assets/images/apple.png')    },
+    { id: '1', name: 'Apple Plant', image: require('../assets/images/apple.png') },
     { id: '2', name: 'Orange Plant', image: require('../assets/images/orange.png') },
     { id: '3', name: 'Blueberry Plant', image: require('../assets/images/blueberry.jpg') },
     { id: '4', name: 'Peach Plant', image: require('../assets/images/fruit home page image.jpeg') },
@@ -28,7 +36,8 @@ const plants = {
 };
 
 const AllPlants = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>(''); // Default category to show all
+  const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
 
   const renderItem = ({ item }: { item: typeof plants.fruits[0] }) => (
     <View style={styles.card}>
@@ -46,15 +55,21 @@ const AllPlants = () => {
     setSelectedCategory(category);
   };
 
-  // Get the plants based on the selected category or show all if nothing is selected
   const filteredPlants = selectedCategory
     ? plants[selectedCategory as keyof typeof plants]
     : [...plants.fruits, ...plants.vegetables, ...plants.herbs, ...plants.grains];
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <View style={styles.container}>
+      <Ionicons
+        name="arrow-back"
+        size={27}
+        color="white"
+        style={styles.backIcon}
+        onPress={() => router.push('./homepage')}
+      />
       <Text style={styles.header}>All plants</Text>
-      
+
       {/* Category filter buttons */}
       <View style={styles.filterContainer}>
         <TouchableOpacity style={styles.filterButton} onPress={() => handleCategoryChange('fruits')}>
@@ -80,7 +95,28 @@ const AllPlants = () => {
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
       />
-    </ScrollView>
+
+      {/* Bottom Navigation Bar */}
+      <View style={styles.bottomNav}>
+        <View style={[styles.iconContainer, styles.shadow]}>
+          <Link href="./homepage">
+            <Icon name="home" size={30} color="#000" />
+          </Link>
+        </View>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
+    </View>
   );
 };
 
@@ -89,8 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#000',
     paddingHorizontal: 16,
-    paddingTop: 40,
-    paddingBottom: 40,
   },
   header: {
     fontSize: 24,
@@ -98,11 +132,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     marginBottom: 16,
   },
+  backIcon: {
+    marginTop: 40,
+    marginBottom: 16,
+  },
   filterContainer: {
     flexDirection: 'row',
     marginBottom: 16,
     justifyContent: 'space-between',
-    flexWrap: 'wrap', // Allow buttons to wrap
+    flexWrap: 'wrap',
   },
   filterButton: {
     padding: 8,
@@ -143,6 +181,20 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#4CAF50',
     marginTop: 8,
+  },
+  bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    backgroundColor: '#D7E9D4',
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    alignItems: 'center',
+  },
+  navItem: {
+    fontSize: 24,
   },
 });
 
