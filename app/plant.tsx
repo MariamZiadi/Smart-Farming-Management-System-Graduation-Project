@@ -1,156 +1,73 @@
-import { Link, Stack } from 'expo-router';
-import { useRouter } from 'expo-router';
+import React from 'react';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 
+interface PlantProps {
+    name: string;
+    wateringPlan: string;
+    fertilizerPlan: string;
+}
 
-import { View, Text, StyleSheet, Image, ScrollView, Dimensions } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import HomePage from './homepage';
+const { width } = Dimensions.get('window');
 
-const screenWidth = Dimensions.get('window').width; 
-
-const Plant = ({ navigation }: any) => {
-  const router = useRouter();
-
-  return (
+const Plant = ({ name, wateringPlan, fertilizerPlan }: PlantProps) => (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View>
-          <Image 
-            source={require('../assets/images/post2 - Copy.jpg')} 
-            style={styles.plantimg} 
-          />
-          <Ionicons
-  name="arrow-back"
-  size={27}
-  color="white"
-  style={styles.backIcon}
-  onPress={() => router.push('./homepage')} 
-/>
+        <View style={styles.card}>
+            <Text style={styles.title}>{name}</Text>
+            <View style={styles.infoRow}>
+                <Text style={styles.label}>💧 Watering Plan:</Text>
+                <Text style={styles.value}>{wateringPlan}</Text>
+            </View>
+            <View style={styles.infoRow}>
+                <Text style={styles.label}>🌱 Fertilizer Plan:</Text>
+                <Text style={styles.value}>{fertilizerPlan}</Text>
+            </View>
         </View>
-
-        <View style={styles.topBar}>
-          <Text style={styles.plantName}>Corn Plant</Text>
-          <Text style={styles.plantTag}>Indoor Plant</Text>
-
-          <View style={styles.infoBoxContainer}>
-            <View style={styles.infoBox}>
-              <Ionicons name="sunny" size={20} color="black" />
-              <Text style={styles.infoText}>Sunlight</Text>
-              <Text style={styles.infoDetail}>Medium</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <Ionicons name="water" size={20} color="black" />
-              <Text style={styles.infoText}>Watering</Text>
-              <Text style={styles.infoDetail}>0.25lt/week</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <Ionicons name="thermometer" size={20} color="black" />
-              <Text style={styles.infoText}>Temperature</Text>
-              <Text style={styles.infoDetail}>15-20C</Text>
-            </View>
-            <View style={styles.infoBox}>
-              <Ionicons name="leaf" size={20} color="black" />
-              <Text style={styles.infoText}>Fertilizer</Text>
-              <Text style={styles.infoDetail}>Organic</Text>
-            </View>
-          </View>
-
-          <Text style={styles.informationHeader}>Information</Text>
-          <Text style={styles.informationText}>
-            Corn is an annual C4 grass plant. It has large, elongated, narrow leaves that grow alternately in opposite sites around the stems.
-          </Text>
-        </View>
-      </ScrollView>
     </View>
-  );
-};
+);
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'white',
-  },
-  scrollContainer: {
-    paddingBottom: 20,
-  },
-  plantimg: {
-    width: screenWidth,
-    height: 400,
-    resizeMode: 'cover',
-  },
-  backIcon: {
-    position: 'absolute',
-    top: 40,
-    left: 15,
-  },
-  topBar: {
-    marginTop: -50,
-    backgroundColor: 'white',
-    borderTopLeftRadius: 30,
-    borderTopRightRadius: 30,
-    padding: 20,
-    marginBottom: 20,
-  },
-  plantName: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: 'black',
-  },
-  plantTag: {
-    backgroundColor: 'rgb(200, 255, 200)',
-    alignSelf: 'flex-start',
-    borderRadius: 10,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    marginTop: 10,
-    fontSize: 14,
-    color: 'black',
-    position:'relative',
-    top:-45,
-    left:280,
-  },
-  infoBoxContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    marginVertical: 20,
-    position:'relative',
-    top:-45,
-  },
-  infoBox: {
-    width: '48%',
-    backgroundColor: 'rgb(240, 240, 240)',
-    borderRadius: 10,
-    padding: 15,
-    alignItems: 'center',
-    marginBottom: 10, 
-  },
-  infoText: {
-    fontSize: 14,
-    fontWeight: '600',
-    color: 'black',
-    marginTop: 5,
-  },
-  infoDetail: {
-    fontSize: 14,
-    color: 'gray',
-    marginTop: 2,
-  },
-  informationHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: 'black',
-    marginBottom: 10,
-    position:'relative',
-    top:-55,
-  },
-  informationText: {
-    fontSize: 14,
-    color: 'gray',
-    lineHeight: 20,
-    position:'relative',
-    top:-55,
-  },
+    container: {
+        width: '100%',
+        alignItems: 'center', 
+        paddingHorizontal: 10,
+    },
+    card: {
+        width: width - 20, 
+        backgroundColor: '#f0f8f0', 
+        borderRadius: 15,
+        padding: 20,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+        elevation: 3,
+        marginVertical: 10,
+        borderWidth: 1,
+        borderColor: '#d0e6d0',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2e7d32',
+        marginBottom: 15,
+        textAlign: 'center',
+    },
+    infoRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 5,
+    },
+    label: {
+        fontWeight: '600',
+        color: '#388e3c',
+        fontSize: 16,
+    },
+    value: {
+        fontSize: 16,
+        color: '#555',
+        flexShrink: 1, 
+        textAlign: 'right',
+    },
 });
 
 export default Plant;
