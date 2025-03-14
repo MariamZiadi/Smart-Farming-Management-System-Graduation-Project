@@ -39,7 +39,7 @@ const ProfileScreen = () => {
         {/* Editable Fields */}
         <View style={styles.inputContainer}>
           {renderField('Name', profile.name, 'name', handleEdit)}
-          {renderField('Phone Number', profile.phone, 'phone', handleEdit)}
+          {/* {renderField('Phone Number', profile.phone, 'phone', handleEdit)} */}
           {renderField('Email', profile.email, 'email', handleEdit)}
 
           {/* Farms as a Dropdown List */}

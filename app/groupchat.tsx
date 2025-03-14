@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#D7E9D4',
     paddingVertical: 10,
-    top:220,
+    top:235,
   },
   navItem: {
     fontSize: 24,

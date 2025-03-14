@@ -28,12 +28,11 @@ export default function App() {
         <Stack.Screen name="Feed" component={FeedPage} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Homepage" component={Homepage} />
-        <Stack.Screen name="Plant" component={Plant} />
+        {/* <Stack.Screen name="Plant" component={Plant} /> */}
         <Stack.Screen name="MyGraden" component={MyGarden} />
         <Stack.Screen name="Post" component={PostPage} />
         <Stack.Screen name="GroupChat" component={GroupChat} />
         <Stack.Screen name="ChatBot" component={ChatBot} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );
