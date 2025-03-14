@@ -105,9 +105,11 @@ export default function LoginScreen() {
         <Text style={styles.loginButtonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <Text style={styles.registerText}>
-        Already have an account? <TouchableOpacity onPress={() => router.push("./login")}><Text style={styles.registerLink}>Sign In</Text></TouchableOpacity>
-      </Text>
+      <TouchableOpacity onPress={() => router.push('/login')}>
+              <Text style={styles.registerText}>
+              Already have an account? <Text style={styles.registerLink}>Sign In</Text>
+              </Text>
+            </TouchableOpacity>
     </ImageBackground>
   );
 }
@@ -123,6 +125,6 @@ const styles = StyleSheet.create({
   eyeIcon: { paddingHorizontal: 5 },
   loginButton: { backgroundColor: 'rgb(9, 71, 10)', paddingVertical: 12, borderRadius: 8, marginHorizontal: 50, marginBottom: 15, marginTop: 70 },
   loginButtonText: { color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' },
-  registerText: { textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
+  registerText: {textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
   registerLink: { color: 'rgb(231, 117, 17)', fontSize: 19, textDecorationLine: 'underline', fontWeight: 'bold' },
 });

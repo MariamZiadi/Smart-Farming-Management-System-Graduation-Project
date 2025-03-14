@@ -25,7 +25,7 @@ app.use(express.json());
 
 // Routes
 app.use("/plants", plantRoutes);
-//app.use("/auth", authRoutes);
+app.use("/auth", authRoutes);
 app.use("/users", userRoutes); // User routes
 
 // Gemini AI Chat Route
