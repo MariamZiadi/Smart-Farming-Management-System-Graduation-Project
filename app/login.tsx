@@ -2,20 +2,14 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
-import { useNavigation } from '@react-navigation/native';
-import { StackNavigationProp } from '@react-navigation/stack';
-import { RootStackParamList } from '../types'; // Import the types
 import { useRouter } from 'expo-router';
-
-
-type NavigationProps = StackNavigationProp<RootStackParamList, 'Login'>; // Define the type
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const navigation = useNavigation<NavigationProps>(); // Apply the correct type
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -27,11 +21,24 @@ export default function LoginScreen() {
       const response = await axios.post('http://10.0.2.2:5000/auth/login', { email, password });
 
       if (response.status === 200) {
+        const { token } = response.data;
+        
+        // ✅ Store token securely
+        await AsyncStorage.setItem('userToken', token);
+
         Alert.alert('Success', 'Login Successful!');
-        router.push("./homepage"); // ✅ Navigate only on success
+        
+        // ✅ Redirect to homepage & prevent back navigation
+        router.replace('/homepage');
       }
     } catch (error: any) {
-      Alert.alert('Login Failed', 'Invalid credentials. Please try again.');
+      console.error('❌ Login error:', error.response?.data || error.message);
+      
+      if (error.response?.data?.error) {
+        Alert.alert('Login Failed', error.response.data.error);
+      } else {
+        Alert.alert('Login Failed', 'Something went wrong. Please try again.');
+      }
     }
   };
 
@@ -47,6 +54,7 @@ export default function LoginScreen() {
           placeholder="Enter your email"
           placeholderTextColor="#aaa"
           keyboardType="email-address"
+          autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
         />
@@ -59,6 +67,7 @@ export default function LoginScreen() {
           placeholder="Enter your password"
           placeholderTextColor="#aaa"
           secureTextEntry={!showPassword}
+          autoCapitalize="none"
           value={password}
           onChangeText={setPassword}
         />
@@ -68,14 +77,14 @@ export default function LoginScreen() {
       </View>
 
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-              <Text style={styles.loginButtonText}>Sign In</Text>
-            </TouchableOpacity>
-      
-            <TouchableOpacity onPress={() => router.push('/signup')}>
-                    <Text style={styles.registerText}>
-                    Don't have an account? <Text style={styles.registerLink}>Sign Up</Text>
-                    </Text>
-                  </TouchableOpacity>
+        <Text style={styles.loginButtonText}>Sign In</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push('/signup')}>
+        <Text style={styles.registerText}>
+          Don't have an account? <Text style={styles.registerLink}>Sign Up</Text>
+        </Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 }
@@ -91,6 +100,6 @@ const styles = StyleSheet.create({
   eyeIcon: { paddingHorizontal: 5 },
   loginButton: { backgroundColor: 'rgb(9, 71, 10)', paddingVertical: 12, borderRadius: 8, marginHorizontal: 50, marginBottom: 15, marginTop: 70 },
   loginButtonText: { color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' },
-  registerText: {textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
+  registerText: { textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
   registerLink: { color: 'rgb(231, 117, 17)', fontSize: 19, textDecorationLine: 'underline', fontWeight: 'bold' },
 });

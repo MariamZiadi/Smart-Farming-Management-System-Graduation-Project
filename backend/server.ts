@@ -17,10 +17,11 @@ connectDB();
 
 // Middleware
 app.use(cors({
-  origin: ["http://localhost:19006", "http://192.168.1.100:5000/chat"],
-  methods: ["GET", "POST"],
-  allowedHeaders: ["Content-Type"],
+  origin: "*", // Allows requests from any origin
+  methods: ["GET", "POST"], // Allows only GET and POST requests
+  allowedHeaders: ["Content-Type"], // Allows Content-Type header
 }));
+
 app.use(express.json());
 
 // Routes

@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 const router = express.Router(); // ✅ Ensure using express.Router()
 
 // Register a new user
-router.post("/register", async (req: Request, res: Response) : Promise<void> => {
+router.post("/register", async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password } = req.body;
 
@@ -13,15 +13,15 @@ router.post("/register", async (req: Request, res: Response) : Promise<void> => 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       res.status(400).json({ message: "User already exists" });
-      return
+      return;
     }
 
     // Hash the password before saving
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Save user in database
-    const newUser = new User({ name, email, password: hashedPassword });
+    // Save user in database with farms field
+    const newUser = new User({ name, email, password: hashedPassword, farms: [] });
     await newUser.save();
 
     res.status(201).json({ message: "User registered successfully", userId: newUser._id });

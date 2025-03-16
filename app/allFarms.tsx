@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Link } from 'expo-router';
 import {
@@ -11,29 +11,46 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const plants = [
-  {
-    id: 1,
-    name: "Farm 1",
-    details: 'Potato, Grape',
-  },
-  {
-    id: 2,
-    name: 'Farm 2',
-    details: 'Strawberry, Peach',
-  },
-  {
-    id: 3,
-    name: 'Farm 3',
-    details: 'Apple, Cherry, Tomato',
-  },
-];
+// Define a TypeScript type for farms
+type Farm = {
+  _id: string;
+  name: string;
+  crops: string[];
+};
 
-const allFarmsPage = () => {
-    const router = useRouter();
+const AllFarmsPage = () => {
+  const router = useRouter();
+  const [farms, setFarms] = useState<Farm[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchFarms = async () => {
+    try {
+      const token = await AsyncStorage.getItem("token");
+      if (!token) {
+        setError("Unauthorized: No token found");
+        return;
+      }
+
+      const response = await axios.get("http://10.0.2.2:5000/farms/my-farms", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setFarms(response.data); // Store farms in state
+      setError(null); // Clear error if successful
+    } catch (error) {
+      console.error("Error fetching farms:", error);
+      setError("Failed to fetch farms");
+    }
+  };
+
+  useEffect(() => {
+    fetchFarms();
+  }, []);
 
   return (
     <ImageBackground
@@ -46,50 +63,60 @@ const allFarmsPage = () => {
         keyboardShouldPersistTaps="handled"
       >
         <Ionicons
-                name="arrow-back"
-                size={27}
-                color="white"
-                style={styles.backIcon}
-                onPress={() => router.push('./homepage')}
-              />
+          name="arrow-back"
+          size={27}
+          color="white"
+          style={styles.backIcon}
+          onPress={() => router.push('./homepage')}
+        />
         <Text style={styles.title}>All your farms</Text>
-        {plants.map((plant) => (
-          <View key={plant.id} style={styles.card}>
-            <View style={styles.cardContent}>
-              <View style={styles.info}>
-                <Text style={styles.plantName}>{plant.name}</Text>
-                <View style={styles.details}>
-                  <Text style={styles.detailsHeader}>Plants</Text>
-                  <Text style={styles.detailsText}>{plant.details}</Text>
+
+        {error && <Text style={styles.errorText}>{error}</Text>}
+
+        {farms.length > 0 ? (
+          farms.map((farm) => (
+            <View key={farm._id} style={styles.card}>
+              <View style={styles.cardContent}>
+                <View style={styles.info}>
+                  <Text style={styles.plantName}>{farm.name}</Text>
+                  <View style={styles.details}>
+                    <Text style={styles.detailsHeader}>Plants</Text>
+                    <Text style={styles.detailsText}>
+                      {farm.crops.length > 0 ? farm.crops.join(', ') : 'No crops listed'}
+                    </Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-        ))}
+          ))
+        ) : (
+          !error && <Text style={styles.noFarmsText}>No farms found.</Text>
+        )}
+
         <Link href="./add_farm" style={styles.addFarmButton}>
           <Text style={styles.addFarmButtonText}>Add New Farm</Text>
         </Link>
       </ScrollView>
+
       <View style={styles.bottomNav}>
-              <Link href="./homepage">
-                <Icon name="home" size={30} color="#000" />
-              </Link>
-              <Link href="./profile">
-                <Icon name="person" size={30} color="#000" />
-              </Link>
-              <Link href="./disease_detection">
-                <Icon2 name="leaf" size={30} color="#000" />
-              </Link>
-              <Link href="./feed">
-                <Icon2 name="file-document-outline" size={30} color="#000" />
-              </Link>
-               <View style={[styles.iconContainer, styles.shadow]}>
-                <Link href="./allFarms">
-                <Icon name="local-florist" size={30} color="#000" />
-              </Link>
-              </View>
-              
-            </View>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <View style={[styles.iconContainer, styles.shadow]}>
+          <Link href="./allFarms">
+            <Icon name="local-florist" size={30} color="#000" />
+          </Link>
+        </View>
+      </View>
     </ImageBackground>
   );
 };
@@ -103,6 +130,11 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
   backIcon: {
+    position: 'absolute',
+    top: 20,
+    left: 15,
+    zIndex: 10,
+    padding: 10,
   },
   title: {
     fontSize: 35,
@@ -110,6 +142,18 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     textAlign: 'center',
     color: 'rgb(254, 254, 253)',
+  },
+  errorText: {
+    color: 'red',
+    textAlign: 'center',
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  noFarmsText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 20,
   },
   scrollContainer: {
     top: 40,
@@ -169,7 +213,6 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     color: 'rgb(9, 71, 10)',
   },
-  
   bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -178,19 +221,19 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 10,
-    borderRadius: 40, 
-    backgroundColor: 'white', 
+    borderRadius: 40,
+    backgroundColor: 'white',
   },
   shadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, 
+    elevation: 8,
   },
   navItem: {
     fontSize: 24,
   },
 });
 
-export default allFarmsPage;
+export default AllFarmsPage;
