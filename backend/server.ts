@@ -6,6 +6,8 @@ import { connectDB } from "./database";
 import plantRoutes from "./routes/plantRoutes";
 import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes"; // Import user routes
+import farmsRoutes from "./routes/farmRoutes";
+
 
 dotenv.config();
 
@@ -28,6 +30,8 @@ app.use(express.json());
 app.use("/plants", plantRoutes);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes); // User routes
+app.use("/farms", farmsRoutes);
+
 
 // Gemini AI Chat Route
 app.post("/chat", async (req: Request, res: Response): Promise<void> => {

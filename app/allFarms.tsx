@@ -35,19 +35,24 @@ const AllFarmsPage = () => {
         setError("Unauthorized: No token found");
         return;
       }
-
+  
       const response = await axios.get("http://10.0.2.2:5000/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
-
-      setFarms(response.data); // Store farms in state
-      setError(null); // Clear error if successful
+  
+      if (response.data.message) {
+        setError(response.data.message); // If message exists, show it
+        setFarms([]); // Ensure farms array is empty
+      } else {
+        setFarms(response.data.farms); // Store farms in state
+        setError(null);
+      }
     } catch (error) {
       console.error("Error fetching farms:", error);
       setError("Failed to fetch farms");
     }
   };
-
+  
   useEffect(() => {
     fetchFarms();
   }, []);
@@ -71,27 +76,28 @@ const AllFarmsPage = () => {
         />
         <Text style={styles.title}>All your farms</Text>
 
-        {error && <Text style={styles.errorText}>{error}</Text>}
-
-        {farms.length > 0 ? (
-          farms.map((farm) => (
-            <View key={farm._id} style={styles.card}>
-              <View style={styles.cardContent}>
-                <View style={styles.info}>
-                  <Text style={styles.plantName}>{farm.name}</Text>
-                  <View style={styles.details}>
-                    <Text style={styles.detailsHeader}>Plants</Text>
-                    <Text style={styles.detailsText}>
-                      {farm.crops.length > 0 ? farm.crops.join(', ') : 'No crops listed'}
-                    </Text>
+                  {error ? (
+            <Text style={styles.noFarmsText}>{error}</Text> // Show proper message
+          ) : farms.length > 0 ? (
+            farms.map((farm) => (
+              <View key={farm._id} style={styles.card}>
+                <View style={styles.cardContent}>
+                  <View style={styles.info}>
+                    <Text style={styles.plantName}>{farm.name}</Text>
+                    <View style={styles.details}>
+                      <Text style={styles.detailsHeader}>Plants</Text>
+                      <Text style={styles.detailsText}>
+                        {farm.crops.length > 0 ? farm.crops.join(", ") : "No crops listed"}
+                      </Text>
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          ))
-        ) : (
-          !error && <Text style={styles.noFarmsText}>No farms found.</Text>
-        )}
+            ))
+          ) : (
+            <Text style={styles.noFarmsText}>No farms found.</Text>
+          )}
+
 
         <Link href="./add_farm" style={styles.addFarmButton}>
           <Text style={styles.addFarmButtonText}>Add New Farm</Text>
