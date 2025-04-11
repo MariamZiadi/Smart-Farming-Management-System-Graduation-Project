@@ -13,7 +13,7 @@ app = Flask(__name__)
 model_map = {
     "potato": {
         "model": load_model("Potato_best_model.keras"),
-        "labels": ["Early Blight", "Late Blight", "Healthy"]
+        "labels": ["Early Blight", "Healthy", "Late Blight"]
     },
     "strawberry": {
         "model": load_model("Strawberry_best_model.keras"),
@@ -41,11 +41,12 @@ def prepare_image(image_path):
     return img
 
 @app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    if 'image' not in request.files:
+    if 'file' not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
-    image = request.files['image']
+    image = request.files['file']
     image_path = os.path.join("uploads", image.filename)
     image.save(image_path)
 
@@ -69,13 +70,14 @@ def predict():
         if not best_crop:
             return jsonify({"error": "Could not classify the image properly."}), 400
 
-        return jsonify({"crop_type": best_crop, "prediction": best_disease, "probability": highest_prob})
+        return jsonify({"crop_type": best_crop, "prediction": best_disease, "probability": float(highest_prob)})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
     finally:
         os.remove(image_path)
+
 
 if __name__ == '__main__':
     os.makedirs("uploads", exist_ok=True)
