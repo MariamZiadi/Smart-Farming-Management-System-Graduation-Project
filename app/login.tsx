@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -18,7 +19,7 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('http://10.0.2.2:5000/auth/login', { email, password });
+      const response = await axios.post('https://nice-barnacle-complete.ngrok-free.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;

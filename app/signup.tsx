@@ -1,3 +1,5 @@
+
+
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import {
@@ -41,7 +43,7 @@ export default function SignUpScreen() {
       );
     } else {
       try {
-        const response = await axios.post("http://10.0.2.2:5000/users/register", {
+        const response = await axios.post("https://nice-barnacle-complete.ngrok-free.app/users/register", {
           name,
           email,
           password,

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -22,9 +23,9 @@ import { Ionicons } from '@expo/vector-icons';
 const PlantDiseaseDetection = () => {
   const router = useRouter();
 
-  const [imageUri, setImageUri] = useState(null);
+  const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [prediction, setPrediction] = useState('');
+  const [prediction, setPrediction] = useState<string | null>('');
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -48,26 +49,32 @@ const PlantDiseaseDetection = () => {
     }
   };
 
-  const sendToAPI = async (uri) => {
+  const sendToAPI = async (uri: string) => {
     try {
       setIsLoading(true);
-      setPrediction('');
+      setPrediction(null);
+  
+      // Fetch the image file information (e.g., file type and name)
+      const fileInfo = await FileSystem.getInfoAsync(uri);
+  
+      if (!fileInfo.exists) {
+        throw new Error('The image file does not exist.');
+      }
+  
+      // Fetch the file as a Blob using fetch API
+      const imageBlob = await fetch(uri).then((res) => res.blob());
   
       const formData = new FormData();
-      formData.append('file', {
-        uri: uri, 
-        type: 'image/jpeg',  // You can adjust the mime type based on the image format
-        name: 'image.jpg',   // Adjust the file name
-      });
+      formData.append('image', imageBlob, 'image.jpg');  // Append Blob with the correct filename
   
-      const response = await fetch('http://10.0.2.2:5000/predict', {
+      const response = await fetch("https://nice-barnacle-complete.ngrok-free.app/predict", {  // Updated URL here
         method: 'POST',
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         body: formData,
       });
-      
+  
       const result = await response.json();
       if (response.ok) {
         setPrediction(result.prediction || 'No prediction received.');
@@ -251,10 +258,9 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     elevation: 8, 
   },
-  navItem: {
-    fontSize: 24,
+  navIcon: {
+    fontSize: 30,
   },
 });
-
 
 export default PlantDiseaseDetection;

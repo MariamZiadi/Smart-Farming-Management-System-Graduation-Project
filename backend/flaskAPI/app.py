@@ -1,3 +1,5 @@
+
+
 from flask import Flask, request, jsonify
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -40,10 +42,6 @@ def prepare_image(image_path):
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    crop_type = request.form.get('crop')
-    if not crop_type or crop_type.lower() not in model_map:
-        return jsonify({"error": "Invalid or missing crop type. Use one of: potato, strawberry, apple, grape, peach."}), 400
-
     if 'image' not in request.files:
         return jsonify({"error": "No image provided"}), 400
 
@@ -52,12 +50,26 @@ def predict():
     image.save(image_path)
 
     try:
-        processed_image = prepare_image(image_path)
-        model_info = model_map[crop_type.lower()]
-        prediction = model_info["model"].predict(processed_image)
-        predicted_class = model_info["labels"][np.argmax(prediction)]
+        highest_prob = 0
+        best_crop = None
+        best_disease = None
 
-        return jsonify({"prediction": predicted_class})
+        # Try each model and check the prediction
+        for crop_type, model_info in model_map.items():
+            processed_image = prepare_image(image_path)
+            prediction = model_info["model"].predict(processed_image)
+            max_prob = np.max(prediction)  # Highest probability for the crop's prediction
+            predicted_class = model_info["labels"][np.argmax(prediction)]
+
+            if max_prob > highest_prob:
+                highest_prob = max_prob
+                best_crop = crop_type
+                best_disease = predicted_class
+
+        if not best_crop:
+            return jsonify({"error": "Could not classify the image properly."}), 400
+
+        return jsonify({"crop_type": best_crop, "prediction": best_disease, "probability": highest_prob})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

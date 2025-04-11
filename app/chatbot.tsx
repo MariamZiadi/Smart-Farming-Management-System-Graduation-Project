@@ -1,3 +1,5 @@
+
+
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, ScrollView, ActivityIndicator, KeyboardAvoidingView, Platform } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
@@ -28,7 +30,7 @@ const ChatBot = () => {
     setLoading(true);
   
     try {
-      const response = await fetch("http://192.168.100.4:5000/chat", {
+      const response = await fetch("https://nice-barnacle-complete.ngrok-free.app/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
