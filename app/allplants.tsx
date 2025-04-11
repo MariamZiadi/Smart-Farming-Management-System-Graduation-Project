@@ -43,8 +43,8 @@ export default function AllPlants() {
     const router = useRouter();
 
     useEffect(() => {
-        fetch('http://192.168.1.8:5000/plants')
-            .then((res) => res.json())
+        fetch('http://192.168.1.9:5000/plants')
+        .then((res) => res.json())
             .then((data) => {
                 setPlants(data);
                 setLoading(false);

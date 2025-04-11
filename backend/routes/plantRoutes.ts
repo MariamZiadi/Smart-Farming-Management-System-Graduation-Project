@@ -1,5 +1,5 @@
 import express from "express";
-import Plant from "../models/plant";
+import Plant from "../models/Plant";
 
 const router = express.Router();
 
