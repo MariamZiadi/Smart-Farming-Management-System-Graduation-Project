@@ -16,6 +16,7 @@ import {
   ScrollView
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import * as FileSystem from 'expo-file-system';
 import { Ionicons } from '@expo/vector-icons';
 
 const PlantDiseaseDetection = () => {
@@ -23,6 +24,7 @@ const PlantDiseaseDetection = () => {
 
   const [imageUri, setImageUri] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [prediction, setPrediction] = useState('');
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -37,11 +39,49 @@ const PlantDiseaseDetection = () => {
       quality: 1,
     });
 
-    
     if (!result.canceled) {
-      setImageUri(result.assets[0].uri); 
+      const selectedUri = result.assets[0].uri;
+      console.log("Image URI:", selectedUri);
+
+      setImageUri(selectedUri);
+      sendToAPI(selectedUri); // Send image to Flask
     }
   };
+
+  const sendToAPI = async (uri) => {
+    try {
+      setIsLoading(true);
+      setPrediction('');
+  
+      const formData = new FormData();
+      formData.append('file', {
+        uri: uri, 
+        type: 'image/jpeg',  // You can adjust the mime type based on the image format
+        name: 'image.jpg',   // Adjust the file name
+      });
+  
+      const response = await fetch('http://10.0.2.2:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        body: formData,
+      });
+      
+      const result = await response.json();
+      if (response.ok) {
+        setPrediction(result.prediction || 'No prediction received.');
+      } else {
+        throw new Error('Server returned an error.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Failed to get prediction from server.');
+      console.error(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  
 
   return (
     <ImageBackground
@@ -58,12 +98,10 @@ const PlantDiseaseDetection = () => {
       <Text style={styles.header}>Plant Disease </Text>
       <Text style={styles.header2}>Detection </Text>
       <View style={styles.container}>
-        {/* Button to Upload Image */}
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Text style={styles.uploadText}>Upload Your Plant Image</Text>
         </TouchableOpacity>
 
-        {/* Display Uploaded Image */}
         <TouchableOpacity style={styles.imageContainer} onPress={pickImage}>
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.image} />
@@ -75,18 +113,16 @@ const PlantDiseaseDetection = () => {
           )}
         </TouchableOpacity>
 
-        {/* Analysis Section */}
         <Text style={styles.analysisHeader}>Analysis</Text>
         {isLoading ? (
           <ActivityIndicator size="large" color="#000" />
         ) : (
           <Text style={styles.analysisText}>
-            {imageUri ? 'Analysis Complete!' : 'Waiting for Image..'}
+            {prediction || (imageUri ? 'Analyzing...' : 'Waiting for Image..')}
           </Text>
         )}
       </View>
 
-      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <Link href="./homepage">
           <Icon name="home" size={30} color="#000" />
@@ -95,9 +131,9 @@ const PlantDiseaseDetection = () => {
           <Icon name="person" size={30} color="#000" />
         </Link>
         <View style={[styles.iconContainer, styles.shadow]}>
-        <Link href="./disease_detection">
-          <Icon2 name="leaf" size={30} color="#000" />
-        </Link>
+          <Link href="./disease_detection">
+            <Icon2 name="leaf" size={30} color="#000" />
+          </Link>
         </View>
         <Link href="./feed">
           <Icon2 name="file-document-outline" size={30} color="#000" />
@@ -219,5 +255,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
 });
+
 
 export default PlantDiseaseDetection;

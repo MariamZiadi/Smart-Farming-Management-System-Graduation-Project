@@ -43,45 +43,29 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
   });
   
 // Get all farms of the logged-in user
-router.get("/my-farms", authMiddleware, async (req: Request, res: Response) : Promise<void> => {
-    try {
+router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+  try {
       const userId = (req as any).user.userId;
-  
+
       // Find the user and populate farm details
       const user = await User.findById(userId).populate("farms");
       if (!user) {
-         res.status(404).json({ message: "User not found" });
-         return
+          res.status(404).json({ message: "User not found" });
+          return;
       }
-  
-      res.status(200).json(user.farms);
-    } catch (error) {
+
+      if (!user.farms || user.farms.length === 0) {
+          res.status(200).json({ message: "You don't have any farms", farms: [] });
+          return;
+      }
+
+      res.status(200).json({ farms: user.farms });
+  } catch (error) {
       console.error("❌ Fetch Farms Error:", error);
       res.status(500).json({ message: "Server error" });
-    }
-  });
-// Verify farm access with password (for the join farm page)
-// router.post("/access", authMiddleware, async (req: Request, res: Response) => {
-//     try {
-//       const { farmId, password } = req.body;
-  
-//       const farm = await Farm.findById(farmId);
-//       if (!farm) {
-//         return res.status(404).json({ message: "Farm not found" });
-//       }
-  
-//       // Compare passwords
-//       const isMatch = await bcrypt.compare(password, farm.password);
-//       if (!isMatch) {
-//         return res.status(400).json({ message: "Incorrect password" });
-//       }
-  
-//       res.status(200).json({ message: "Access granted", farm });
-//     } catch (error) {
-//       console.error("❌ Farm Access Error:", error);
-//       res.status(500).json({ message: "Server error" });
-//     }
-//   });
-    
+  }
+});
+
+
 
 export default router;
