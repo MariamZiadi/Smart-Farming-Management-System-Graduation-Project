@@ -17,11 +17,11 @@ model_map = {
     },
     "strawberry": {
         "model": load_model("Strawberry_best_model.keras"),
-        "labels": ["Leaf Scorch", "Healthy"]
+        "labels": ["Healthy", "Leaf Scorch"]
     },
     "apple": {
         "model": load_model("Apple_best_model.keras"),
-        "labels": ["Apple Scab", "Black Rot", "Healthy", "Cedar Apple Rust"]
+        "labels": ["Apple Scab", "Black Rot", "Cedar Apple Rust", "Healthy"]
     },
     "grape": {
         "model": load_model("Grape_best_model.keras"),
@@ -42,35 +42,32 @@ def prepare_image(image_path):
 
 @app.route('/predict', methods=['POST'])
 @app.route('/predict', methods=['POST'])
+@app.route('/predict', methods=['POST'])
 def predict():
-    if 'file' not in request.files:
-        return jsonify({"error": "No image provided"}), 400
+    if 'file' not in request.files or 'crop' not in request.form:
+        return jsonify({"error": "Missing file or crop selection"}), 400
 
     image = request.files['file']
+    crop_type = request.form['crop'].lower()
+
+    if crop_type not in model_map:
+        return jsonify({"error": f"Crop '{crop_type}' not supported"}), 400
+
     image_path = os.path.join("uploads", image.filename)
     image.save(image_path)
 
     try:
-        highest_prob = 0
-        best_crop = None
-        best_disease = None
+        processed_image = prepare_image(image_path)
+        model_info = model_map[crop_type]
+        prediction = model_info["model"].predict(processed_image)
+        predicted_class = model_info["labels"][np.argmax(prediction)]
+        probability = float(np.max(prediction))
 
-        # Try each model and check the prediction
-        for crop_type, model_info in model_map.items():
-            processed_image = prepare_image(image_path)
-            prediction = model_info["model"].predict(processed_image)
-            max_prob = np.max(prediction)  # Highest probability for the crop's prediction
-            predicted_class = model_info["labels"][np.argmax(prediction)]
-
-            if max_prob > highest_prob:
-                highest_prob = max_prob
-                best_crop = crop_type
-                best_disease = predicted_class
-
-        if not best_crop:
-            return jsonify({"error": "Could not classify the image properly."}), 400
-
-        return jsonify({"crop_type": best_crop, "prediction": best_disease, "probability": float(highest_prob)})
+        return jsonify({
+            "crop_type": crop_type,
+            "prediction": predicted_class,
+            "probability": probability
+        })
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500

@@ -26,7 +26,9 @@ const PlantDiseaseDetection = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<string | null>('');
-
+  const [selectedCrop, setSelectedCrop] = useState<string>('potato');
+  const cropOptions = ['potato', 'apple', 'grape', 'strawberry', 'peach'];
+  
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -54,24 +56,17 @@ const PlantDiseaseDetection = () => {
       setIsLoading(true);
       setPrediction(null);
   
-      // Fetch the image file information (e.g., file type and name)
       const fileInfo = await FileSystem.getInfoAsync(uri);
+      if (!fileInfo.exists) throw new Error('Image file does not exist');
   
-      if (!fileInfo.exists) {
-        throw new Error('The image file does not exist.');
-      }
-  
-      // Fetch the file as a Blob using fetch API
       const imageBlob = await fetch(uri).then((res) => res.blob());
   
       const formData = new FormData();
-      formData.append('image', imageBlob, 'image.jpg');  // Append Blob with the correct filename
+      formData.append('file', imageBlob, 'image.jpg');
+      formData.append('crop', selectedCrop); // Append selected crop
   
-      const response = await fetch("https://nice-barnacle-complete.ngrok-free.app/predict", {  // Updated URL here
+      const response = await fetch('https://nice-barnacle-complete.ngrok-free.app/predict', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
         body: formData,
       });
   
@@ -89,7 +84,6 @@ const PlantDiseaseDetection = () => {
     }
   };
   
-
   return (
     <ImageBackground
       source={require('../assets/images/BG2.jpg')}
@@ -104,6 +98,24 @@ const PlantDiseaseDetection = () => {
       />
       <Text style={styles.header}>Plant Disease </Text>
       <Text style={styles.header2}>Detection </Text>
+      <View style={{ marginHorizontal: 20, marginTop: 20 }}>
+  <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'green' }}>Choose Crop:</Text>
+  {cropOptions.map((crop) => (
+    <TouchableOpacity
+      key={crop}
+      onPress={() => setSelectedCrop(crop)}
+      style={{
+        backgroundColor: selectedCrop === crop ? '#a5d6a7' : '#e0e0e0',
+        padding: 10,
+        borderRadius: 8,
+        marginTop: 8,
+      }}
+    >
+      <Text style={{ fontSize: 16 }}>{crop.charAt(0).toUpperCase() + crop.slice(1)}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
+
       <View style={styles.container}>
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Text style={styles.uploadText}>Upload Your Plant Image</Text>
