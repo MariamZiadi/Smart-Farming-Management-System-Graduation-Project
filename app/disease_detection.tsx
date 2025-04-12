@@ -79,7 +79,7 @@ const PlantDiseaseDetection = () => {
         throw new Error('Server returned an error.');
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to get prediction from server.');
+      Alert.alert('Error', 'Failed to get prediction.');
       console.error(error);
     } finally {
       setIsLoading(false);
