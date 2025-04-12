@@ -10,7 +10,7 @@ export default function HomeScreen() {
       <View style={styles.overlay} />
 
       <View style={styles.content}>
-        <Text style={styles.topText}>Plant Smarter</Text>
+        <Text style={styles.topText}>Plant Smarterrrr</Text>
         <Text style={styles.topText2}>Grow Stronger</Text>
 
         <View style={styles.options}>

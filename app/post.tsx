@@ -7,19 +7,18 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';
-
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 
-
 export default function PostPage() {
-
   const [description, setDescription] = useState('');
-  const [photo, setPhoto] = useState(null);
+  const [photo, setPhoto] = useState<string | null>(null); // To store the photo URI
   const router = useRouter();
 
+  // Function to request permission and open the image picker
   const handleChoosePhoto = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -33,22 +32,70 @@ export default function PostPage() {
       quality: 1,
     });
 
+    // Check if the user canceled the picker and handle accordingly
+    if (!result.canceled) {
+      setPhoto(result.assets[0].uri); // Update the URI using assets[0].uri
+    }
   };
 
-  const handlePost = () => {
-    console.log('Description:', description);
-    console.log('Photo URI:', photo);
-    
+  // Function to handle posting the content
+  const handlePost = async () => {
+    if (!description.trim()) {
+      alert('Please enter a description before posting.');
+      return;
+    }
+
+    try {
+      // Logging the description and photo to ensure they're correct
+      console.log('Description:', description);
+      console.log('Photo URI:', photo || 'No image attached');
+
+      // Obtain the token (assuming you're using Firebase or other authentication method)
+      const token = 'YOUR_AUTH_TOKEN';  // Replace with actual token logic
+
+      // Sending the data to the backend API with the authorization token
+      const response = await fetch('https://9a6c-154-239-97-37.ngrok-free.app/posts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,  // Add token here
+        },
+        body: JSON.stringify({
+          description,
+          photo, // Optional URI
+        }),
+      });
+
+      // Check if the response is successful (status code 200-299)
+      if (!response.ok) {
+        const errorDetails = await response.text();
+        console.error('Error response:', errorDetails); // Log the error details
+        throw new Error('Failed to submit post');
+      }
+
+      const result = await response.json();
+      console.log('Post created:', result);
+
+      // Show a success alert and clear form
+      alert('Post submitted successfully!');
+
+      setDescription('');
+      setPhoto(null);
+      router.push('./feed'); // Redirect to the feed page
+    } catch (error) {
+      console.error('Error posting:', error);
+      Alert.alert('Error', 'Something went wrong while submitting your post.');
+    }
   };
 
   return (
     <ScrollView style={styles.container}>
       <Ionicons
-          name="arrow-back"
-          size={27}
-          style={styles.backIcon}
-          onPress={() => router.push('./feed')} 
-        />
+        name="arrow-back"
+        size={27}
+        style={styles.backIcon}
+        onPress={() => router.push('./feed')}
+      />
       <Text style={styles.title}>Share Your Experience With Us!</Text>
       <View style={styles.form}>
         {/* Description Input */}
@@ -69,7 +116,7 @@ export default function PostPage() {
             <Image source={{ uri: photo }} style={styles.photoPreview} />
           ) : (
             <Image
-              source={require('../assets/images/imageupload.png')} 
+              source={require('../assets/images/imageupload.png')}
               style={styles.imagePlaceholder}
             />
           )}
@@ -90,7 +137,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   backIcon: {
-    color:'rgb(9, 71, 10)',
+    color: 'rgb(9, 71, 10)',
     marginTop: 30,
     marginLeft: 10,
   },
@@ -147,9 +194,9 @@ const styles = StyleSheet.create({
     resizeMode: 'cover',
   },
   postButton: {
-    top:20,
+    top: 20,
     backgroundColor: 'rgb(9, 71, 10)',
-    marginHorizontal:45,
+    marginHorizontal: 45,
     height: 50,
     borderRadius: 20,
     justifyContent: 'center',

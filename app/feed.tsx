@@ -1,6 +1,6 @@
 import { Link, Stack } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   View,
   Text,
@@ -8,16 +8,15 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  TouchableOpacity,
 } from 'react-native';
 
-import post1 from '../assets/images/post1.jpg'; 
-import post2 from '../assets/images/post2.jpg'; 
-import post3 from '../assets/images/post3.png'; 
-import post from '../assets/images/post.jpg'; 
-import post4 from '../assets/images/sam.png'; 
-import poster from '../assets/images/poster.jpg'; 
-import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import post1 from '../assets/images/post1.jpg';
+import post2 from '../assets/images/post2.jpg';
+import post3 from '../assets/images/post3.png';
+import post from '../assets/images/post.jpg';
+import post4 from '../assets/images/sam.png';
+import poster from '../assets/images/poster.jpg';
 
 const posts = [
   {
@@ -25,7 +24,7 @@ const posts = [
     name: 'Emily Johnson',
     date: '3 days ago',
     text: 'Plants play an essential role in our lives, offering numerous benefits that go beyond their beauty.',
-    contentImage: post, 
+    contentImage: post,
     photo: post3,
   },
   {
@@ -33,7 +32,7 @@ const posts = [
     name: 'Smith',
     date: '1 day ago',
     text: 'Plants are the Earth’s lungs, let’s protect them!',
-    contentImage: post2, 
+    contentImage: post2,
     photo: post4,
   },
   {
@@ -47,17 +46,21 @@ const posts = [
 ];
 
 export default function FeedPage() {
-  const router = useRouter();
-
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView
+        style={styles.scrollContainer}
+        contentContainerStyle={{ paddingBottom: 100 }}
+      >
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Feed</Text>
-          <Link href="./post" style={styles.addButton}>
-            <Text style={styles.addButtonText}>+</Text>
-          </Link>
+          <TouchableOpacity>
+            <Link href="./post" style={styles.addButton}>
+              <Text style={styles.addButtonText}>+</Text>
+            </Link>
+          </TouchableOpacity>
         </View>
+
         {posts.map((post) => (
           <View key={post.id} style={styles.postContainer}>
             <View style={styles.header}>
@@ -74,23 +77,37 @@ export default function FeedPage() {
       </ScrollView>
 
       <View style={styles.bottomNav}>
-        <Link href="./homepage">
-          <Icon name="home" size={30} color="#000" />
-        </Link>
-        <Link href="./profile">
-          <Icon name="person" size={30} color="#000" />
-        </Link>
-        <Link href="./disease_detection">
-          <Icon2 name="leaf" size={30} color="#000" />
-        </Link>
+        <TouchableOpacity>
+          <Link href="./homepage">
+            <Icon name="home" size={30} color="#000" />
+          </Link>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Link href="./profile">
+            <Icon name="person" size={30} color="#000" />
+          </Link>
+        </TouchableOpacity>
+
+        <TouchableOpacity>
+          <Link href="./disease_detection">
+            <Icon2 name="leaf" size={30} color="#000" />
+          </Link>
+        </TouchableOpacity>
+
         <View style={[styles.iconContainer, styles.shadow]}>
-        <Link href="./feed">
-          <Icon2 name="file-document-outline" size={30} color="#000" />
-        </Link>
+          <TouchableOpacity>
+            <Link href="./feed">
+              <Icon2 name="file-document-outline" size={30} color="rgb(9, 71, 10)" />
+            </Link>
+          </TouchableOpacity>
         </View>
-        <Link href="./allFarms">
-          <Icon name="local-florist" size={30} color="#000" />
-        </Link>
+
+        <TouchableOpacity>
+          <Link href="./allFarms">
+            <Icon name="local-florist" size={30} color="#000" />
+          </Link>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -108,16 +125,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingHorizontal: 20,
     marginTop: 25,
     marginBottom: 25,
-    marginLeft: 140,
-    paddingHorizontal: 10,
   },
   title: {
     fontSize: 45,
     fontWeight: 'bold',
     color: 'rgb(9, 71, 10)',
-    textAlign: 'left',
   },
   addButton: {
     backgroundColor: 'rgb(9, 71, 10)',
@@ -127,83 +142,83 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.2,
+    shadowRadius: 5,
+    elevation: 6,
   },
   addButtonText: {
-    fontSize: 30,
+    color: 'white',
+    fontSize: 35,
     fontWeight: 'bold',
-    color: '#fff',
-    textAlign: 'center',
-    lineHeight: 50,
   },
   postContainer: {
-    marginBottom: 20,
     backgroundColor: '#fff',
-    borderRadius: 10,
     marginHorizontal: 10,
-    padding: 10,
+    marginVertical: 10,
+    borderRadius: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3,
+    elevation: 2,
   },
   header: {
     flexDirection: 'row',
+    padding: 10,
     alignItems: 'center',
-    marginBottom: 10,
   },
   avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
   },
   headerText: {
-    flexDirection: 'column',
+    marginLeft: 10,
   },
   name: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
   },
   date: {
-    fontSize: 14,
-    color: '#777',
+    fontSize: 12,
+    color: '#888',
   },
   postText: {
-    fontSize: 16,
-    color: '#444',
-    marginVertical: 10,
+    paddingHorizontal: 10,
+    paddingBottom: 10,
+    fontSize: 14,
+    color: '#555',
   },
   contentImage: {
-    width: Dimensions.get('window').width - 40,
+    width: '100%',
     height: 200,
-    borderRadius: 10,
-    marginTop: 10,
+    resizeMode: 'cover',
+    borderBottomLeftRadius: 10,
+    borderBottomRightRadius: 10,
   },
   bottomNav: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    backgroundColor: '#D7E9D4',
+    paddingVertical: 15,
+    backgroundColor: '#fff',
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
   },
   iconContainer: {
-    padding: 10,
-    borderRadius: 40, 
-    backgroundColor: 'white', 
+    backgroundColor: 'rgb(9, 71, 10)',
+    width: 50,
+    height: 50,
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   shadow: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
+    shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8, 
-  },
-  navItem: {
-    fontSize: 24,
+    shadowRadius: 5,
+    elevation: 6,
   },
 });

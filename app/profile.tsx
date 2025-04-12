@@ -3,8 +3,15 @@ import { View, Text, TextInput, StyleSheet, ImageBackground, Image, ScrollView, 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
+// Define the Profile type
+interface Profile {
+  name: string;
+  email: string;
+  image: string | null;
+}
+
 const ProfileScreen = () => {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<Profile | null>(null); // Profile state with type
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -12,7 +19,7 @@ const ProfileScreen = () => {
       try {
         const token = await AsyncStorage.getItem('userToken');
         if (!token) {
-          Alert.alert('Error', 'User not authenticated!');
+          Alert.alert('Authentication Error', 'User not authenticated!');
           return;
         }
 
@@ -22,6 +29,7 @@ const ProfileScreen = () => {
 
         setProfile(response.data);
       } catch (error) {
+        console.error(error);
         Alert.alert('Error', 'Failed to fetch profile.');
       } finally {
         setLoading(false);
@@ -43,24 +51,28 @@ const ProfileScreen = () => {
     <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
       <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        {/* <View style={styles.imageContainer}>
+        {/* Profile Image (Uncomment if image is available in the response) */}
+        <View style={styles.imageContainer}>
           <Image 
             source={{ uri: profile.image || 'https://via.placeholder.com/150' }} 
             style={styles.profileImage} 
           />
-        </View> */}
-        <Text style={styles.title}> My Profile </Text>
+        </View>
+
+        <Text style={styles.title}>My Profile</Text>
 
         <View style={styles.inputContainer}>
           {renderField('Name', profile.name)}
           {renderField('Email', profile.email)}
+          {/* Add more fields here if required */}
         </View>
       </ScrollView>
     </ImageBackground>
   );
 };
 
-const renderField = (label, value) => (
+// Reusable function to render profile fields
+const renderField = (label: string, value: string) => (
   <View style={styles.field}>
     <Text style={styles.inputLabel}>{label}</Text>
     <TextInput style={styles.input} value={value || 'N/A'} editable={false} />
@@ -73,7 +85,7 @@ const styles = StyleSheet.create({
   scrollContainer: { padding: 10 },
   imageContainer: { top: 40, alignItems: 'center', marginBottom: 20 },
   title: { color: 'white', fontSize: 33, textAlign: 'center', marginTop: 20 },
-  profileImage: { width: 120, height: 120, borderRadius: 60 },
+  profileImage: { width: 120, height: 120, borderRadius: 60, marginBottom: 20 },
   inputContainer: { top: 50, paddingHorizontal: 10 },
   field: { marginBottom: 15 },
   inputLabel: { fontSize: 20, color: 'white', marginBottom: 5 },
