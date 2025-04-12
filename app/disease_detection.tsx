@@ -1,9 +1,10 @@
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { Link } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
 
 import {
   View,
@@ -26,8 +27,9 @@ const PlantDiseaseDetection = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<string | null>('');
-  const [selectedCrop, setSelectedCrop] = useState<string>('potato');
-  const cropOptions = ['potato', 'apple', 'grape', 'strawberry', 'peach'];
+  const [selectedCrop, setSelectedCrop] = useState("potato");
+  const cropOptions = ["potato", "apple", "grape", "strawberry", "peach"];
+
   
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -63,8 +65,8 @@ const PlantDiseaseDetection = () => {
   
       const formData = new FormData();
       formData.append('file', imageBlob, 'image.jpg');
-      formData.append('crop', selectedCrop); // Append selected crop
-  
+      formData.append('crop', selectedCrop);  // append selected crop here
+
       const response = await fetch('https://nice-barnacle-complete.ngrok-free.app/predict', {
         method: 'POST',
         body: formData,
@@ -98,25 +100,21 @@ const PlantDiseaseDetection = () => {
       />
       <Text style={styles.header}>Plant Disease </Text>
       <Text style={styles.header2}>Detection </Text>
-      <View style={{ marginHorizontal: 20, marginTop: 20 }}>
-  <Text style={{ fontSize: 18, fontWeight: 'bold', color: 'green' }}>Choose Crop:</Text>
-  {cropOptions.map((crop) => (
-    <TouchableOpacity
-      key={crop}
-      onPress={() => setSelectedCrop(crop)}
-      style={{
-        backgroundColor: selectedCrop === crop ? '#a5d6a7' : '#e0e0e0',
-        padding: 10,
-        borderRadius: 8,
-        marginTop: 8,
-      }}
-    >
-      <Text style={{ fontSize: 16 }}>{crop.charAt(0).toUpperCase() + crop.slice(1)}</Text>
-    </TouchableOpacity>
-  ))}
-</View>
 
       <View style={styles.container}>
+      <Text style={styles.dropdownLabel}>Please choose the crop</Text>
+        <View style={styles.dropdownContainer}>
+          <Picker
+            selectedValue={selectedCrop}
+            onValueChange={(itemValue) => setSelectedCrop(itemValue)}
+            style={styles.picker}
+            dropdownIconColor="#000"
+          >
+            {cropOptions.map((crop) => (
+              <Picker.Item key={crop} label={crop} value={crop} />
+            ))}
+          </Picker>
+        </View>
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Text style={styles.uploadText}>Upload Your Plant Image</Text>
         </TouchableOpacity>
@@ -215,6 +213,33 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'rgb(2, 91, 4)',
   },
+  dropdownLabel: {
+    marginLeft: 20,
+    marginBottom: 5,
+    fontSize: 20,
+    fontWeight: '600',
+    color: '#000',
+    top:20,
+  },
+  
+  dropdownContainer: {
+    borderWidth: 2,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    marginHorizontal: 20,
+    marginBottom: 10,
+    overflow: 'hidden',
+    top:20,
+
+  },
+  
+  picker: {
+    bottom: 10,
+    height: 50,
+    width: '100%',
+    //color: 'rgb(2, 91, 4)',
+  },
+  
   imageContainer: {
     height: 200,
     width: 350,
