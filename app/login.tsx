@@ -1,12 +1,10 @@
-import React, { useState } from 'react';
+
+import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { jwtDecode } from 'jwt-decode'; // ✅ Correct import
-import auth from './utils/auth';  // Adjust the import path to match your project structure
-
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -21,33 +19,22 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('https://9a6c-154-239-97-37.ngrok-free.app/auth/login', {
-        email,
-        password,
-      });
+      const response = await axios.post('https://nice-barnacle-complete.ngrok-free.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
-
-        // ✅ Decode token to get user info (optional)
-        const decoded: any = jwtDecode(token);
-        console.log('Decoded Token:', decoded);
-
+        
         // ✅ Store token securely
         await AsyncStorage.setItem('userToken', token);
-        
-        // Debugging check
-        const storedToken = await AsyncStorage.getItem('userToken');
-        console.log('Stored Token:', storedToken); // Ensure token is stored
 
         Alert.alert('Success', 'Login Successful!');
-
+        
         // ✅ Redirect to homepage & prevent back navigation
         router.replace('/homepage');
       }
     } catch (error: any) {
       console.error('❌ Login error:', error.response?.data || error.message);
-
+      
       if (error.response?.data?.error) {
         Alert.alert('Login Failed', error.response.data.error);
       } else {
@@ -57,10 +44,7 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground
-      source={require('../assets/images/BG2.jpg')}
-      style={styles.background}
-    >
+    <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
       <View style={styles.overlay} />
       <Text style={styles.title}>Glad to See You, Again!</Text>
 
@@ -88,15 +72,8 @@ export default function LoginScreen() {
           value={password}
           onChangeText={setPassword}
         />
-        <TouchableOpacity
-          onPress={() => setShowPassword(!showPassword)}
-          style={styles.eyeIcon}
-        >
-          <Icon
-            name={showPassword ? 'eye-slash' : 'eye'}
-            size={20}
-            color="#aaa"
-          />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+          <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
         </TouchableOpacity>
       </View>
 
@@ -106,8 +83,7 @@ export default function LoginScreen() {
 
       <TouchableOpacity onPress={() => router.push('/signup')}>
         <Text style={styles.registerText}>
-          Don't have an account?{' '}
-          <Text style={styles.registerLink}>Sign Up</Text>
+          Don't have an account? <Text style={styles.registerLink}>Sign Up</Text>
         </Text>
       </TouchableOpacity>
     </ImageBackground>
@@ -116,67 +92,15 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   background: { flex: 1 },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  },
-  title: {
-    top: 50,
-    fontSize: 45,
-    fontWeight: '600',
-    color: 'rgb(252, 255, 252)',
-    marginBottom: 25,
-    textAlign: 'center',
-  },
-  inputContainer: {
-    top: 100,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginHorizontal: 15,
-    marginBottom: 25,
-    height: 55,
-  },
-  passContainer: {
-    top: 105,
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginHorizontal: 15,
-    marginBottom: 100,
-    height: 55,
-  },
+  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.4)' },
+  title: { top: 50, fontSize: 45, fontWeight: 'semibold', color: 'rgb(252, 255, 252)', marginBottom: 25, textAlign: 'center' },
+  inputContainer: { top: 100, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 25, height: 55 },
+  passContainer: { top: 105, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 100, height: 55 },
   icon: { marginRight: 10 },
   input: { flex: 1, color: '#000', fontSize: 18 },
   eyeIcon: { paddingHorizontal: 5 },
-  loginButton: {
-    backgroundColor: 'rgb(9, 71, 10)',
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginHorizontal: 50,
-    marginBottom: 15,
-    marginTop: 70,
-  },
-  loginButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  registerText: {
-    textAlign: 'center',
-    color: 'white',
-    fontSize: 19,
-    fontWeight: '600',
-  },
-  registerLink: {
-    color: 'rgb(231, 117, 17)',
-    fontSize: 19,
-    textDecorationLine: 'underline',
-    fontWeight: 'bold',
-  },
+  loginButton: { backgroundColor: 'rgb(9, 71, 10)', paddingVertical: 12, borderRadius: 8, marginHorizontal: 50, marginBottom: 15, marginTop: 70 },
+  loginButtonText: { color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' },
+  registerText: { textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
+  registerLink: { color: 'rgb(231, 117, 17)', fontSize: 19, textDecorationLine: 'underline', fontWeight: 'bold' },
 });

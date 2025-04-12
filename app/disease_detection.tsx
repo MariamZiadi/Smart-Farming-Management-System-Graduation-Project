@@ -61,30 +61,52 @@ const PlantDiseaseDetection = () => {
       const fileInfo = await FileSystem.getInfoAsync(uri);
       if (!fileInfo.exists) throw new Error('Image file does not exist');
   
-      const imageBlob = await fetch(uri).then((res) => res.blob());
+      const fileUriParts = uri.split('/');
+      const fileName = fileUriParts[fileUriParts.length - 1];
+  
+      const imageBlob = await fetch(uri).then(res => res.blob());
   
       const formData = new FormData();
-      formData.append('file', imageBlob, 'image.jpg');
-      formData.append('crop', selectedCrop);  // append selected crop here
-
+      formData.append('file', {
+        uri,
+        type: 'image/jpeg',
+        name: fileName
+      } as any);
+      formData.append('crop', selectedCrop);
+  
       const response = await fetch('https://nice-barnacle-complete.ngrok-free.app/predict', {
         method: 'POST',
         body: formData,
       });
   
-      const result = await response.json();
-      if (response.ok) {
-        setPrediction(result.prediction || 'No prediction received.');
-      } else {
-        throw new Error('Server returned an error.');
+      const text = await response.text();
+      console.log("📦 Raw response from server:", text);
+  
+      try {
+        const result = JSON.parse(text);
+  
+        if (response.ok) {
+          setPrediction(`${result.prediction} (${(result.probability * 100).toFixed(2)}%)`);
+        } else {
+          console.error("❌ API error response:", result);
+          throw new Error(result.error || 'Server returned an error.');
+        }
+  
+      } catch (jsonError) {
+        console.error("🚨 JSON Parse Error:", jsonError);
+        console.log("📃 Full response that failed parsing:", text);
+        Alert.alert("Error", "Invalid response from server. See console for details.");
       }
+  
     } catch (error) {
       Alert.alert('Error', 'Failed to get prediction from server.');
-      console.error(error);
+      console.error("🚫 Outer error in sendToAPI:", error);
     } finally {
       setIsLoading(false);
     }
   };
+  
+  
   
   return (
     <ImageBackground
@@ -216,10 +238,10 @@ const styles = StyleSheet.create({
   dropdownLabel: {
     marginLeft: 20,
     marginBottom: 5,
-    fontSize: 20,
-    fontWeight: '600',
-    color: '#000',
+    fontSize: 22,
     top:20,
+    color: 'rgb(2, 91, 4)',
+    fontWeight: 'bold',
   },
   
   dropdownContainer: {
@@ -230,16 +252,13 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     overflow: 'hidden',
     top:20,
-
   },
   
   picker: {
-    bottom: 10,
     height: 50,
     width: '100%',
     //color: 'rgb(2, 91, 4)',
   },
-  
   imageContainer: {
     height: 200,
     width: 350,
@@ -250,7 +269,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     margin: 20,
     marginTop: 5,
-    marginBottom: 37,
+    marginBottom: 22,
     overflow: 'hidden',
   },
   image: {

@@ -10,7 +10,7 @@ export default function HomeScreen() {
       <View style={styles.overlay} />
 
       <View style={styles.content}>
-        <Text style={styles.topText}>Plant Smarterrrr</Text>
+        <Text style={styles.topText}>Plant Smarter</Text>
         <Text style={styles.topText2}>Grow Stronger</Text>
 
         <View style={styles.options}>
@@ -19,6 +19,9 @@ export default function HomeScreen() {
           </Link>
           <Link href="/signup" style={[styles.button, styles.greenButton]}>
             <Text style={[styles.buttonText, styles.greenText]}>Create an Account</Text>
+          </Link>
+          <Link href="/homepage" style={[styles.button, styles.greenButton]}>
+            <Text style={[styles.buttonText, styles.greenText]}>Home Page</Text>
           </Link>
         </View>
       </View>
