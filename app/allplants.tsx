@@ -43,7 +43,7 @@ export default function AllPlants() {
     const router = useRouter();
 
     useEffect(() => {
-        fetch('https://9a6c-154-239-97-37.ngrok-free.app/plants')
+        fetch('https://nice-barnacle-complete.ngrok-free.app/plants')
         .then((res) => res.json())
             .then((data) => {
                 setPlants(data);
