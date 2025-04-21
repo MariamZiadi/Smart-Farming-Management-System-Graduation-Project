@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -15,7 +14,6 @@ import {
   Image,
   ActivityIndicator,
   Alert,
-  ScrollView
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
@@ -30,7 +28,6 @@ const PlantDiseaseDetection = () => {
   const [selectedCrop, setSelectedCrop] = useState("potato");
   const cropOptions = ["potato", "apple", "grape", "strawberry", "peach"];
 
-  
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
@@ -47,9 +44,8 @@ const PlantDiseaseDetection = () => {
     if (!result.canceled) {
       const selectedUri = result.assets[0].uri;
       console.log("Image URI:", selectedUri);
-
       setImageUri(selectedUri);
-      sendToAPI(selectedUri); // Send image to Flask
+      sendToAPI(selectedUri);
     }
   };
 
@@ -57,15 +53,13 @@ const PlantDiseaseDetection = () => {
     try {
       setIsLoading(true);
       setPrediction(null);
-  
+
       const fileInfo = await FileSystem.getInfoAsync(uri);
       if (!fileInfo.exists) throw new Error('Image file does not exist');
-  
+
       const fileUriParts = uri.split('/');
       const fileName = fileUriParts[fileUriParts.length - 1];
-  
-      const imageBlob = await fetch(uri).then(res => res.blob());
-  
+
       const formData = new FormData();
       formData.append('file', {
         uri,
@@ -73,31 +67,30 @@ const PlantDiseaseDetection = () => {
         name: fileName
       } as any);
       formData.append('crop', selectedCrop);
-  
+
       const response = await fetch('https://nice-barnacle-complete.ngrok-free.app/predict', {
         method: 'POST',
         body: formData,
       });
-  
+
       const text = await response.text();
       console.log("📦 Raw response from server:", text);
-  
+
       try {
         const result = JSON.parse(text);
-  
+
         if (response.ok) {
-          setPrediction(`${result.prediction} (${(result.probability * 100).toFixed(2)}%)`);
+          setPrediction(`${result.prediction}\n(${(result.probability * 100).toFixed(2)}%)`);
         } else {
           console.error("❌ API error response:", result);
           throw new Error(result.error || 'Server returned an error.');
         }
-  
       } catch (jsonError) {
         console.error("🚨 JSON Parse Error:", jsonError);
         console.log("📃 Full response that failed parsing:", text);
         Alert.alert("Error", "Invalid response from server. See console for details.");
       }
-  
+
     } catch (error) {
       Alert.alert('Error', 'Failed to get prediction from server.');
       console.error("🚫 Outer error in sendToAPI:", error);
@@ -105,9 +98,7 @@ const PlantDiseaseDetection = () => {
       setIsLoading(false);
     }
   };
-  
-  
-  
+
   return (
     <ImageBackground
       source={require('../assets/images/BG2.jpg')}
@@ -124,7 +115,7 @@ const PlantDiseaseDetection = () => {
       <Text style={styles.header2}>Detection </Text>
 
       <View style={styles.container}>
-      <Text style={styles.dropdownLabel}>Please choose the crop</Text>
+        <Text style={styles.dropdownLabel}>Please choose the crop</Text>
         <View style={styles.dropdownContainer}>
           <Picker
             selectedValue={selectedCrop}
@@ -137,6 +128,7 @@ const PlantDiseaseDetection = () => {
             ))}
           </Picker>
         </View>
+
         <TouchableOpacity style={styles.uploadButton} onPress={pickImage}>
           <Text style={styles.uploadText}>Upload Your Plant Image</Text>
         </TouchableOpacity>
@@ -226,8 +218,8 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     padding: 10,
     alignItems: 'center',
-    margin: 20,
-    marginBottom: 7,
+    marginTop: 15,
+    marginLeft: 15,
     width: 270,
   },
   uploadText: {
@@ -239,25 +231,22 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginBottom: 5,
     fontSize: 22,
-    top:20,
+    top: 15,
     color: 'rgb(2, 91, 4)',
     fontWeight: 'bold',
   },
-  
   dropdownContainer: {
     borderWidth: 2,
     borderColor: '#ccc',
     borderRadius: 10,
-    marginHorizontal: 20,
+    marginHorizontal: 25,
     marginBottom: 10,
     overflow: 'hidden',
-    top:20,
+    top: 20,
   },
-  
   picker: {
     height: 50,
     width: '100%',
-    //color: 'rgb(2, 91, 4)',
   },
   imageContainer: {
     height: 200,
@@ -267,9 +256,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ccc',
     borderRadius: 10,
-    margin: 20,
-    marginTop: 5,
-    marginBottom: 22,
+    marginLeft: 20,
+    marginBottom: 18,
     overflow: 'hidden',
   },
   image: {
@@ -291,7 +279,9 @@ const styles = StyleSheet.create({
   },
   analysisText: {
     fontSize: 20,
-    left: 110,
+    textAlign: 'center',
+    marginHorizontal: 20,
+    color: '#333',
   },
   bottomNav: {
     position: 'absolute',

@@ -4,17 +4,15 @@ import { authMiddleware } from "../middleware/authMiddleware";
 import { AuthRequest } from "../types/custom"; // Import the custom request type
 
 const router = express.Router();
-
-// POST /posts - Create a new post
-router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => { // Use AuthRequest type
+router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => { 
   const { description, image } = req.body;
-  const userId = req.user?.userId; // TypeScript knows that req.user has userId
+  const userId = req.user?.userId; 
 
   try {
     const newPost = new Post({
       description,
       image,
-      user: userId, // Link post to the authenticated user
+      user: userId, 
     });
 
     await newPost.save();
@@ -25,7 +23,6 @@ router.post("/", authMiddleware, async (req: AuthRequest, res: Response) => { //
   }
 });
 
-// GET /posts - Get all posts for the feed
 router.get("/", async (req: Request, res: Response) => {
   try {
     const posts = await Post.find().populate("user", "name email");

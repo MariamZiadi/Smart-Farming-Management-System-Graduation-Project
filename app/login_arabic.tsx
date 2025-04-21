@@ -1,12 +1,13 @@
-
-import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert, I18nManager } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function LoginScreen() {
+I18nManager.forceRTL(true); // Make sure the app runs RTL (optional, if not already set)
+
+export default function LoginScreenArabic() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -14,7 +15,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'All fields are required!');
+      Alert.alert('خطأ', 'جميع الحقول مطلوبة!');
       return;
     }
 
@@ -23,22 +24,17 @@ export default function LoginScreen() {
 
       if (response.status === 200) {
         const { token } = response.data;
-        
-        // ✅ Store token securely
+
         await AsyncStorage.setItem('userToken', token);
 
-        Alert.alert('Success', 'Login Successful!');
-        
-        // ✅ Redirect to homepage & prevent back navigation
+        Alert.alert('نجاح', 'تم تسجيل الدخول بنجاح!');
         router.replace('/homepage');
       }
     } catch (error: any) {
-      //console.error('❌ Login error:', error.response?.data || error.message);
-      
       if (error.response?.data?.error) {
-        Alert.alert('Login Failed', error.response.data.error);
+        Alert.alert('فشل تسجيل الدخول', error.response.data.error);
       } else {
-        Alert.alert('Login Failed', 'Something went wrong. Please try again.');
+        Alert.alert('فشل تسجيل الدخول', 'حدث خطأ ما. حاول مرة أخرى.');
       }
     }
   };
@@ -46,18 +42,19 @@ export default function LoginScreen() {
   return (
     <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
       <View style={styles.overlay} />
-      <Text style={styles.title}>Glad to See You, Again!</Text>
+      <Text style={styles.title}>سعيدون برؤيتك مرة أخرى!</Text>
 
       <View style={styles.inputContainer}>
         <Icon name="envelope" size={20} color="#aaa" style={styles.icon} />
         <TextInput
           style={styles.input}
-          placeholder="Enter your email"
+          placeholder="أدخل بريدك الإلكتروني"
           placeholderTextColor="#aaa"
           keyboardType="email-address"
           autoCapitalize="none"
           value={email}
           onChangeText={setEmail}
+          textAlign="right"
         />
       </View>
 
@@ -65,12 +62,13 @@ export default function LoginScreen() {
         <Icon name="lock" size={20} color="#aaa" style={styles.icon} />
         <TextInput
           style={[styles.input, { flex: 1 }]}
-          placeholder="Enter your password"
+          placeholder="أدخل كلمة المرور"
           placeholderTextColor="#aaa"
           secureTextEntry={!showPassword}
           autoCapitalize="none"
           value={password}
           onChangeText={setPassword}
+          textAlign="right"
         />
         <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
           <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
@@ -78,12 +76,12 @@ export default function LoginScreen() {
       </View>
 
       <TouchableOpacity style={styles.loginButton} onPress={handleLogin}>
-        <Text style={styles.loginButtonText}>Sign In</Text>
+        <Text style={styles.loginButtonText}>تسجيل الدخول</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/signup')}>
         <Text style={styles.registerText}>
-          Don't have an account? <Text style={styles.registerLink}>Sign Up</Text>
+          ليس لديك حساب؟ <Text style={styles.registerLink}>إنشاء حساب</Text>
         </Text>
       </TouchableOpacity>
     </ImageBackground>
@@ -93,14 +91,14 @@ export default function LoginScreen() {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.4)' },
-  title: { top: 50, fontSize: 45, fontWeight: 'semibold', color: 'rgb(252, 255, 252)', marginBottom: 25, textAlign: 'center' },
-  inputContainer: { top: 100, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 25, height: 55 },
-  passContainer: { top: 105, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 100, height: 55 },
-  icon: { marginRight: 10 },
+  title: { top: 50, fontSize: 45, fontWeight: '600', color: 'rgb(252, 255, 252)', marginBottom: 25, textAlign: 'center' },
+  inputContainer: { top: 100, flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 25, height: 55 },
+  passContainer: { top: 105, flexDirection: 'row-reverse', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 100, height: 55 },
+  icon: { marginLeft: 10 },
   input: { flex: 1, color: '#000', fontSize: 18 },
   eyeIcon: { paddingHorizontal: 5 },
   loginButton: { backgroundColor: 'rgb(9, 71, 10)', paddingVertical: 12, borderRadius: 8, marginHorizontal: 50, marginBottom: 15, marginTop: 70 },
   loginButtonText: { color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' },
-  registerText: { textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
+  registerText: { textAlign: 'center', color: 'white', fontSize: 19, fontWeight: '600' },
   registerLink: { color: 'rgb(231, 117, 17)', fontSize: 19, textDecorationLine: 'underline', fontWeight: 'bold' },
 });

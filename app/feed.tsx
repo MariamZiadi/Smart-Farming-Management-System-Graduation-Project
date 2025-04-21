@@ -1,4 +1,4 @@
-import { Link, Stack } from 'expo-router';
+import { Link } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -52,15 +52,17 @@ export default function FeedPage() {
         style={styles.scrollContainer}
         contentContainerStyle={{ paddingBottom: 100 }}
       >
+        {/* Header */}
         <View style={styles.headerContainer}>
           <Text style={styles.title}>Feed</Text>
-          <TouchableOpacity>
-            <Link href="./post" style={styles.addButton}>
+          <TouchableOpacity style={styles.addButton}>
+            <Link href="./post">
               <Text style={styles.addButtonText}>+</Text>
             </Link>
           </TouchableOpacity>
         </View>
 
+        {/* Posts */}
         {posts.map((post) => (
           <View key={post.id} style={styles.postContainer}>
             <View style={styles.header}>
@@ -76,6 +78,7 @@ export default function FeedPage() {
         ))}
       </ScrollView>
 
+      {/* Bottom Navigation */}
       <View style={styles.bottomNav}>
         <TouchableOpacity>
           <Link href="./homepage">
@@ -122,23 +125,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerContainer: {
+    marginTop: 25,
+    marginBottom: 25,
+    paddingHorizontal: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
-    marginTop: 25,
-    marginBottom: 25,
   },
   title: {
     fontSize: 45,
     fontWeight: 'bold',
     color: 'rgb(9, 71, 10)',
+    flex: 1,
+    textAlign: 'center',
   },
   addButton: {
+    position: 'absolute',
+    right: 20,
     backgroundColor: 'rgb(9, 71, 10)',
     width: 50,
     height: 50,
-    borderRadius: 30,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
@@ -149,8 +156,9 @@ const styles = StyleSheet.create({
   },
   addButtonText: {
     color: 'white',
-    fontSize: 35,
+    fontSize: 32,
     fontWeight: 'bold',
+    textAlign: 'center',
   },
   postContainer: {
     backgroundColor: '#fff',
@@ -177,7 +185,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   name: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   date: {
@@ -187,8 +195,8 @@ const styles = StyleSheet.create({
   postText: {
     paddingHorizontal: 10,
     paddingBottom: 10,
-    fontSize: 14,
-    color: '#555',
+    fontSize: 16,
+    color: '#333',
   },
   contentImage: {
     width: '100%',
@@ -198,27 +206,24 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 10,
   },
   bottomNav: {
+    position: 'absolute',
+    bottom: 0,
+    width: '100%',
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    paddingVertical: 15,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    backgroundColor: '#D7E9D4',
   },
   iconContainer: {
-    backgroundColor: 'rgb(9, 71, 10)',
-    width: 50,
-    height: 50,
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
+    padding: 10,
+    borderRadius: 40,
+    backgroundColor: 'white',
   },
   shadow: {
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
-    shadowRadius: 5,
-    elevation: 6,
+    shadowRadius: 6,
+    elevation: 8,
   },
 });
