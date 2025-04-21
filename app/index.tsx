@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'expo-router';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
@@ -23,10 +22,10 @@ export default function HomeScreen() {
           <Link href="/login_arabic" style={[styles.button, styles.greenButton]}>
             <Text style={[styles.buttonText, styles.greenText]}>تسجيل الدخول</Text>
           </Link>
-          <Link href="/signup" style={[styles.button, styles.greenButton]}>
+          <Link href="/signup_arabic" style={[styles.button, styles.greenButton]}>
             <Text style={[styles.buttonText, styles.greenText]}>إنشاء حساب</Text>
           </Link>
-          <Link href="/homepage" style={[styles.button, styles.greenButton]}>
+          <Link href="/homepage_arabic" style={[styles.button, styles.greenButton]}>
             <Text style={[styles.buttonText, styles.greenText]}>الصفحة الرئيسية</Text>
           </Link>
         </View>

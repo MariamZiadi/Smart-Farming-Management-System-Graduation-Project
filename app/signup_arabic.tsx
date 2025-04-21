@@ -1,0 +1,181 @@
+import React, { useState } from 'react';
+import { useRouter } from 'expo-router';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ImageBackground,
+  Alert,
+  I18nManager
+} from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import axios from 'axios';
+
+I18nManager.forceRTL(true); // Force RTL for Arabic layout
+
+export default function SignUpScreenArabic() {
+  const router = useRouter();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const isValidEmail = (email: string): boolean => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidPassword = (password: string): boolean => {
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    return passwordRegex.test(password);
+  };
+
+  const handleSignUp = async () => {
+    if (!name || !email || !password) {
+      Alert.alert('خطأ', 'جميع الحقول مطلوبة!');
+    } else if (!isValidEmail(email)) {
+      Alert.alert('خطأ', 'تنسيق البريد الإلكتروني غير صحيح!');
+    } else if (!isValidPassword(password)) {
+      Alert.alert(
+        'خطأ',
+        'يجب أن تكون كلمة المرور 8 أحرف على الأقل وتشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا خاصًا'
+      );
+    } else {
+      try {
+        const response = await axios.post("https://nice-barnacle-complete.ngrok-free.app/users/register", {
+          name,
+          email,
+          password,
+        });
+
+        Alert.alert("نجاح", "تم تسجيل المستخدم بنجاح!");
+        console.log(response.data);
+
+        router.push('./homepage_arabic'); // الصفحة الرئيسية العربية
+      } catch (error: any) {
+        Alert.alert("خطأ", error.response?.data?.message || "حدث خطأ ما");
+      }
+    }
+  };
+
+  return (
+    <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
+      <View style={styles.overlay} />
+      <Text style={styles.title}>أنشئ حسابك الخاص</Text>
+
+      <View style={styles.inputContainer}>
+        <Icon name="user" size={20} color="#aaa" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="أدخل اسمك الكامل"
+          placeholderTextColor="#aaa"
+          value={name}
+          onChangeText={setName}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Icon name="envelope" size={20} color="#aaa" style={styles.icon} />
+        <TextInput
+          style={styles.input}
+          placeholder="أدخل بريدك الإلكتروني"
+          placeholderTextColor="#aaa"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={setEmail}
+        />
+      </View>
+
+      <View style={styles.passContainer}>
+        <Icon name="lock" size={20} color="#aaa" style={styles.icon} />
+        <TextInput
+          style={[styles.input, { flex: 1 }]}
+          placeholder="أدخل كلمة المرور"
+          placeholderTextColor="#aaa"
+          secureTextEntry={!showPassword}
+          value={password}
+          onChangeText={setPassword}
+        />
+        <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+          <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
+        </TouchableOpacity>
+      </View>
+
+      <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
+        <Text style={styles.loginButtonText}>إنشاء حساب</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => router.push('/login_arabic')}>
+        <Text style={styles.registerText}>
+          لديك حساب بالفعل؟ <Text style={styles.registerLink}>سجّل الدخول</Text>
+        </Text>
+      </TouchableOpacity>
+    </ImageBackground>
+  );
+}
+
+const styles = StyleSheet.create({
+  background: { flex: 1 },
+  overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.4)' },
+  title: {
+    top: 50,
+    fontSize: 42,
+    fontWeight: 'bold',
+    color: 'rgb(252, 255, 252)',
+    marginBottom: 35,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    top: 70,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    marginBottom: 25,
+    height: 55,
+  },
+  passContainer: {
+    top: 70,
+    flexDirection: 'row-reverse',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    marginBottom: 55,
+    height: 55,
+  },
+  icon: { marginLeft: 10 },
+  input: { flex: 1, color: '#000', fontSize: 18, textAlign: 'right' },
+  eyeIcon: { paddingHorizontal: 5 },
+  loginButton: {
+    backgroundColor: 'rgb(9, 71, 10)',
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginHorizontal: 50,
+    marginBottom: 15,
+    marginTop: 70,
+  },
+  loginButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  registerText: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 19,
+    fontWeight: 'bold',
+  },
+  registerLink: {
+    color: 'rgb(231, 117, 17)',
+    fontSize: 19,
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
+  },
+});

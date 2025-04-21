@@ -28,7 +28,7 @@ export default function LoginScreenArabic() {
         await AsyncStorage.setItem('userToken', token);
 
         Alert.alert('نجاح', 'تم تسجيل الدخول بنجاح!');
-        router.replace('/homepage');
+        router.replace('/homepage_arabic');
       }
     } catch (error: any) {
       if (error.response?.data?.error) {
@@ -79,7 +79,7 @@ export default function LoginScreenArabic() {
         <Text style={styles.loginButtonText}>تسجيل الدخول</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push('/signup')}>
+      <TouchableOpacity onPress={() => router.push('/signup_arabic')}>
         <Text style={styles.registerText}>
           ليس لديك حساب؟ <Text style={styles.registerLink}>إنشاء حساب</Text>
         </Text>
