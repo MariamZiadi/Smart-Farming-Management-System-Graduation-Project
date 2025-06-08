@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'expo-router';
 import { StyleSheet, View, Text, ImageBackground } from 'react-native';
-import LanguageSwitcher from '../components/LanguageSwitcher'; 
+import LanguageSwitcher from '../components/LanguageSwitcher'; // Language switcher component
 
 export default function HomeScreen() {
   return (
@@ -19,14 +19,14 @@ export default function HomeScreen() {
         <Text style={styles.topText2}>Grow Stronger</Text>
 
         <View style={styles.options}>
-          <Link href="/login_arabic" style={[styles.button, styles.greenButton]}>
-            <Text style={[styles.buttonText, styles.greenText]}>تسجيل الدخول</Text>
+          <Link href="/login" style={[styles.button, styles.greenButton]}>
+            <Text style={[styles.buttonText, styles.greenText]}>Sign In</Text>
           </Link>
-          <Link href="/signup_arabic" style={[styles.button, styles.greenButton]}>
-            <Text style={[styles.buttonText, styles.greenText]}>إنشاء حساب</Text>
+          <Link href="/signup" style={[styles.button, styles.greenButton]}>
+            <Text style={[styles.buttonText, styles.greenText]}>Create an Account</Text>
           </Link>
-          <Link href="/homepage_arabic" style={[styles.button, styles.greenButton]}>
-            <Text style={[styles.buttonText, styles.greenText]}>الصفحة الرئيسية</Text>
+          <Link href="/homepage" style={[styles.button, styles.greenButton]}>
+            <Text style={[styles.buttonText, styles.greenText]}>Home Page</Text>
           </Link>
         </View>
       </View>
