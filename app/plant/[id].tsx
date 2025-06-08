@@ -46,7 +46,7 @@ export default function PlantDetails() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch(`https://nice-barnacle-complete.ngrok-free.app/plants/${id}`)
+        fetch(`https://d440-154-239-77-135.ngrok-free.app/plants/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setPlant(data);

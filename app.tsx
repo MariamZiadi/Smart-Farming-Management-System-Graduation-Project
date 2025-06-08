@@ -1,6 +1,10 @@
+import React, { useEffect } from 'react';
+import { Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+
 import HomeScreen from './app/index.js'; 
 import LoginScreen from './app/login.js'; 
 import SignUpScreen from './app/signup.js';
@@ -9,15 +13,42 @@ import FeedPage from './app/feed.js';
 import ProfileScreen from './app/profile.js';
 import PostPage from './app/post.js';
 import Homepage from './app/homepage.js';
-import Plant from './app/plant.js';
 import MyGarden from './app/mygarden.js';
-import AddFarmPage from './app/add_farm.js';import GroupChat from './app/groupchat.js';
+import AddFarmPage from './app/add_farm.js';
+import GroupChat from './app/groupchat.js';
 import ChatBot from './app/chatbot.js';
-
 
 const Stack = createStackNavigator();
 
+// Notification handler: allows popup alerts
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
+
+// Import your weather notification function
+//import { checkWeatherAndNotify } from './app/weatherNotifier';
+
 export default function App() {
+  useEffect(() => {
+    const requestPermissionsAndNotify = async () => {
+      if (Platform.OS !== 'web') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        if (status !== 'granted') {
+          alert('Notification permissions not granted!');
+          return;
+        }
+        // Call your weather notification function here
+       // await checkWeatherAndNotify();
+      }
+    };
+
+    requestPermissionsAndNotify();
+  }, []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
@@ -28,7 +59,6 @@ export default function App() {
         <Stack.Screen name="Feed" component={FeedPage} />
         <Stack.Screen name="Profile" component={ProfileScreen} />
         <Stack.Screen name="Homepage" component={Homepage} />
-        {/* <Stack.Screen name="Plant" component={Plant} /> */}
         <Stack.Screen name="MyGraden" component={MyGarden} />
         <Stack.Screen name="Post" component={PostPage} />
         <Stack.Screen name="GroupChat" component={GroupChat} />

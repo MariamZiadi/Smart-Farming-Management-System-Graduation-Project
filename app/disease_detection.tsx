@@ -74,7 +74,7 @@ const PlantDiseaseDetection = () => {
       } as any);
       formData.append('crop', selectedCrop);
   
-      const response = await fetch('https://nice-barnacle-complete.ngrok-free.app/predict', {
+      const response = await fetch('https://d440-154-239-77-135.ngrok-free.app/predict', {
         method: 'POST',
         body: formData,
       });

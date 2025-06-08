@@ -19,7 +19,7 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('https://nice-barnacle-complete.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post('https://d440-154-239-77-135.ngrok-free.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
