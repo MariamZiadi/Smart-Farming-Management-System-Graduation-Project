@@ -4,6 +4,8 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { Link } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
+import { API_BASE_URL } from '@env';
+
 
 import {
   View,
@@ -68,7 +70,7 @@ const PlantDiseaseDetection = () => {
       } as any);
       formData.append('crop', selectedCrop);
 
-      const response = await fetch('https://nice-barnacle-complete.ngrok-free.app/predict', {
+      const response = await fetch(`${API_BASE_URL}/predict`, {
         method: 'POST',
         body: formData,
       });

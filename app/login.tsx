@@ -1,16 +1,18 @@
-
 import { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ImageBackground, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '@env';
+
 
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -19,7 +21,7 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('https://d440-154-239-77-135.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post(`http://192.168.100.4:5000/auth/login`, { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
