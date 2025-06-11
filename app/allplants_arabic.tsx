@@ -64,7 +64,7 @@ export default function AllPlants() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('https://nice-barnacle-complete.ngrok-free.app/plants')
+    fetch('https://c62b-41-43-3-74.ngrok-free.app/plant_arabics')
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);
@@ -99,7 +99,7 @@ export default function AllPlants() {
           return (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => router.push(`/plant/${item._id}`)}
+              onPress={() => router.push(`/plant_arabics/${item._id}`)}
             >
               <Image source={plantImage} style={styles.plantImage} />
               <Text style={styles.plantName}>{arabicName}</Text>

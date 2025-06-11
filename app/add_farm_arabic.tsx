@@ -10,41 +10,46 @@ import {
   KeyboardAvoidingView,
   Platform,
   ScrollView,
+  I18nManager,
 } from 'react-native';
 import Autocomplete from 'react-native-autocomplete-input';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
-export default function AddFarmPage() {
-  const [plants, setPlants] = useState([{ name: '', key: 'Plant 1' }]);
+// Ensure RTL direction
+I18nManager.allowRTL(true);
+
+export default function AddFarmPageArabic() {
+  const [plants, setPlants] = useState([{ name: '', key: 'النبتة 1' }]);
   const [farmName, setFarmName] = useState('');
   const [farmPassword, setFarmPassword] = useState('');
-const plantSuggestions = [
-  'Apple',
-  'Barley',
-  'Basil',
-  'Blueberry',
-  'Cherry',
-  'Corn',
-  'Cucumber',
-  'Grape',
-  'Lettuce',
-  'Mint',
-  'Nettle',
-  'Oats',
-  'Orange',
-  'Pepper Bell',
-  'Rice',
-  'Thyme',
-  'Tomato',
-  'Wheat',
-  'Peach',
-  'Potato',
-  'Carrot'
-];
+
+  const plantSuggestions = [
+    'تفاح',
+    'شعير',
+    'ريحان',
+    'توت',
+    'كرز',
+    'ذرة',
+    'خيار',
+    'عنب',
+    'خس',
+    'نعناع',
+    'قراص',
+    'شوفان',
+    'برتقال',
+    'فلفل حلو',
+    'أرز',
+    'زعتر',
+    'طماطم',
+    'قمح',
+    'خوخ',
+    'بطاطس',
+    'جزر',
+  ];
 
   const addPlantField = () => {
-    setPlants([...plants, { name: '', key: `Plant ${plants.length + 1}` }]);
+    setPlants([...plants, { name: '', key: `النبتة ${plants.length + 1}` }]);
   };
 
   const updatePlantName = (index, name) => {
@@ -67,7 +72,7 @@ const plantSuggestions = [
           }
           defaultValue={item.name}
           onChangeText={(text) => updatePlantName(index, text)}
-          placeholder={`Enter ${item.key.toLowerCase()}`}
+          placeholder={`أدخل ${item.key}`}
           containerStyle={styles.autocompleteContainer}
           inputContainerStyle={styles.input}
           renderItem={({ item }) => (
@@ -98,35 +103,37 @@ const plantSuggestions = [
       >
         <View style={styles.overlay} />
         <Ionicons
-          name="arrow-back"
+          name="arrow-forward" // Reversed for RTL
           size={27}
           color="white"
           style={styles.backIcon}
           onPress={() => router.push('./allFarms')}
         />
 
-        <Text style={styles.title}>Add Your New Farm</Text>
+        <Text style={styles.title}>أضف مزرعتك الجديدة</Text>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           {/* Farm Name Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Farm Name</Text>
+            <Text style={styles.label}>اسم المزرعة</Text>
             <TextInput
               style={styles.input}
               value={farmName}
               onChangeText={setFarmName}
-              placeholder="Enter farm name"
+              placeholder="أدخل اسم المزرعة"
+              textAlign="right"
             />
           </View>
 
           {/* Farm Password Field */}
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>Farm Password</Text>
+            <Text style={styles.label}>كلمة مرور المزرعة</Text>
             <TextInput
               style={styles.input}
               value={farmPassword}
               onChangeText={setFarmPassword}
-              placeholder="Enter farm password"
+              placeholder="أدخل كلمة المرور"
               secureTextEntry
+              textAlign="right"
             />
           </View>
 
@@ -136,7 +143,7 @@ const plantSuggestions = [
             renderItem={({ item, index }) =>
               item.isFooter ? (
                 <TouchableOpacity style={styles.addFarmButton}>
-                  <Text style={styles.addFarmButtonText}>Add Farm</Text>
+                  <Text style={styles.addFarmButtonText}>أضف المزرعة</Text>
                 </TouchableOpacity>
               ) : (
                 renderItem({ item, index })
@@ -164,10 +171,11 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     marginTop: 40,
-    marginLeft: 10,
+    marginRight: 10,
+    alignSelf: 'flex-end',
   },
   title: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
@@ -186,6 +194,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     marginBottom: 5,
+    textAlign: 'right',
   },
   input: {
     height: 50,
@@ -195,16 +204,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 10,
     flex: 1,
+    textAlign: 'right',
   },
   row: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     alignItems: 'center',
   },
   addPlantButton: {
     backgroundColor: 'rgb(9, 71, 10)',
     height: 50,
     width: 50,
-    marginLeft: 10,
+    marginRight: 10,
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
@@ -235,5 +245,6 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     color: '#000',
+    textAlign: 'right',
   },
 });
