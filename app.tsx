@@ -5,8 +5,8 @@ import * as Notifications from 'expo-notifications';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import HomeScreen from './app/index.js'; 
-import LoginScreen from './app/login.js'; 
+import HomeScreen from './app/index.js';
+import LoginScreen from './app/login.js';
 import SignUpScreen from './app/signup.js';
 import DiseaseScreen from './app/disease_detection.js';
 import FeedPage from './app/feed.js';
@@ -17,10 +17,11 @@ import MyGarden from './app/mygarden.js';
 import AddFarmPage from './app/add_farm.js';
 import GroupChat from './app/groupchat.js';
 import ChatBot from './app/chatbot.js';
+import WeatherNotifier from './app/weatherNotifier.js'; // ✅ Import
 
 const Stack = createStackNavigator();
 
-// Notification handler: allows popup alerts
+// Notification handler for pop-up alerts
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
@@ -29,9 +30,6 @@ Notifications.setNotificationHandler({
   }),
 });
 
-// Import your weather notification function
-//import { checkWeatherAndNotify } from './app/weatherNotifier';
-
 export default function App() {
   useEffect(() => {
     const requestPermissionsAndNotify = async () => {
@@ -39,10 +37,7 @@ export default function App() {
         const { status } = await Notifications.requestPermissionsAsync();
         if (status !== 'granted') {
           alert('Notification permissions not granted!');
-          return;
         }
-        // Call your weather notification function here
-       // await checkWeatherAndNotify();
       }
     };
 
@@ -63,6 +58,7 @@ export default function App() {
         <Stack.Screen name="Post" component={PostPage} />
         <Stack.Screen name="GroupChat" component={GroupChat} />
         <Stack.Screen name="ChatBot" component={ChatBot} />
+        <Stack.Screen name="WeatherNotifier" component={WeatherNotifier} /> {/* ✅ Added */}
       </Stack.Navigator>
     </NavigationContainer>
   );
