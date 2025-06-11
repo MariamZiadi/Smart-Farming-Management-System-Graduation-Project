@@ -9,8 +9,6 @@ import userRoutes from "./routes/userRoutes"; // Import user routes
 import farmsRoutes from "./routes/farmRoutes";
 import postRoutes from "./routes/postRoutes"; // Import post routes
 
-
-
 dotenv.config();
 
 const app: Application = express();
@@ -68,7 +66,11 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ error: "Internal Server Error", details: err.message });
 });
 
-// Start Server
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
-});
+
+ app.listen(PORT, () => {
+   console.log(`🚀 Server running on http://localhost:${PORT}`);
+ });
+// app.listen(5000, '0.0.0.0', () => {
+//   console.log('Server running on http://0.0.0.0:5000');
+// });
+

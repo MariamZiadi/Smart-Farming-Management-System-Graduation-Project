@@ -9,6 +9,7 @@
       "@/components/*": ["./components/*"],
       "@/constants/*": ["./constants/*"],
       "@/hooks/*": ["./hooks/*"],
+      "types": ["./env.d.ts"]
     }
   },
   "include": [
@@ -25,6 +26,7 @@
     "app/chatbot.tsx",
     "app/groupchat.tsx",
     "app/allplants.tsx",
-    ".expo/types/**/*.ts"
+    ".expo/types/**/*.ts",
+    "env.d.ts"
   ]
 }
