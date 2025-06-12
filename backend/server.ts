@@ -9,7 +9,7 @@ import userRoutes from "./routes/userRoutes"; // Import user routes
 import farmsRoutes from "./routes/farmRoutes";
 import postRoutes from "./routes/postRoutes"; // Import post routes
 import plantRoutes_arabic from "./routes/plantRoutes_arabic"; // adjust path as needed
-import "./cronJobs/plantCareReminder";
+//import "../../app/cronJobs/plantCareReminder";
 
 
 dotenv.config();
