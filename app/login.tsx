@@ -6,13 +6,11 @@ import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@env';
 
-
 export default function LoginScreen() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -21,13 +19,17 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post(`https://7c4f-41-43-3-74.ngrok-free.app/auth/login`, { email, password });
+      const response = await axios.post(`https://cb93-154-239-126-13.ngrok-free.app/auth/login`, { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
-        
+
         // ✅ Store token securely
         await AsyncStorage.setItem('userToken', token);
+
+        // ✅ Log the stored token for debugging
+        const savedToken = await AsyncStorage.getItem('userToken');
+        console.log('✅ Saved Token:', savedToken);
 
         Alert.alert('Success', 'Login Successful!');
         
@@ -35,8 +37,6 @@ export default function LoginScreen() {
         router.replace('/homepage');
       }
     } catch (error: any) {
-      //console.error('❌ Login error:', error.response?.data || error.message);
-      
       if (error.response?.data?.error) {
         Alert.alert('Login Failed', error.response.data.error);
       } else {
