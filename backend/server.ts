@@ -8,6 +8,9 @@ import authRoutes from "./routes/authRoutes";
 import userRoutes from "./routes/userRoutes"; // Import user routes
 import farmsRoutes from "./routes/farmRoutes";
 import postRoutes from "./routes/postRoutes"; // Import post routes
+import plantRoutes_arabic from "./routes/plantRoutes_arabic"; // adjust path as needed
+import "./cronJobs/plantCareReminder";
+
 
 dotenv.config();
 
@@ -28,6 +31,7 @@ app.use(express.json());
 
 // Routes
 app.use("/plants", plantRoutes);
+app.use("/plant_arabics", plantRoutes_arabic);
 app.use("/auth", authRoutes);
 app.use("/users", userRoutes); // User routes
 app.use("/farms", farmsRoutes);

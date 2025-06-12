@@ -66,6 +66,7 @@ export default function PlantDetails() {
 
     useEffect(() => {
         fetch(`https://285f-102-46-246-195.ngrok-free.app/plants/${id}`)
+        fetch(`https://7787-41-43-3-74.ngrok-free.app/plant_arabics/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setPlant(data);

@@ -4,7 +4,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
 import { Link } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
-import { API_BASE_URL } from '@env';
 
 
 import {
@@ -70,7 +69,7 @@ const PlantDiseaseDetection = () => {
       } as any);
       formData.append('crop', selectedCrop);
 
-      const response = await fetch(`${API_BASE_URL}/predict`, {
+      const response = await fetch(`https://7ed0-41-43-3-74.ngrok-free.app/predict`, {
         method: 'POST',
         body: formData,
       });

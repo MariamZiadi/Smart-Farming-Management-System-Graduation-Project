@@ -20,7 +20,7 @@ export default function LoginScreenArabic() {
     }
 
     try {
-      const response = await axios.post('https://nice-barnacle-complete.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post('https://7787-41-43-3-74.ngrok-free.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;

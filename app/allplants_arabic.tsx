@@ -8,7 +8,7 @@ interface Plant {
   name: string;
 }
 
-// Plant images map
+// Plant images map (Assuming these paths are correct in your assets folder)
 const plantImages: Record<string, any> = {
   apple: require('assets/images/apple.png'),
   barley: require('assets/images/barley.jpeg'),
@@ -99,7 +99,8 @@ export default function AllPlants() {
           return (
             <TouchableOpacity
               style={styles.card}
-              onPress={() => router.push(`/plant/${item._id}`)}
+              // FIX: Change navigation path to plural "plant_arabics"
+              onPress={() => router.push(`/plant_arabics/${item._id}`)}
             >
               <Image source={plantImage} style={styles.plantImage} />
               <Text style={styles.plantName}>{arabicName}</Text>
