@@ -8,7 +8,7 @@ interface Plant {
   name: string;
 }
 
-// Plant images map
+// Plant images map (Assuming these paths are correct in your assets folder)
 const plantImages: Record<string, any> = {
   apple: require('assets/images/apple.png'),
   barley: require('assets/images/barley.jpeg'),
@@ -64,7 +64,8 @@ export default function AllPlants() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('https://c62b-41-43-3-74.ngrok-free.app/plant_arabics')
+    // Fetch all plants
+    fetch('https://7787-41-43-3-74.ngrok-free.app/plant_arabics')
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);
@@ -99,6 +100,7 @@ export default function AllPlants() {
           return (
             <TouchableOpacity
               style={styles.card}
+              // FIX: Change navigation path to plural "plant_arabics"
               onPress={() => router.push(`/plant_arabics/${item._id}`)}
             >
               <Image source={plantImage} style={styles.plantImage} />
