@@ -1,4 +1,4 @@
-//import cron from "node-cron";
+import cron from "node-cron";
 import { parseInterval } from "../utils/planParser";
 import Farm from "../../backend/models/Farm";
 import Plant from "../../backend/models/Plant";

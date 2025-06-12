@@ -5,9 +5,6 @@ import User from "../models/User";
 
 const router = express.Router();
 
-// =====================
-// ✅ Middleware to verify token
-// =====================
 const authenticateToken = (
   req: Request & { userId?: string },
   res: Response,
@@ -24,17 +21,14 @@ const authenticateToken = (
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
     req.userId = decoded.userId;
-    next(); // 👈 properly passes control
+    next(); 
   } catch (err) {
     res.status(403).json({ error: "Invalid token." });
-    return; // 👈 again, exit after sending a response
+    return; 
   }
 };
 
 
-// =====================
-// ✅ POST /login
-// =====================
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
   try {
     const { email, password } = req.body;
@@ -64,15 +58,13 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// =====================
-// ✅ GET /profile
-// =====================
+
 router.get("/profile", authenticateToken, async (
   req: Request & { userId?: string },
   res: Response
 ): Promise<void> => {
   try {
-    const user = await User.findById(req.userId).select("name email image");
+    const user = await User.findById(req.userId).select("name email image farms");
 
     if (!user) {
       res.status(404).json({ error: "User not found" });
@@ -82,12 +74,14 @@ router.get("/profile", authenticateToken, async (
     res.status(200).json({
       name: user.name,
       email: user.email,
+      farms: user.farms || [],
     });
   } catch (error) {
     console.error("❌ Profile Fetch Error:", error);
     res.status(500).json({ error: "Failed to fetch user profile" });
   }
 });
+
 
 
 export default router;
