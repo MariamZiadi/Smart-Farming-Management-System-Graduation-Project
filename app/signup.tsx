@@ -41,7 +41,7 @@ export default function SignUpScreen() {
       );
     } else {
       try {
-        const response = await axios.post("https://d440-154-239-77-135.ngrok-free.app/users/register", {
+        const response = await axios.post("https://cb93-154-239-126-13.ngrok-free.app/users/register", {
           name,
           email,
           password,

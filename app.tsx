@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-
+import dotenv from 'dotenv';
+dotenv.config();
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-
 import HomeScreen from './app/index.js';
 import LoginScreen from './app/login.js';
 import SignUpScreen from './app/signup.js';

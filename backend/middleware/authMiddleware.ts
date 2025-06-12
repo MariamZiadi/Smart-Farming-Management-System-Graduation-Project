@@ -17,7 +17,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 
   try {
     if (!process.env.JWT_SECRET) {
-      console.error("🚨 JWT_SECRET is missing from environment variables.");
+      console.error(" JWT_SECRET is missing from environment variables.");
       res.status(500).json({ message: "Internal Server Error: JWT secret is not configured" });
       return
     }
@@ -27,7 +27,7 @@ export const authMiddleware = (req: AuthRequest, res: Response, next: NextFuncti
 
     next(); // Proceed to next middleware or route handler
   } catch (error) {
-    console.error("🚨 Token verification failed:", error);
+    console.error(" Token verification failed:", error);
     res.status(401).json({ message: "Unauthorized: Invalid token" });
     return
   }
