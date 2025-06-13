@@ -1,91 +1,92 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  View,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  ImageBackground,
-  FlatList,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
+  View, Text, TextInput, TouchableOpacity, StyleSheet,
+  ImageBackground, KeyboardAvoidingView, Platform, ScrollView, Alert
 } from 'react-native';
-import Autocomplete from 'react-native-autocomplete-input';
+import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
-import { useRouter } from 'expo-router';
+import { useRouter, useFocusEffect } from 'expo-router';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // ✅ correct import
+
+
+type PlantItem = {
+  name: string;
+  key: string;
+};
 
 export default function AddFarmPage() {
-  const [plants, setPlants] = useState([{ name: '', key: 'Plant 1' }]);
+  const [plants, setPlants] = useState<PlantItem[]>([{ name: '', key: 'Plant 1' }]);
   const [farmName, setFarmName] = useState('');
   const [farmPassword, setFarmPassword] = useState('');
-const plantSuggestions = [
-  'Apple',
-  'Barley',
-  'Basil',
-  'Blueberry',
-  'Cherry',
-  'Corn',
-  'Cucumber',
-  'Grape',
-  'Lettuce',
-  'Mint',
-  'Nettle',
-  'Oats',
-  'Orange',
-  'Pepper Bell',
-  'Rice',
-  'Thyme',
-  'Tomato',
-  'Wheat',
-  'Peach',
-  'Potato',
-  'Carrot'
-];
+  const [loading, setLoading] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
+
+  const plantSuggestions: string[] = [
+    'Apple', 'Barley', 'Basil', 'Blueberry', 'Cherry', 'Corn', 'Cucumber',
+    'Grape', 'Lettuce', 'Mint', 'Nettle', 'Oats', 'Orange', 'Pepper Bell',
+    'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato', 'Carrot'
+  ];
+
+useFocusEffect(
+  React.useCallback(() => {
+    const fetchToken = async () => {
+      console.log('🔄 Refetching token on screen focus');
+      const storedToken = await AsyncStorage.getItem('userToken');
+      console.log('🔐 Token retrieved in AddFarm:', storedToken);
+      setToken(storedToken);
+    };
+
+    fetchToken();
+  }, [])
+);
+
 
   const addPlantField = () => {
     setPlants([...plants, { name: '', key: `Plant ${plants.length + 1}` }]);
   };
 
-  const updatePlantName = (index, name) => {
+  const updatePlantName = (index: number, name: string) => {
     const updatedPlants = [...plants];
     updatedPlants[index].name = name;
     setPlants(updatedPlants);
   };
 
-  const renderItem = ({ item, index }) => (
-    <View style={styles.inputContainer}>
-      <Text style={styles.label}>{item.key}</Text>
-      <View style={styles.row}>
-        <Autocomplete
-          data={
-            item.name
-              ? plantSuggestions.filter((suggestion) =>
-                  suggestion.toLowerCase().includes(item.name.toLowerCase())
-                )
-              : []
-          }
-          defaultValue={item.name}
-          onChangeText={(text) => updatePlantName(index, text)}
-          placeholder={`Enter ${item.key.toLowerCase()}`}
-          containerStyle={styles.autocompleteContainer}
-          inputContainerStyle={styles.input}
-          renderItem={({ item }) => (
-            <TouchableOpacity onPress={() => updatePlantName(index, item)}>
-              <Text style={styles.suggestionText}>{item}</Text>
-            </TouchableOpacity>
-          )}
-        />
-        {index === plants.length - 1 && (
-          <TouchableOpacity style={styles.addPlantButton} onPress={addPlantField}>
-            <Text style={styles.addPlantButtonText}>+</Text>
-          </TouchableOpacity>
-        )}
-      </View>
-    </View>
-  );
+  const handleAddFarm = async () => {
+    try {
+      setLoading(true);
 
-  const router = useRouter();
+      if (!token) {
+        Alert.alert('Authentication Error', 'User not authenticated. Please log in again.');
+        return;
+      }
+
+      const cropNames = plants.filter(p => p.name.trim()).map(p => ({ name: p.name.trim() }));
+
+      const response = await axios.post(
+        'https://ab13-197-121-251-146.ngrok-free.app/farms/create',
+        {
+          name: farmName,
+          password: farmPassword,
+          crops: cropNames,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      Alert.alert('✅ Success', response.data.message || 'Farm added successfully.');
+      router.replace('./allFarms');
+    } catch (error: any) {
+      console.error('❌ Farm creation error:', error?.response || error);
+      Alert.alert('Error', error?.response?.data?.message || 'Could not add farm.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -107,7 +108,6 @@ const plantSuggestions = [
 
         <Text style={styles.title}>Add Your New Farm</Text>
         <ScrollView contentContainerStyle={styles.scrollContent}>
-          {/* Farm Name Field */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Farm Name</Text>
             <TextInput
@@ -118,7 +118,6 @@ const plantSuggestions = [
             />
           </View>
 
-          {/* Farm Password Field */}
           <View style={styles.inputContainer}>
             <Text style={styles.label}>Farm Password</Text>
             <TextInput
@@ -130,20 +129,36 @@ const plantSuggestions = [
             />
           </View>
 
-          {/* Plant Fields */}
-          <FlatList
-            data={[...plants, { isFooter: true }]}
-            renderItem={({ item, index }) =>
-              item.isFooter ? (
-                <TouchableOpacity style={styles.addFarmButton}>
-                  <Text style={styles.addFarmButtonText}>Add Farm</Text>
-                </TouchableOpacity>
-              ) : (
-                renderItem({ item, index })
-              )
-            }
-            keyExtractor={(item, index) => index.toString()}
-          />
+          {plants.map((plant, index) => (
+            <View key={plant.key} style={styles.inputContainer}>
+              <Text style={styles.label}>{plant.key}</Text>
+              <View style={styles.row}>
+                <View style={styles.pickerWrapper}>
+                  <Picker
+                    selectedValue={plant.name}
+                    onValueChange={(value) => updatePlantName(index, value)}
+                    style={styles.picker}
+                  >
+                    <Picker.Item label="Select a plant" value="" />
+                    {plantSuggestions.map((suggestion, idx) => (
+                      <Picker.Item key={idx} label={suggestion} value={suggestion} />
+                    ))}
+                  </Picker>
+                </View>
+                {index === plants.length - 1 && (
+                  <TouchableOpacity style={styles.addPlantButton} onPress={addPlantField}>
+                    <Text style={styles.addPlantButtonText}>+</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          ))}
+
+          <TouchableOpacity style={styles.addFarmButton} onPress={handleAddFarm}>
+            <Text style={styles.addFarmButtonText}>
+              {loading ? 'Adding...' : 'Add Farm'}
+            </Text>
+          </TouchableOpacity>
         </ScrollView>
       </ImageBackground>
     </KeyboardAvoidingView>
@@ -200,6 +215,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  pickerWrapper: {
+    flex: 1,
+    backgroundColor: '#fff',
+    borderRadius: 8,
+  },
+  picker: {
+    height: 50,
+    width: '100%',
+  },
   addPlantButton: {
     backgroundColor: 'rgb(9, 71, 10)',
     height: 50,
@@ -227,13 +251,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 18,
     fontWeight: 'bold',
-  },
-  autocompleteContainer: {
-    flex: 1,
-  },
-  suggestionText: {
-    padding: 10,
-    fontSize: 16,
-    color: '#000',
   },
 });

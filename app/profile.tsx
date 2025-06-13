@@ -38,7 +38,7 @@ const ProfileScreen = () => {
           return;
         }
 
-        const response = await axios.get('https://ff64-41-43-3-74.ngrok-free.app/auth/profile', {
+        const response = await axios.get('https://ab13-197-121-251-146.ngrok-free.app/auth/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

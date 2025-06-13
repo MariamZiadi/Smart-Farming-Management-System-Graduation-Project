@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
-import { Link } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import {
   View,
   Text,
@@ -16,11 +15,14 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Define a TypeScript type for farms
+type Crop = {
+  name: string;
+};
+
 type Farm = {
   _id: string;
   name: string;
-  crops: string[];
+  crops: Crop[];
 };
 
 const AllFarmsPage = () => {
@@ -30,21 +32,21 @@ const AllFarmsPage = () => {
 
   const fetchFarms = async () => {
     try {
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem("userToken");
       if (!token) {
         setError("Unauthorized: No token found");
         return;
       }
-  
-      const response = await axios.get("http://10.0.2.2:5000/farms/my-farms", {
+
+      const response = await axios.get("https://ab13-197-121-251-146.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
-  
+
       if (response.data.message) {
-        setError(response.data.message); // If message exists, show it
-        setFarms([]); // Ensure farms array is empty
+        setError(response.data.message);
+        setFarms([]);
       } else {
-        setFarms(response.data.farms); // Store farms in state
+        setFarms(response.data.farms);
         setError(null);
       }
     } catch (error) {
@@ -52,7 +54,7 @@ const AllFarmsPage = () => {
       setError("Failed to fetch farms");
     }
   };
-  
+
   useEffect(() => {
     fetchFarms();
   }, []);
@@ -76,28 +78,29 @@ const AllFarmsPage = () => {
         />
         <Text style={styles.title}>All your farms</Text>
 
-                  {error ? (
-            <Text style={styles.noFarmsText}>{error}</Text> // Show proper message
-          ) : farms.length > 0 ? (
-            farms.map((farm) => (
-              <View key={farm._id} style={styles.card}>
-                <View style={styles.cardContent}>
-                  <View style={styles.info}>
-                    <Text style={styles.plantName}>{farm.name}</Text>
-                    <View style={styles.details}>
-                      <Text style={styles.detailsHeader}>Plants</Text>
-                      <Text style={styles.detailsText}>
-                        {farm.crops.length > 0 ? farm.crops.join(", ") : "No crops listed"}
-                      </Text>
-                    </View>
+        {error ? (
+          <Text style={styles.noFarmsText}>{error}</Text>
+        ) : farms.length > 0 ? (
+          farms.map((farm) => (
+            <View key={farm._id} style={styles.card}>
+              <View style={styles.cardContent}>
+                <View style={styles.info}>
+                  <Text style={styles.plantName}>{farm.name}</Text>
+                  <View style={styles.details}>
+                    <Text style={styles.detailsHeader}>Plants</Text>
+                    <Text style={styles.detailsText}>
+                      {farm.crops.length > 0
+                        ? farm.crops.map(crop => crop.name).join(", ")
+                        : "No crops listed"}
+                    </Text>
                   </View>
                 </View>
               </View>
-            ))
-          ) : (
-            <Text style={styles.noFarmsText}>No farms found.</Text>
-          )}
-
+            </View>
+          ))
+        ) : (
+          <Text style={styles.noFarmsText}>No farms found.</Text>
+        )}
 
         <Link href="./add_farm" style={styles.addFarmButton}>
           <Text style={styles.addFarmButtonText}>Add New Farm</Text>
@@ -167,57 +170,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    marginBottom: 22,
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    marginBottom: 20,
+    padding: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    elevation: 5,
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
   },
   cardContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
+    gap: 12,
   },
   info: {
-    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
   },
   plantName: {
-    fontSize: 22,
-    fontWeight: 'bold',
+    fontSize: 24,
+    fontWeight: '700',
     marginBottom: 8,
-    color: 'black',
-  },
-  addFarmButton: {
-    backgroundColor: 'rgb(9, 71, 10)',
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginHorizontal: 50,
-    marginTop: 5,
-    marginBottom: 30,
-  },
-  addFarmButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: '#2e7d32',
   },
   details: {
-    paddingTop: 8,
-    backgroundColor: 'white',
+    marginTop: 6,
+    backgroundColor: '#f1f8e9',
+    borderRadius: 10,
+    padding: 10,
   },
   detailsHeader: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 8,
-    color: 'rgb(9, 71, 10)',
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#1b5e20',
+    marginBottom: 4,
   },
   detailsText: {
-    fontSize: 18,
-    lineHeight: 20,
-    fontWeight: 'semibold',
-    color: 'rgb(9, 71, 10)',
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#33691e',
+    lineHeight: 22,
   },
   bottomNav: {
     flexDirection: 'row',
@@ -239,6 +233,19 @@ const styles = StyleSheet.create({
   },
   navItem: {
     fontSize: 24,
+  },
+  addFarmButton: {
+    marginTop: 20,
+    backgroundColor: 'rgb(9, 71, 10)',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 10,
+    alignSelf: 'center',
+  },
+  addFarmButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
   },
 });
 
