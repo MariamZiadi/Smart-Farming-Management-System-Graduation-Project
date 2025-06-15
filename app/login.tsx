@@ -19,7 +19,7 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post(`https://ff64-41-43-3-74.ngrok-free.app/auth/login`, { email, password });
+      const response = await axios.post(`https://43b2-41-43-3-74.ngrok-free.app/auth/login`, { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;

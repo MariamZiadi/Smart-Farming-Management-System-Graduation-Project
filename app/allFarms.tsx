@@ -36,7 +36,7 @@ const AllFarmsPage = () => {
         return;
       }
   
-      const response = await axios.get("http://10.0.2.2:5000/farms/my-farms", {
+      const response = await axios.get("https://43b2-41-43-3-74.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
   
