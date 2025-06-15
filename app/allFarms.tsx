@@ -23,6 +23,7 @@ type Farm = {
   _id: string;
   name: string;
   crops: Crop[];
+  plainPassword: string; // added to receive from backend
 };
 
 const AllFarmsPage = () => {
@@ -38,7 +39,7 @@ const AllFarmsPage = () => {
         return;
       }
 
-      const response = await axios.get("https://ab13-197-121-251-146.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://7aec-41-43-3-74.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -86,6 +87,8 @@ const AllFarmsPage = () => {
               <View style={styles.cardContent}>
                 <View style={styles.info}>
                   <Text style={styles.plantName}>{farm.name}</Text>
+                  <Text style={styles.farmPassword}>Password: {farm.plainPassword}</Text>
+
                   <View style={styles.details}>
                     <Text style={styles.detailsHeader}>Plants</Text>
                     <Text style={styles.detailsText}>
@@ -192,8 +195,14 @@ const styles = StyleSheet.create({
   plantName: {
     fontSize: 24,
     fontWeight: '700',
-    marginBottom: 8,
+    marginBottom: 4,
     color: '#2e7d32',
+  },
+  farmPassword: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2e7d32',
+    marginBottom: 8,
   },
   details: {
     marginTop: 6,

@@ -65,7 +65,7 @@ useFocusEffect(
       const cropNames = plants.filter(p => p.name.trim()).map(p => ({ name: p.name.trim() }));
 
       const response = await axios.post(
-        'https://ab13-197-121-251-146.ngrok-free.app/farms/create',
+        'https://ed24-41-43-3-74.ngrok-free.app/farms/create',
         {
           name: farmName,
           password: farmPassword,
