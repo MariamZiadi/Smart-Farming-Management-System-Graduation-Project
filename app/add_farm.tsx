@@ -7,8 +7,8 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useFocusEffect } from 'expo-router';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; // ✅ correct import
-
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type PlantItem = {
   name: string;
@@ -22,6 +22,8 @@ export default function AddFarmPage() {
   const [loading, setLoading] = useState(false);
   const [token, setToken] = useState<string | null>(null);
   const router = useRouter();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const plantSuggestions: string[] = [
     'Apple', 'Barley', 'Basil', 'Blueberry','Strawberry', 'Cucumber',
@@ -118,7 +120,7 @@ useFocusEffect(
             />
           </View>
 
-          <View style={styles.inputContainer}>
+          {/* <View style={styles.inputContainer}>
             <Text style={styles.label}>Farm Password</Text>
             <TextInput
               style={styles.input}
@@ -127,7 +129,20 @@ useFocusEffect(
               placeholder="Enter farm password"
               secureTextEntry
             />
-          </View>
+          </View> */}
+          <View style={styles.inputWrapper}>
+                    <TextInput
+                      style={styles.inputWithIcon}
+                      placeholder="Enter Farm Password"
+                      placeholderTextColor="#888"
+                      value={farmPassword}
+                      onChangeText={setFarmPassword}
+                      secureTextEntry={!showPassword}
+                    />
+                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                        <Icon2 name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
+                    </TouchableOpacity>
+                  </View>
 
           {plants.map((plant, index) => (
             <View key={plant.key} style={styles.inputContainer}>
@@ -211,6 +226,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     flex: 1,
   },
+  inputWithIcon: {
+  flex: 1,
+  fontSize: 16,
+  color: "#000",
+},
+  eyeIcon: { paddingHorizontal: 5 },
+
+    inputWrapper: {
+  flexDirection: "row",
+  alignItems: "center",
+  backgroundColor: "#f5f5f5",
+  borderRadius: 8,
+  height: 50,
+  paddingHorizontal: 10,
+  shadowColor: "#000",
+  shadowOpacity: 0.1,
+  shadowRadius: 10,
+  elevation: 4,
+  marginVertical: 16,
+},
   row: {
     flexDirection: 'row',
     alignItems: 'center',
