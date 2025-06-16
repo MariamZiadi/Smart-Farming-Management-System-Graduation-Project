@@ -583,7 +583,6 @@ const styles = StyleSheet.create({
   },
   notificationIcon: {
     position: 'absolute',
-    top: 25,
     left: 350,
   },
 

@@ -4,7 +4,6 @@ import {
   Text,
   TextInput,
   StyleSheet,
-  Image,
   ImageBackground,
   ScrollView,
   Alert,
@@ -15,11 +14,16 @@ import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
+interface Farm {
+  _id: string;
+  name: string;
+}
+
 interface Profile {
   name: string;
   email: string;
   image: string | null;
-  farms: string[];
+  farms: Farm[];
 }
 
 const ProfileScreen = () => {
@@ -38,7 +42,7 @@ const ProfileScreen = () => {
           return;
         }
 
-        const response = await axios.get('https://7c3a-41-43-3-74.ngrok-free.app/auth/profile', {
+        const response = await axios.get('https://0bb5-41-43-3-74.ngrok-free.app/auth/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -80,10 +84,8 @@ const ProfileScreen = () => {
       <View style={styles.overlay} />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        
         <Text style={styles.title}>My Profile</Text>
 
-        {/* 👤 Default Icon under My Profile */}
         <View style={styles.iconContainer}>
           <Ionicons name="person-circle-outline" size={70} color="white" />
         </View>
@@ -98,7 +100,7 @@ const ProfileScreen = () => {
               <View style={styles.dropdown}>
                 {profile.farms.map((farm, index) => (
                   <Text key={index} style={styles.dropdownItem}>
-                    🌿 {farm}
+                    🌿 {farm.name}
                   </Text>
                 ))}
               </View>
@@ -137,17 +139,6 @@ const styles = StyleSheet.create({
     padding: 20,
     paddingTop: 70,
   },
-  imageContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
-    borderColor: '#fff',
-  },
   iconContainer: {
     alignItems: 'center',
     marginBottom: 25,
@@ -168,9 +159,6 @@ const styles = StyleSheet.create({
     padding: 15,
     marginBottom: 15,
     elevation: 3,
-  },
-  field: {
-    marginBottom: 15,
   },
   inputLabel: {
     fontSize: 18,

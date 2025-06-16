@@ -64,7 +64,9 @@ router.get("/profile", authenticateToken, async (
   res: Response
 ): Promise<void> => {
   try {
-    const user = await User.findById(req.userId).select("name email image farms");
+    const user = await User.findById(req.userId)
+      .select("name email image farms")
+      .populate("farms", "name"); // This fetches farm names
 
     if (!user) {
       res.status(404).json({ error: "User not found" });
@@ -74,13 +76,14 @@ router.get("/profile", authenticateToken, async (
     res.status(200).json({
       name: user.name,
       email: user.email,
-      farms: user.farms || [],
+      farms: user.farms || [], // Now contains objects with `_id` and `name`
     });
   } catch (error) {
     console.error("❌ Profile Fetch Error:", error);
     res.status(500).json({ error: "Failed to fetch user profile" });
   }
 });
+
 
 
 

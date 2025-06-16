@@ -21,7 +21,6 @@ export default function JoinFarmScreen() {
   const [farmPassword, setFarmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
-
   const handleJoinFarm = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
@@ -60,7 +59,7 @@ export default function JoinFarmScreen() {
             secureTextEntry={!showPassword}
           />
           <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-              <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
+              <Icon2 name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
           </TouchableOpacity>
         </View>
         <TouchableOpacity style={styles.button} onPress={handleJoinFarm}>
