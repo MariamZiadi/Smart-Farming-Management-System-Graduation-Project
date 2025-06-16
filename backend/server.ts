@@ -9,7 +9,7 @@ import userRoutes from "./routes/userRoutes"; // Import user routes
 import farmsRoutes from "./routes/farmRoutes";
 import postRoutes from "./routes/postRoutes"; // Import post routes
 import plantRoutes_arabic from "./routes/plantRoutes_arabic"; // adjust path as needed
-//import "../../app/cronJobs/plantCareReminder";
+import reminderRoutes from './routes/reminderRoutes';
 
 
 dotenv.config();
@@ -36,6 +36,7 @@ app.use("/auth", authRoutes);
 app.use("/users", userRoutes); // User routes
 app.use("/farms", farmsRoutes);
 app.use("/posts", postRoutes); // This will handle routes like POST /posts
+app.use("/farms", reminderRoutes);
 
 
 

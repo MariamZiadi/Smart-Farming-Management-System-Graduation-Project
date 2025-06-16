@@ -24,9 +24,9 @@ export default function AddFarmPage() {
   const router = useRouter();
 
   const plantSuggestions: string[] = [
-    'Apple', 'Barley', 'Basil', 'Blueberry', 'Cherry', 'Corn', 'Cucumber',
-    'Grape', 'Lettuce', 'Mint', 'Nettle', 'Oats', 'Orange', 'Pepper Bell',
-    'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato', 'Carrot'
+    'Apple', 'Barley', 'Basil', 'Blueberry','Strawberry', 'Cucumber',
+    'Grape', 'Lettuce', 'Mint', 'Oats', 'Orange', 'Pepper Bell',
+    'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato'
   ];
 
 useFocusEffect(
@@ -65,7 +65,7 @@ useFocusEffect(
       const cropNames = plants.filter(p => p.name.trim()).map(p => ({ name: p.name.trim() }));
 
       const response = await axios.post(
-        'https://ed24-41-43-3-74.ngrok-free.app/farms/create',
+        'https://7c3a-41-43-3-74.ngrok-free.app/farms/create',
         {
           name: farmName,
           password: farmPassword,

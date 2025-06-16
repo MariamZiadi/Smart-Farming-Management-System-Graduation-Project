@@ -51,16 +51,18 @@ export default function JoinFarmScreen() {
       <View style={styles.main}>
         <Text style={styles.title}>Join Your Farm</Text>
         <View style={styles.inputWrapper}>
-  <Icon name="lock" size={20} color="#aaa" style={styles.icon} />
-  <TextInput
-    style={styles.inputWithIcon}
-    placeholder="Enter Farm Password"
-    placeholderTextColor="#888"
-    value={farmPassword}
-    onChangeText={setFarmPassword}
-    secureTextEntry={!showPassword}
-  />
-</View>
+          <TextInput
+            style={styles.inputWithIcon}
+            placeholder="Enter Farm Password"
+            placeholderTextColor="#888"
+            value={farmPassword}
+            onChangeText={setFarmPassword}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+              <Icon name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.button} onPress={handleJoinFarm}>
           <Text style={styles.buttonText}>Join</Text>
         </TouchableOpacity>
@@ -120,5 +122,6 @@ inputWithIcon: {
   fontSize: 16,
   color: "#000",
 },
+  eyeIcon: { paddingHorizontal: 5 },
 
 });

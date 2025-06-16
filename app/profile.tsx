@@ -38,7 +38,7 @@ const ProfileScreen = () => {
           return;
         }
 
-        const response = await axios.get('https://ab13-197-121-251-146.ngrok-free.app/auth/profile', {
+        const response = await axios.get('https://7c3a-41-43-3-74.ngrok-free.app/auth/profile', {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -80,13 +80,7 @@ const ProfileScreen = () => {
       <View style={styles.overlay} />
 
       <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: profile.image || 'https://via.placeholder.com/150' }}
-            style={styles.profileImage}
-          />
-        </View>
-
+        
         <Text style={styles.title}>My Profile</Text>
 
         {/* 👤 Default Icon under My Profile */}
