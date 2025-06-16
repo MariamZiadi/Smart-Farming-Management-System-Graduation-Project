@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
   ImageBackground, KeyboardAvoidingView, Platform, ScrollView, Alert
@@ -7,7 +7,7 @@ import { Picker } from '@react-native-picker/picker';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter, useFocusEffect } from 'expo-router';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage'; 
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 
 type PlantItem = {
@@ -24,26 +24,21 @@ export default function AddFarmPage() {
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
 
-
   const plantSuggestions: string[] = [
-    'Apple', 'Barley', 'Basil', 'Blueberry','Strawberry', 'Cucumber',
+    'Apple', 'Barley', 'Basil', 'Blueberry', 'Strawberry', 'Cucumber',
     'Grape', 'Lettuce', 'Mint', 'Oats', 'Orange', 'Pepper Bell',
     'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato'
   ];
 
-useFocusEffect(
-  React.useCallback(() => {
-    const fetchToken = async () => {
-      console.log('🔄 Refetching token on screen focus');
-      const storedToken = await AsyncStorage.getItem('userToken');
-      console.log('🔐 Token retrieved in AddFarm:', storedToken);
-      setToken(storedToken);
-    };
-
-    fetchToken();
-  }, [])
-);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchToken = async () => {
+        const storedToken = await AsyncStorage.getItem('userToken');
+        setToken(storedToken);
+      };
+      fetchToken();
+    }, [])
+  );
 
   const addPlantField = () => {
     setPlants([...plants, { name: '', key: `Plant ${plants.length + 1}` }]);
@@ -58,7 +53,6 @@ useFocusEffect(
   const handleAddFarm = async () => {
     try {
       setLoading(true);
-
       if (!token) {
         Alert.alert('Authentication Error', 'User not authenticated. Please log in again.');
         return;
@@ -74,9 +68,7 @@ useFocusEffect(
           crops: cropNames,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         }
       );
 
@@ -91,14 +83,8 @@ useFocusEffect(
   };
 
   return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-    >
-      <ImageBackground
-        source={require('../assets/images/BG2.jpg')}
-        style={styles.background}
-      >
+    <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+      <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
         <View style={styles.overlay} />
         <Ionicons
           name="arrow-back"
@@ -107,7 +93,6 @@ useFocusEffect(
           style={styles.backIcon}
           onPress={() => router.push('./allFarms')}
         />
-
         <Text style={styles.title}>Add Your New Farm</Text>
         <ScrollView contentContainerStyle={styles.scrollContent}>
           <View style={styles.inputContainer}>
@@ -117,32 +102,26 @@ useFocusEffect(
               value={farmName}
               onChangeText={setFarmName}
               placeholder="Enter farm name"
+              placeholderTextColor="#888"
             />
           </View>
 
-          {/* <View style={styles.inputContainer}>
+          <View style={styles.inputContainer}>
             <Text style={styles.label}>Farm Password</Text>
-            <TextInput
-              style={styles.input}
-              value={farmPassword}
-              onChangeText={setFarmPassword}
-              placeholder="Enter farm password"
-              secureTextEntry
-            />
-          </View> */}
-          <View style={styles.inputWrapper}>
-                    <TextInput
-                      style={styles.inputWithIcon}
-                      placeholder="Enter Farm Password"
-                      placeholderTextColor="#888"
-                      value={farmPassword}
-                      onChangeText={setFarmPassword}
-                      secureTextEntry={!showPassword}
-                    />
-                    <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
-                        <Icon2 name={showPassword ? 'eye-slash' : 'eye'} size={20} color="#aaa" />
-                    </TouchableOpacity>
-                  </View>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.inputWithIcon}
+                placeholder="Enter farm password"
+                placeholderTextColor="#888"
+                value={farmPassword}
+                onChangeText={setFarmPassword}
+                secureTextEntry={!showPassword}
+              />
+              <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeIcon}>
+                <Icon2 name={showPassword ? 'eye-off' : 'eye'} size={22} color="#666" />
+              </TouchableOpacity>
+            </View>
+          </View>
 
           {plants.map((plant, index) => (
             <View key={plant.key} style={styles.inputContainer}>
@@ -170,9 +149,7 @@ useFocusEffect(
           ))}
 
           <TouchableOpacity style={styles.addFarmButton} onPress={handleAddFarm}>
-            <Text style={styles.addFarmButtonText}>
-              {loading ? 'Adding...' : 'Add Farm'}
-            </Text>
+            <Text style={styles.addFarmButtonText}>{loading ? 'Adding...' : 'Add Farm'}</Text>
           </TouchableOpacity>
         </ScrollView>
       </ImageBackground>
@@ -197,25 +174,22 @@ const styles = StyleSheet.create({
     marginLeft: 10,
   },
   title: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
-    marginTop: 30,
+    marginTop: 20,
     marginBottom: 30,
   },
   inputContainer: {
-    flexDirection: 'column',
     marginHorizontal: 20,
     marginBottom: 15,
-    padding: 15,
-    borderRadius: 8,
   },
   label: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'white',
-    marginBottom: 5,
+    marginBottom: 6,
   },
   input: {
     height: 50,
@@ -224,28 +198,27 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderRadius: 8,
     paddingHorizontal: 10,
-    flex: 1,
+  },
+  inputWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#fff",
+    borderRadius: 8,
+    height: 50,
+    paddingHorizontal: 10,
+    shadowColor: "#000",
+    shadowOpacity: 0.05,
+    shadowRadius: 6,
+    elevation: 2,
   },
   inputWithIcon: {
-  flex: 1,
-  fontSize: 16,
-  color: "#000",
-},
-  eyeIcon: { paddingHorizontal: 5 },
-
-    inputWrapper: {
-  flexDirection: "row",
-  alignItems: "center",
-  backgroundColor: "#f5f5f5",
-  borderRadius: 8,
-  height: 50,
-  paddingHorizontal: 10,
-  shadowColor: "#000",
-  shadowOpacity: 0.1,
-  shadowRadius: 10,
-  elevation: 4,
-  marginVertical: 16,
-},
+    flex: 1,
+    fontSize: 16,
+    color: "#000",
+  },
+  eyeIcon: {
+    paddingLeft: 10,
+  },
   row: {
     flexDirection: 'row',
     alignItems: 'center',

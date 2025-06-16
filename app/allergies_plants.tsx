@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-import { Link, Stack } from 'expo-router';
+import { Link } from 'expo-router';
 import {
   View,
   Text,
@@ -14,54 +14,83 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
-/*import plant1 from '../assets/images/babys-breath.jpg';
-import plant2 from '../assets/images/Hyacinth.jpg';
-import plant3 from '../assets/images/poision oak.jpg';
-import plant4 from '../assets/images/ragweed.jpg';
-import plant5 from '../assets/images/nettle.jpg';*/
-
-
 const plants = [
   {
     id: 1,
     name: "Baby's-breath",
     image: require('../assets/images/babys-breath.jpg'),
-    details: 'Circumstances: Sunny areas\nAvoidance: Wear gloves while handling.',
-    watering: 'Water in 7 days',
+    circumstances: 'Thrives in full sun with well-drained soil; drought-tolerant.',
+    avoidance: 'Wear gloves when handling.',
+    allergenic: 'Contains saponins that can cause skin irritation or trigger mild asthma in sensitive individuals.',
   },
   {
     id: 2,
     name: 'Hyacinth',
     image: require('../assets/images/Hyacinth.jpg'),
-    details: 'Circumstances: Requires watering twice a week\nAvoidance: Keep it out of reach.',
-    watering: 'Water in 3 days',
+    circumstances: 'Water every 7–14 days; prefers full to partial sun.',
+    avoidance: 'Wear gloves and keep away from children/pets.',
+    allergenic: 'Bulbs cause skin irritation (contact dermatitis); toxic if ingested, especially to pets.',
   },
   {
     id: 3,
     name: 'Poison Oak',
     image: require('../assets/images/poision oak.jpg'),
-    details: 'Circumstances: Sunny areas\nAvoidance: Wear gloves while handling.',
-    watering: 'Water in 7 days',
+    circumstances: 'Grows in sunny to shaded areas; no watering needed.',
+    avoidance: 'Wear full protective gear and avoid contact.',
+    allergenic: 'Releases urushiol oil that causes severe allergic skin rash (contact dermatitis).',
   },
   {
     id: 4,
     name: 'Ragweed',
     image: require('../assets/images/ragweed.jpg'),
-    details: 'Circumstances: Requires watering twice a week\nAvoidance: Keep it out of reach.',
-    watering: 'Water in 3 days',
+    circumstances: 'Thrives in dry soil; no watering required.',
+    avoidance: 'Avoid exposure during pollen season.',
+    allergenic: 'Produces airborne pollen that causes hay fever, sneezing, and allergic rhinitis.',
   },
   {
     id: 5,
     name: 'Nettle',
     image: require('../assets/images/nettle.jpg'),
-    details: 'Circumstances: Requires watering twice a week\nAvoidance: Keep it out of reach.',
-    watering: 'Water in 3 days',
+    circumstances: 'Prefers moist, rich soil.',
+    avoidance: 'Wear gloves; wash skin after contact.',
+    allergenic: 'Stinging hairs inject histamine and other irritants, causing a burning rash.',
+  },
+  {
+    id: 6,
+    name: 'Oleander',
+    image: require('../assets/images/oleander.jpg'),
+    circumstances: 'Needs full sun and moderate watering.',
+    avoidance: 'Keep away from children and pets; wear gloves.',
+    allergenic: 'Extremely toxic—can cause heart issues if ingested; even touching sap may irritate skin.',
+  },
+  {
+    id: 7,
+    name: 'Foxglove',
+    image: require('../assets/images/foxglove.jpg'),
+    circumstances: 'Prefers partial shade, moist soil.',
+    avoidance: 'Handle with care; do not ingest.',
+    allergenic: 'All parts contain cardiac glycosides—highly poisonous if consumed.',
+  },
+  {
+    id: 8,
+    name: 'Castor Bean',
+    image: require('../assets/images/castor-bean.jpg'),
+    circumstances: 'Requires full sun; grows in warm climates.',
+    avoidance: 'Avoid handling seeds; do not grow in accessible areas.',
+    allergenic: 'Seeds contain ricin—one of the most toxic naturally occurring substances.',
+  },
+  {
+    id: 9,
+    name: 'Poinsettia',
+    image: require('../assets/images/poinsettia.jpg'),
+    circumstances: 'Needs bright, indirect light; light watering.',
+    avoidance: 'Wash hands after contact.',
+    allergenic: 'Sap may cause mild skin irritation or nausea if ingested; not as toxic as once believed.',
   },
 ];
 
 const PlantAllergyPage = () => {
-    const router = useRouter();
-  
+  const router = useRouter();
   const [expandedPlantId, setExpandedPlantId] = useState(null);
 
   const toggleDropdown = (plantId) => {
@@ -83,7 +112,7 @@ const PlantAllergyPage = () => {
           size={27}
           color="white"
           style={styles.backIcon}
-          onPress={() => router.push('./homepage')} 
+          onPress={() => router.push('./homepage')}
         />
         <Text style={styles.title}>Allergenic Plants</Text>
         {plants.map((plant) => (
@@ -119,30 +148,36 @@ const PlantAllergyPage = () => {
             </View>
             {expandedPlantId === plant.id && (
               <View style={styles.details}>
-                <Text style={styles.detailsHeader}>Additional Information</Text>
-                <Text style={styles.detailsText}>{plant.details}</Text>
+                <Text style={styles.detailsHeader}>Circumstances</Text>
+                <Text style={styles.detailsText}>{plant.circumstances}</Text>
+
+                <Text style={styles.detailsHeader}>Avoidance</Text>
+                <Text style={styles.detailsText}>{plant.avoidance}</Text>
+
+                <Text style={styles.detailsHeader}>Allergenic/Toxicity</Text>
+                <Text style={styles.detailsText}>{plant.allergenic}</Text>
               </View>
             )}
           </View>
         ))}
       </ScrollView>
       <View style={styles.bottomNav}>
-              <Link href="./homepage">
-                <Icon name="home" size={30} color="#000" />
-              </Link>
-              <Link href="./profile">
-                <Icon name="person" size={30} color="#000" />
-              </Link>
-              <Link href="./disease_detection">
-                <Icon2 name="leaf" size={30} color="#000" />
-              </Link>
-              <Link href="./feed">
-                <Icon2 name="file-document-outline" size={30} color="#000" />
-              </Link>
-              <Link href="./allFarms">
-                <Icon name="local-florist" size={30} color="#000" />
-              </Link>
-            </View>
+        <Link href="./homepage">
+          <Icon name="home" size={30} color="#000" />
+        </Link>
+        <Link href="./profile">
+          <Icon name="person" size={30} color="#000" />
+        </Link>
+        <Link href="./disease_detection">
+          <Icon2 name="leaf" size={30} color="#000" />
+        </Link>
+        <Link href="./feed">
+          <Icon2 name="file-document-outline" size={30} color="#000" />
+        </Link>
+        <Link href="./allFarms">
+          <Icon name="local-florist" size={30} color="#000" />
+        </Link>
+      </View>
     </ImageBackground>
   );
 };
@@ -157,6 +192,7 @@ const styles = StyleSheet.create({
   },
   backIcon: {
     marginLeft: 10,
+    marginTop: 40,
   },
   title: {
     fontSize: 35,
@@ -166,7 +202,6 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
   scrollContainer: {
-    top:40,
     paddingBottom: 20,
     paddingHorizontal: 16,
   },
@@ -180,7 +215,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   expandedCard: {
-    marginBottom: 30, 
+    marginBottom: 30,
   },
   cardContent: {
     flexDirection: 'row',
@@ -190,6 +225,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderTopLeftRadius: 16,
+    borderBottomLeftRadius: 16,
   },
   info: {
     flex: 1,
@@ -222,14 +258,13 @@ const styles = StyleSheet.create({
   detailsHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
+    marginBottom: 6,
     color: 'rgb(9, 71, 10)',
   },
   detailsText: {
     fontSize: 16,
-    lineHeight: 20,
-    fontWeight: 'semibold',
-    color: 'rgb(9, 71, 10)',
+    marginBottom: 10,
+    color: '#333',
   },
   bottomNav: {
     flexDirection: 'row',
@@ -237,9 +272,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#D7E9D4',
     paddingVertical: 10,
-  },
-  navItem: {
-    fontSize: 24,
   },
 });
 
