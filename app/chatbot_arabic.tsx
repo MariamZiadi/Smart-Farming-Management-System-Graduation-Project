@@ -28,7 +28,7 @@ const ChatBot = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://nice-barnacle-complete.ngrok-free.app/chat", {
+      const response = await fetch("https://8c75-41-43-3-74.ngrok-free.app/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),

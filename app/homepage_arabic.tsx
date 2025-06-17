@@ -37,7 +37,7 @@ const HomePage = ({ navigation }: any) => {
   
           <View style={styles.garden}>
             <Text style={styles.yourgarden}>مزارعك</Text>
-            <Link href="./allFarms" style={styles.viewall}>عرض الكل</Link>
+            <Link href="./allFarms_arabic" style={styles.viewall}>عرض الكل</Link>
           </View>
   
           <View style={styles.gardencontainers}>

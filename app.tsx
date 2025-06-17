@@ -17,7 +17,8 @@ import MyGarden from './app/mygarden.js';
 import AddFarmPage from './app/add_farm.js';
 import GroupChat from './app/groupchat.js';
 import ChatBot from './app/chatbot.js';
-import WeatherNotifier from './app/weatherNotifier.js'; // ✅ Import
+import WeatherNotifier from './app/weatherNotifier.js'; 
+import { I18nManager } from 'react-native';
 
 const Stack = createStackNavigator();
 

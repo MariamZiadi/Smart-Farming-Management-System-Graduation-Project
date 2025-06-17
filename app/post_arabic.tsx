@@ -14,10 +14,7 @@ import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { Ionicons } from '@expo/vector-icons';
 
-// Force RTL layout (optional; better controlled via app-wide i18n)
-I18nManager.forceRTL(true);
-
-export default function PostPageArabic() {
+export default function PostPage() {
   const [description, setDescription] = useState('');
   const [photo, setPhoto] = useState<string | null>(null);
   const router = useRouter();
@@ -25,7 +22,7 @@ export default function PostPageArabic() {
   const handleChoosePhoto = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (!permissionResult.granted) {
-      alert('يرجى السماح بالوصول إلى مكتبة الوسائط!');
+      alert('يجب السماح بالوصول إلى مكتبة الصور!');
       return;
     }
 
@@ -42,17 +39,14 @@ export default function PostPageArabic() {
 
   const handlePost = async () => {
     if (!description.trim()) {
-      alert('يرجى كتابة وصف قبل النشر.');
+      alert('يرجى إدخال وصف قبل النشر.');
       return;
     }
 
     try {
-      console.log('الوصف:', description);
-      console.log('رابط الصورة:', photo || 'لا توجد صورة');
+      const token = 'YOUR_AUTH_TOKEN'; // Replace with actual logic
 
-      const token = 'YOUR_AUTH_TOKEN';
-
-      const response = await fetch('https://9a6c-154-239-97-37.ngrok-free.app/posts', {
+      const response = await fetch('https://8c75-41-43-3-74.ngrok-free.app/posts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -66,17 +60,18 @@ export default function PostPageArabic() {
 
       if (!response.ok) {
         const errorDetails = await response.text();
-        console.error('خطأ في الاستجابة:', errorDetails);
-        throw new Error('فشل في إرسال المنشور');
+        console.error('تفاصيل الخطأ:', errorDetails);
+        throw new Error('فشل إرسال المنشور');
       }
 
       const result = await response.json();
       console.log('تم إنشاء المنشور:', result);
 
-      alert('تم إرسال المنشور بنجاح!');
+      alert('تم نشر تجربتك بنجاح!');
+
       setDescription('');
       setPhoto(null);
-      router.push('./feed');
+      router.push('./feed_arabic');
     } catch (error) {
       console.error('خطأ أثناء النشر:', error);
       Alert.alert('خطأ', 'حدث خطأ أثناء إرسال المنشور.');
@@ -89,7 +84,7 @@ export default function PostPageArabic() {
         name="arrow-back"
         size={27}
         style={styles.backIcon}
-        onPress={() => router.push('./feed')}
+        onPress={() => router.push('./feed_arabic')}
       />
       <Text style={styles.title}>شارك تجربتك معنا!</Text>
       <View style={styles.form}>
@@ -101,9 +96,10 @@ export default function PostPageArabic() {
           multiline
           value={description}
           onChangeText={(text) => setDescription(text)}
+          textAlign={I18nManager.isRTL ? 'right' : 'left'}
         />
 
-        <Text style={styles.label}>تحميل صورة</Text>
+        <Text style={styles.label}>أرفق صورة</Text>
         <TouchableOpacity style={styles.photoButton} onPress={handleChoosePhoto}>
           {photo ? (
             <Image source={{ uri: photo }} style={styles.photoPreview} />
@@ -131,9 +127,7 @@ const styles = StyleSheet.create({
   backIcon: {
     color: 'rgb(9, 71, 10)',
     marginTop: 30,
-    marginRight: 10,
-    transform: [{ scaleX: -1 }], // flip icon for RTL
-    alignSelf: 'flex-end',
+    marginLeft: 10,
   },
   title: {
     marginTop: 25,
@@ -151,7 +145,7 @@ const styles = StyleSheet.create({
     color: '#333',
     marginBottom: 5,
     fontWeight: 'bold',
-    textAlign: 'right',
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
   },
   input: {
     height: 100,
@@ -161,12 +155,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 18,
     color: '#333',
-    textAlign: 'right',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
     marginBottom: 20,
   },
   photoButton: {
@@ -197,10 +185,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 3,
     elevation: 5,
   },
   postButtonText: {

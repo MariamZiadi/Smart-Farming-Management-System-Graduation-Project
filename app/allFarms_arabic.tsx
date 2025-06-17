@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
-import { Link } from 'expo-router';
+import { useRouter, Link } from 'expo-router';
 import {
   View,
   Text,
@@ -21,6 +20,7 @@ type Farm = {
   _id: string;
   name: string;
   crops: string[];
+  plainPassword: string; 
 };
 
 const AllFarmsPage = () => {
@@ -32,11 +32,11 @@ const AllFarmsPage = () => {
     try {
       const token = await AsyncStorage.getItem("token");
       if (!token) {
-        setError("غير مصرح: لم يتم العثور على الرمز");
+        setError("غير مصرح: لا يوجد رمز مميز");
         return;
       }
 
-      const response = await axios.get("http://10.0.2.2:5000/farms/my-farms", {
+      const response = await axios.get("https://28df-41-43-3-74.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -47,9 +47,9 @@ const AllFarmsPage = () => {
         setFarms(response.data.farms);
         setError(null);
       }
-    } catch (error) {
-      console.error("خطأ في جلب المزارع:", error);
-      setError("فشل في جلب المزارع");
+    } catch (err) {
+      console.error("خطأ في جلب المزارع:", err);
+      setError("حدث خطأ أثناء جلب المزارع");
     }
   };
 
@@ -72,7 +72,7 @@ const AllFarmsPage = () => {
           size={27}
           color="white"
           style={styles.backIcon}
-          onPress={() => router.push('./homepage')}
+          onPress={() => router.push('./homepage_arabic')}
         />
         <Text style={styles.title}>جميع مزارعك</Text>
 
@@ -84,18 +84,22 @@ const AllFarmsPage = () => {
               <View style={styles.cardContent}>
                 <View style={styles.info}>
                   <Text style={styles.plantName}>{farm.name}</Text>
+                  <Text style={styles.farmPassword}>رمز المرور: {farm.plainPassword}</Text>
+
                   <View style={styles.details}>
-                    <Text style={styles.detailsHeader}>النباتات</Text>
+                    <Text style={styles.detailsHeader}>المحاصيل</Text>
                     <Text style={styles.detailsText}>
-                      {farm.crops.length > 0 ? farm.crops.join(", ") : "لا توجد محاصيل"}
-                    </Text>
+                      {farm.crops.length > 0
+                        ? farm.crops.join(', ')
+                        : "لا توجد محاصيل مسجلة"}
+                    </Text> 
                   </View>
                 </View>
               </View>
             </View>
           ))
         ) : (
-          <Text style={styles.noFarmsText}>لم يتم العثور على مزارع.</Text>
+          <Text style={styles.noFarmsText}>لا توجد مزارع مسجلة</Text>
         )}
 
         <Link href="./add_farm_arabic" style={styles.addFarmButton}>
@@ -147,7 +151,13 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 18,
     textAlign: 'center',
-    color: 'rgb(254, 254, 253)',
+    color: 'white',
+  },
+  farmPassword: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2e7d32',
+    marginBottom: 8,
   },
   noFarmsText: {
     color: 'white',
@@ -183,35 +193,33 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: 'black',
   },
-  addFarmButton: {
-    backgroundColor: 'rgb(9, 71, 10)',
-    paddingVertical: 12,
-    borderRadius: 8,
-    marginHorizontal: 50,
-    marginTop: 5,
-    marginBottom: 30,
-  },
-  addFarmButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 18,
-    fontWeight: 'bold',
-  },
   details: {
     paddingTop: 8,
-    backgroundColor: 'white',
   },
   detailsHeader: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 8,
-    color: 'rgb(9, 71, 10)',
+    marginBottom: 6,
+    color: '#2e7d32',
   },
   detailsText: {
+    fontSize: 16,
+    fontWeight: '500',
+    color: '#1b5e20',
+  },
+  addFarmButton: {
+    backgroundColor: 'rgb(9, 71, 10)',
+    paddingVertical: 12,
+    borderRadius: 10,
+    marginHorizontal: 50,
+    marginTop: 15,
+    marginBottom: 40,
+  },
+  addFarmButtonText: {
+    color: '#fff',
+    textAlign: 'center',
     fontSize: 18,
-    lineHeight: 20,
-    fontWeight: '600',
-    color: 'rgb(9, 71, 10)',
+    fontWeight: 'bold',
   },
   bottomNav: {
     flexDirection: 'row',
