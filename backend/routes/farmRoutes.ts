@@ -1,12 +1,13 @@
 import express, { Request, Response } from "express";
 import Farm from "../models/Farm";
 import User from "../models/User";
+import Plant from "../models/Plant";
 import bcrypt from "bcryptjs";
 import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-// Create a new farm
+// CREATE FARM
 router.post("/create", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, password, crops } = req.body;
@@ -17,39 +18,42 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
       return;
     }
 
-    // Check if farm name already exists
     const existingFarm = await Farm.findOne({ name });
     if (existingFarm) {
       res.status(400).json({ message: "Farm name already exists" });
       return;
     }
 
-    // Hash the password
+    // ✅ Save crops as plain Arabic names directly
+    const formattedCrops: { name: string; addedAt: Date }[] = (crops || []).map((crop: string) => ({
+      name: crop,
+      addedAt: new Date(),
+    }));
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Create farm with both hashed and plain password
     const newFarm = new Farm({
       name,
       password: hashedPassword,
-      plainPassword: password, // 👈 Add this line
+      plainPassword: password,
       owner: userId,
-      crops,
+      crops: formattedCrops,
     });
 
     await newFarm.save();
-
-    // Add farm to user's list
     await User.findByIdAndUpdate(userId, { $push: { farms: newFarm._id } });
 
     res.status(201).json({ message: "Farm created successfully", farmId: newFarm._id });
-  } catch (error) {
+  } catch (error: any) {
     console.error("❌ Farm Creation Error:", error);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: error.message || "Server error" });
   }
 });
 
-// Join a farm by password
+
+
+// JOIN FARM
 router.post("/join", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { password } = req.body;
@@ -82,7 +86,6 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
       return;
     }
 
-    // ✅ Check if user already in farm
     const isAlreadyMember =
       user.farms.includes(matchedFarm._id) && matchedFarm.members.includes(userId);
 
@@ -91,7 +94,6 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
       return;
     }
 
-    // Otherwise, proceed to add
     if (!user.farms.includes(matchedFarm._id)) {
       user.farms.push(matchedFarm._id);
       await user.save();
@@ -109,12 +111,10 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
   }
 });
 
-
-// Get all farms of the logged-in user
+// GET MY FARMS
 router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.userId;
-
     const user = await User.findById(userId).populate("farms");
 
     if (!user) {
@@ -122,17 +122,11 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
       return;
     }
 
-    if (!user.farms || user.farms.length === 0) {
-      res.status(200).json({ message: "You don't have any farms", farms: [] });
-      return;
-    }
-
-    // Convert to plain object and send only the fields needed
     const farmsWithPasswords = user.farms.map((farm: any) => ({
       _id: farm._id,
       name: farm.name,
       crops: farm.crops,
-      plainPassword: farm.plainPassword || "N/A", // fallback if missing
+      plainPassword: farm.plainPassword || "N/A",
     }));
 
     res.status(200).json({ farms: farmsWithPasswords });
@@ -142,7 +136,7 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
   }
 });
 
-// DELETE /farms/:farmId
+// DELETE FARM
 router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { farmId } = req.params;
@@ -154,16 +148,12 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
       return;
     }
 
-    // Only owner can delete
     if (farm.owner.toString() !== userId) {
       res.status(403).json({ message: "Unauthorized" });
       return;
     }
 
-    // Remove from all users
     await User.updateMany({ farms: farmId }, { $pull: { farms: farmId } });
-
-    // Delete the farm
     await Farm.findByIdAndDelete(farmId);
 
     res.status(200).json({ message: "Farm deleted successfully" });
@@ -173,7 +163,7 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
   }
 });
 
-// PUT /farms/:farmId
+// UPDATE FARM
 router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, password, crops } = req.body;

@@ -12,15 +12,19 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
-
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+type Crop = {
+  name: string;
+  addedAt: string;
+};
 
 type Farm = {
   _id: string;
   name: string;
-  crops: string[];
-  plainPassword: string; 
+  crops: Crop[];
+  plainPassword: string;
 };
 
 const AllFarmsPage = () => {
@@ -30,23 +34,19 @@ const AllFarmsPage = () => {
 
   const fetchFarms = async () => {
     try {
-      const token = await AsyncStorage.getItem("token");
+      const token = await AsyncStorage.getItem("userToken");
       if (!token) {
         setError("غير مصرح: لا يوجد رمز مميز");
         return;
       }
 
-      const response = await axios.get("https://28df-41-43-3-74.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://947b-41-43-3-74.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      if (response.data.message) {
-        setError(response.data.message);
-        setFarms([]);
-      } else {
-        setFarms(response.data.farms);
-        setError(null);
-      }
+      const farmsData: Farm[] = response.data.farms;
+      setFarms(farmsData);
+      setError(null);
     } catch (err) {
       console.error("خطأ في جلب المزارع:", err);
       setError("حدث خطأ أثناء جلب المزارع");
@@ -58,15 +58,9 @@ const AllFarmsPage = () => {
   }, []);
 
   return (
-    <ImageBackground
-      source={require('../assets/images/BG2.jpg')}
-      style={styles.background}
-    >
+    <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
       <View style={styles.overlay} />
-      <ScrollView
-        contentContainerStyle={styles.scrollContainer}
-        keyboardShouldPersistTaps="handled"
-      >
+      <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
         <Ionicons
           name="arrow-back"
           size={27}
@@ -85,14 +79,13 @@ const AllFarmsPage = () => {
                 <View style={styles.info}>
                   <Text style={styles.plantName}>{farm.name}</Text>
                   <Text style={styles.farmPassword}>رمز المرور: {farm.plainPassword}</Text>
-
                   <View style={styles.details}>
                     <Text style={styles.detailsHeader}>المحاصيل</Text>
                     <Text style={styles.detailsText}>
                       {farm.crops.length > 0
-                        ? farm.crops.join(', ')
-                        : "لا توجد محاصيل مسجلة"}
-                    </Text> 
+                        ? farm.crops.map((crop) => crop.name).join("، ")
+                        : "لا توجد محاصيل"}
+                    </Text>
                   </View>
                 </View>
               </View>
@@ -131,9 +124,7 @@ const AllFarmsPage = () => {
 };
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-  },
+  background: { flex: 1 },
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
@@ -152,18 +143,6 @@ const styles = StyleSheet.create({
     marginBottom: 18,
     textAlign: 'center',
     color: 'white',
-  },
-  farmPassword: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#2e7d32',
-    marginBottom: 8,
-  },
-  noFarmsText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 18,
-    marginTop: 20,
   },
   scrollContainer: {
     top: 40,
@@ -184,18 +163,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 16,
   },
-  info: {
-    flex: 1,
-  },
+  info: { flex: 1 },
   plantName: {
     fontSize: 22,
     fontWeight: 'bold',
     marginBottom: 8,
     color: 'black',
   },
-  details: {
-    paddingTop: 8,
+  farmPassword: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#2e7d32',
+    marginBottom: 8,
   },
+  details: { paddingTop: 8 },
   detailsHeader: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -206,6 +187,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '500',
     color: '#1b5e20',
+  },
+  noFarmsText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 18,
+    marginTop: 20,
   },
   addFarmButton: {
     backgroundColor: 'rgb(9, 71, 10)',
