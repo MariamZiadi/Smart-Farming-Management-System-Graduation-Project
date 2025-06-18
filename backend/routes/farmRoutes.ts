@@ -60,7 +60,6 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
       return;
     }
 
-    // Find all farms and compare passwords
     const farms = await Farm.find();
     let matchedFarm = null;
 
@@ -77,20 +76,27 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
       return;
     }
 
-    // Fetch the user
     const user = await User.findById(userId);
     if (!user) {
       res.status(404).json({ message: "User not found" });
       return;
     }
 
-    // Add farm to user's farms if not already present
+    // ✅ Check if user already in farm
+    const isAlreadyMember =
+      user.farms.includes(matchedFarm._id) && matchedFarm.members.includes(userId);
+
+    if (isAlreadyMember) {
+      res.status(400).json({ message: "You are already a member in this farm" });
+      return;
+    }
+
+    // Otherwise, proceed to add
     if (!user.farms.includes(matchedFarm._id)) {
       user.farms.push(matchedFarm._id);
       await user.save();
     }
 
-    // Add user to farm's members if not already present
     if (!matchedFarm.members.includes(userId)) {
       matchedFarm.members.push(userId);
       await matchedFarm.save();
@@ -102,6 +108,7 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // Get all farms of the logged-in user
 router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Promise<void> => {
@@ -131,6 +138,73 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
     res.status(200).json({ farms: farmsWithPasswords });
   } catch (error) {
     console.error("❌ Fetch Farms Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// DELETE /farms/:farmId
+router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { farmId } = req.params;
+    const userId = (req as any).user?.userId;
+
+    const farm = await Farm.findById(farmId);
+    if (!farm) {
+      res.status(404).json({ message: "Farm not found" });
+      return;
+    }
+
+    // Only owner can delete
+    if (farm.owner.toString() !== userId) {
+      res.status(403).json({ message: "Unauthorized" });
+      return;
+    }
+
+    // Remove from all users
+    await User.updateMany({ farms: farmId }, { $pull: { farms: farmId } });
+
+    // Delete the farm
+    await Farm.findByIdAndDelete(farmId);
+
+    res.status(200).json({ message: "Farm deleted successfully" });
+  } catch (error) {
+    console.error("❌ Delete Farm Error:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+// PUT /farms/:farmId
+router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { name, password, crops } = req.body;
+    const { farmId } = req.params;
+    const userId = (req as any).user?.userId;
+
+    const farm = await Farm.findById(farmId);
+    if (!farm) {
+      res.status(404).json({ message: "Farm not found" });
+      return;
+    }
+
+    if (farm.owner.toString() !== userId) {
+      res.status(403).json({ message: "Unauthorized" });
+      return;
+    }
+
+    if (password) {
+      const salt = await bcrypt.genSalt(10);
+      const hashed = await bcrypt.hash(password, salt);
+      farm.password = hashed;
+      farm.plainPassword = password;
+    }
+
+    if (name) farm.name = name;
+    if (crops) farm.crops = crops;
+
+    await farm.save();
+    res.status(200).json({ message: "Farm updated", farm });
+  } catch (error) {
+    console.error("❌ Update Farm Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
