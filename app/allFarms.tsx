@@ -48,7 +48,7 @@ const AllFarmsPage = () => {
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const response = await axios.get("https://2ac6-41-43-3-74.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://fa4f-102-45-148-78.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {
@@ -67,7 +67,7 @@ const AllFarmsPage = () => {
   const handleDelete = async (farmId: string) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.delete(`https://2ac6-41-43-3-74.ngrok-free.app/farms/${farmId}`, {
+      await axios.delete(`https://fa4f-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFarms();
@@ -88,7 +88,7 @@ const AllFarmsPage = () => {
     if (!currentFarm) return;
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.put(`https://2ac6-41-43-3-74.ngrok-free.app/farms/${currentFarm._id}`, {
+      await axios.put(`https://fa4f-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`, {
         name: newName,
         password: newPassword,
         crops: updatedCrops.map(name => ({ name })),
