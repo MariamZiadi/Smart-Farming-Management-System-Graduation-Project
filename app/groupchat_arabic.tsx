@@ -34,7 +34,7 @@ export default function JoinFarmScreenAr() {
       }
 
       const response = await axios.post(
-        "https://8c75-41-43-3-74.ngrok-free.app/farms/join",
+        "https://1b98-41-199-183-199.ngrok-free.app/farms/join",
         { password: farmPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );

@@ -61,7 +61,7 @@ export default function AddFarmPage() {
       const cropNames = plants.filter(p => p.name.trim()).map(p => ({ name: p.name.trim() }));
 
       const response = await axios.post(
-        'https://7c3a-41-43-3-74.ngrok-free.app/farms/create',
+        'https://1b98-41-199-183-199.ngrok-free.app/farms/create',
         {
           name: farmName,
           password: farmPassword,

@@ -59,7 +59,7 @@ export default function App() {
         <Stack.Screen name="Post" component={PostPage} />
         <Stack.Screen name="GroupChat" component={GroupChat} />
         <Stack.Screen name="ChatBot" component={ChatBot} />
-        <Stack.Screen name="WeatherNotifier" component={WeatherNotifier} /> {/* ✅ Added */}
+        <Stack.Screen name="WeatherNotifier" component={WeatherNotifier} /> 
       </Stack.Navigator>
     </NavigationContainer>
   );

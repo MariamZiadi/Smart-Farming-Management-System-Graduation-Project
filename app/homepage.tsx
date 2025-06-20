@@ -59,7 +59,7 @@ const HomePage = ({ navigation }: any) => {
             style={styles.cornImage} 
           />
           <Text style={styles.cornplant}>Farm 1</Text>
-          <Link href ="./mygarden" style={styles.moreinfo}>
+          <Link href ="./allFarms" style={styles.moreinfo}>
           More Info
           </Link>
           
@@ -268,6 +268,11 @@ const styles = StyleSheet.create({
     top: 14,
     right: 50,
     padding: 10,
+  },
+  notificationIcon: {
+    position: 'absolute',
+    left: 350,
+    top: -100,
   },
   joinFarmContainer: {
     marginTop: 20,
@@ -581,10 +586,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     zIndex: 10,
   },
-  notificationIcon: {
-    position: 'absolute',
-    left: 350,
-  },
+
 
   topBarText: {
     position: 'absolute',

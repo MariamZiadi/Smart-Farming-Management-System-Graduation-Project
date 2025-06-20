@@ -44,7 +44,7 @@ export default function SignUpScreenArabic() {
       );
     } else {
       try {
-        const response = await axios.post("https://nice-barnacle-complete.ngrok-free.app/users/register", {
+        const response = await axios.post("https://1b98-41-199-183-199.ngrok-free.app/users/register", {
           name,
           email,
           password,

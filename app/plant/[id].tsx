@@ -46,7 +46,7 @@ export default function PlantDetails() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch(`https://cb93-154-239-126-13.ngrok-free.app/plants/${id}`)
+        fetch(`https://1b98-41-199-183-199.ngrok-free.app/plants/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setPlant(data);
