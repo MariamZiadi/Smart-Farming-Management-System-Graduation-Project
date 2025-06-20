@@ -48,16 +48,7 @@ const AllFarmsPage = () => {
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-<<<<<<< HEAD
-      if (!token) {
-        setError("Unauthorized: No token found");
-        return;
-      }
-
-      const response = await axios.get("https://1b98-41-199-183-199.ngrok-free.app/farms/my-farms", {
-=======
       const response = await axios.get("https://fa4f-102-45-148-78.ngrok-free.app/farms/my-farms", {
->>>>>>> 262fd47bcc4cb3bf4dc0637c3ae4cc337f5f18b9
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {

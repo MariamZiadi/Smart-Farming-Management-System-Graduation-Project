@@ -6,6 +6,8 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Image,
+  ImageBackground,
 } from 'react-native';
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,7 +34,7 @@ const PostCard = ({ post }: { post: PostType }) => {
     <View style={styles.card}>
       <View style={styles.userInfo}>
         {user?.image ? (
-          <Text style={styles.avatar}>{user.name[0]}</Text>
+          <Image source={{ uri: user.image }} style={styles.avatarImage} />
         ) : (
           <View style={styles.avatarPlaceholder}>
             <Text style={styles.avatarText}>{user?.name?.[0] ?? '?'}</Text>
@@ -43,7 +45,9 @@ const PostCard = ({ post }: { post: PostType }) => {
 
       <Text style={styles.description}>{description}</Text>
 
-      {image && <Text style={styles.imageLink}>🖼 Image uploaded</Text>}
+      {image && (
+        <Image source={{ uri: image }} style={styles.postImage} />
+      )}
     </View>
   );
 };
@@ -88,22 +92,38 @@ const Feed = () => {
 
   if (!loading && posts.length === 0) {
     return (
-      <View style={styles.loadingContainer}>
-        <Text>No posts found.</Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => navigation.navigate('post')}
-        >
-          <Text style={styles.addButtonText}>+ Add Post</Text>
-        </TouchableOpacity>
-      </View>
+      <ImageBackground
+        source={require('../assets/images/BG2.jpg')} // Update path as needed
+        style={{ flex: 1 }}
+        resizeMode="cover"
+      >
+        <View style={styles.loadingContainer}>
+          <Text>No posts found.</Text>
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate('post')}
+          >
+            <Text style={styles.addButtonText}>＋</Text>
+          </TouchableOpacity>
+        </View>
+      </ImageBackground>
     );
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <ImageBackground
+      source={require('../assets/images/BG2.jpg')} // Update path as needed
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
       <FlatList
         data={posts}
+        ListHeaderComponent={
+          <View style={styles.headerContainer}>
+            <Text style={styles.headerTitle}>🌱 Plant Blog</Text>
+            <Text style={styles.headerSubtitle}>Learn, Share & Grow</Text>
+          </View>
+        }
         renderItem={({ item }) => <PostCard post={item} />}
         keyExtractor={(item) => item._id}
         contentContainerStyle={styles.container}
@@ -113,16 +133,16 @@ const Feed = () => {
         style={styles.addButton}
         onPress={() => navigation.navigate('post')}
       >
-        <Text style={styles.addButtonText}>+ Add Post</Text>
+        <Text style={styles.addButtonText}>＋</Text>
       </TouchableOpacity>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 10,
-    paddingBottom: 80,
+    paddingHorizontal: 16,
+    paddingBottom: 100,
   },
   loadingContainer: {
     flex: 1,
@@ -133,38 +153,70 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
-    backgroundColor: 'black',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
+    backgroundColor: 'rgb(9, 71, 10)',
+    width: 50,
+    height: 50,
     borderRadius: 25,
-    elevation: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 6,
   },
   addButtonText: {
     color: 'white',
+    fontSize: 28,
     fontWeight: 'bold',
-    fontSize: 16,
+    lineHeight: 30,
+    position: 'absolute',
+    bottom: 7,
+    right: 11,
+  },
+  headerContainer: {
+    paddingTop: 60,
+    paddingBottom: 20,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+  },
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'rgb(163, 222, 164)',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: 'rgb(255, 255, 255)',
+    marginTop: 4,
+    marginRight:-35,
   },
   card: {
-    backgroundColor: '#fff',
-    borderRadius: 10,
-    padding: 12,
-    marginBottom: 12,
-    elevation: 3,
+    backgroundColor: '#f9fdf9',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
     shadowColor: '#000',
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.08,
     shadowRadius: 6,
-    shadowOffset: { width: 0, height: 3 },
+    shadowOffset: { width: 0, height: 2 },
+    borderWidth: 1,
+    borderColor: 'rgba(9, 71, 10, 0.1)',
   },
   userInfo: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: 10,
+  },
+  avatarImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgb(9, 71, 10)',
   },
   avatarPlaceholder: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#ccc',
+    backgroundColor: 'rgb(9, 71, 10)',
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -172,30 +224,26 @@ const styles = StyleSheet.create({
   avatarText: {
     fontWeight: 'bold',
     color: '#fff',
-  },
-  avatar: {
-    backgroundColor: '#444',
-    color: '#fff',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
-    textAlign: 'center',
-    textAlignVertical: 'center',
-    fontSize: 20,
-    marginRight: 10,
+    fontSize: 18,
   },
   username: {
-    fontWeight: '600',
     fontSize: 16,
+    fontWeight: 'bold',
+    color: 'rgb(9, 71, 10)',
   },
   description: {
-    fontSize: 14,
-    marginBottom: 6,
+    fontSize: 14.5,
+    lineHeight: 22,
+    color: '#333',
+    marginBottom: 10,
   },
-  imageLink: {
-    color: '#007aff',
-    marginTop: 5,
-    fontStyle: 'italic',
+  postImage: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
+    marginTop: 8,
+    borderWidth: 0.5,
+    borderColor: 'rgba(9, 71, 10, 0.15)',
   },
 });
 

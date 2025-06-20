@@ -45,11 +45,7 @@ export default function SignUpScreenAr() {
       );
     } else {
       try {
-<<<<<<< HEAD
         const response = await axios.post("https://1b98-41-199-183-199.ngrok-free.app/users/register", {
-=======
-        const response = await axios.post("https://2bd3-102-45-148-78.ngrok-free.app/users/register", {
->>>>>>> 262fd47bcc4cb3bf4dc0637c3ae4cc337f5f18b9
           name,
           email,
           password,

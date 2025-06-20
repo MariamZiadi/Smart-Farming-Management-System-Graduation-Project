@@ -1,14 +1,13 @@
-// ✅ post.tsx - Create a new post
 import React, { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
-  Button,
   Image,
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -32,96 +31,133 @@ const PostScreen = () => {
   };
 
   const handlePostUpload = async () => {
-  try {
-    const token = await AsyncStorage.getItem('userToken');
-    if (!token) {
-      Alert.alert('Error', 'You must be logged in to post.');
-      return;
-    }
-
-    await axios.post(
-      'https://f2b6-41-199-4-67.ngrok-free.app/posts',
-      {
-        description,
-        image, // assuming it's a URL or base64 string
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        Alert.alert('Error', 'You must be logged in to post.');
+        return;
       }
-    );
 
-    navigation.goBack();
-  } catch (error: any) {
-    console.error('❌ Post upload error:', error);
-    Alert.alert('Upload Error', error.response?.data?.message || 'Failed to upload post.');
-  }
-};
+      await axios.post(
+        'https://f2b6-41-199-4-67.ngrok-free.app/posts',
+        {
+          description,
+          image,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
+      navigation.goBack();
+    } catch (error: any) {
+      console.error('❌ Post upload error:', error);
+      Alert.alert('Upload Error', error.response?.data?.message || 'Failed to upload post.');
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>Description</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Write something..."
-        value={description}
-        onChangeText={setDescription}
-        multiline
-      />
+    <ImageBackground
+      source={require('../assets/images/BG2.jpg')} // Replace path if needed
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <Text style={styles.pageTitle}>Create a Post</Text>
 
-      {image && <Image source={{ uri: image }} style={styles.preview} />}
+        <Text style={styles.label}>Description</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Share your thoughts or tips..."
+          value={description}
+          onChangeText={setDescription}
+          multiline
+        />
 
-      <TouchableOpacity style={styles.imageButton} onPress={pickImage}>
-        <Text style={styles.imageButtonText}>Pick an Image</Text>
-      </TouchableOpacity>
+        {/* Image Upload Area */}
+        <TouchableOpacity style={styles.imageUploadArea} onPress={pickImage}>
+          {image ? (
+            <Image source={{ uri: image }} style={styles.uploadedImage} />
+          ) : (
+            <View style={styles.placeholderContent}>
+              <Text style={styles.placeholderIcon}>📸</Text>
+              <Text style={styles.placeholderText}>Tap to upload an image</Text>
+            </View>
+          )}
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.uploadButton} onPress={handlePostUpload}>
-        <Text style={styles.uploadButtonText}>Upload Post</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.uploadButton} onPress={handlePostUpload}>
+          <Text style={styles.uploadButtonText}>Upload Post</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    backgroundColor: '#fff',
     flex: 1,
   },
-  label: {
-    fontSize: 18,
-    marginBottom: 6,
-  },
-  input: {
-    height: 100,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 8,
-    paddingHorizontal: 10,
-    marginBottom: 15,
-    textAlignVertical: 'top',
-  },
-  preview: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    marginBottom: 15,
-  },
-  imageButton: {
-    backgroundColor: '#666',
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  imageButtonText: {
-    color: '#fff',
+  pageTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: 'rgb(163, 222, 164)',
+    marginBottom: 20,
     textAlign: 'center',
   },
+  label: {
+    fontSize: 16,
+    color: 'rgb(255, 255, 255)',
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  input: {
+    height: 120,
+    borderColor: 'rgba(9, 71, 10, 0.3)',
+    borderWidth: 1,
+    borderRadius: 10,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff',
+    marginBottom: 15,
+    textAlignVertical: 'top',
+    fontSize: 14.5,
+    color: '#333',
+  },
+  imageUploadArea: {
+    height: 200,
+    borderWidth: 1.5,
+    borderColor: 'rgba(9, 71, 10, 0.3)',
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 15,
+    overflow: 'hidden',
+  },
+  uploadedImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 10,
+  },
+  placeholderContent: {
+    alignItems: 'center',
+  },
+  placeholderIcon: {
+    fontSize: 32,
+    marginBottom: 6,
+    color: 'rgb(9, 71, 10)',
+  },
+  placeholderText: {
+    fontSize: 14,
+    color: '#555',
+  },
   uploadButton: {
-    backgroundColor: 'black',
+    backgroundColor: 'rgb(9, 71, 10)',
     padding: 14,
     borderRadius: 8,
   },
@@ -129,6 +165,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     textAlign: 'center',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
 
