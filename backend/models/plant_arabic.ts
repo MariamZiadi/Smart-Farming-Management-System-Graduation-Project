@@ -6,6 +6,6 @@ const plantSchema = new mongoose.Schema({
     fertilizerPlan: { type: String, required: true }
 });
 
-const Plant = mongoose.model("plant_arabic", plantSchema);
+const plant_arabic = mongoose.model("plant_arabic", plantSchema);
 
-export default Plant;
+export default plant_arabic;

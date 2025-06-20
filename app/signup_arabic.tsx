@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import {
   View,
@@ -8,14 +8,15 @@ import {
   StyleSheet,
   ImageBackground,
   Alert,
-  I18nManager
+  I18nManager,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-I18nManager.forceRTL(true); // Force RTL for Arabic layout
+I18nManager.forceRTL(true); // Force Right-To-Left layout
 
-export default function SignUpScreenArabic() {
+export default function SignUpScreenAr() {
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -36,24 +37,32 @@ export default function SignUpScreenArabic() {
     if (!name || !email || !password) {
       Alert.alert('خطأ', 'جميع الحقول مطلوبة!');
     } else if (!isValidEmail(email)) {
-      Alert.alert('خطأ', 'تنسيق البريد الإلكتروني غير صحيح!');
+      Alert.alert('خطأ', 'صيغة البريد الإلكتروني غير صحيحة!');
     } else if (!isValidPassword(password)) {
       Alert.alert(
         'خطأ',
-        'يجب أن تكون كلمة المرور 8 أحرف على الأقل وتشمل حرفًا كبيرًا وصغيرًا ورقمًا ورمزًا خاصًا'
+        'يجب أن تتكون كلمة المرور من 8 أحرف على الأقل وتشمل حرف كبير، صغير، رقم، ورمز خاص'
       );
     } else {
       try {
+<<<<<<< HEAD
         const response = await axios.post("https://1b98-41-199-183-199.ngrok-free.app/users/register", {
+=======
+        const response = await axios.post("https://2bd3-102-45-148-78.ngrok-free.app/users/register", {
+>>>>>>> 262fd47bcc4cb3bf4dc0637c3ae4cc337f5f18b9
           name,
           email,
           password,
         });
 
-        Alert.alert("نجاح", "تم تسجيل المستخدم بنجاح!");
+        const { token, userId } = response.data;
+
+        await AsyncStorage.setItem("userToken", token);
+
+        Alert.alert("تم", "تم إنشاء الحساب بنجاح!");
         console.log(response.data);
 
-        router.push('./homepage_arabic'); // الصفحة الرئيسية العربية
+        router.push("./homepage_arabic"); // ✅ Navigate to Arabic homepage
       } catch (error: any) {
         Alert.alert("خطأ", error.response?.data?.message || "حدث خطأ ما");
       }
@@ -63,7 +72,7 @@ export default function SignUpScreenArabic() {
   return (
     <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
       <View style={styles.overlay} />
-      <Text style={styles.title}>أنشئ حسابك الخاص</Text>
+      <Text style={styles.title}>إنشاء حساب جديد</Text>
 
       <View style={styles.inputContainer}>
         <Icon name="user" size={20} color="#aaa" style={styles.icon} />
@@ -104,12 +113,12 @@ export default function SignUpScreenArabic() {
       </View>
 
       <TouchableOpacity style={styles.loginButton} onPress={handleSignUp}>
-        <Text style={styles.loginButtonText}>إنشاء حساب</Text>
+        <Text style={styles.loginButtonText}>تسجيل</Text>
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/login_arabic')}>
         <Text style={styles.registerText}>
-          لديك حساب بالفعل؟ <Text style={styles.registerLink}>سجّل الدخول</Text>
+          لديك حساب بالفعل؟ <Text style={styles.registerLink}>تسجيل الدخول</Text>
         </Text>
       </TouchableOpacity>
     </ImageBackground>
@@ -123,7 +132,7 @@ const styles = StyleSheet.create({
     top: 50,
     fontSize: 42,
     fontWeight: 'bold',
-    color: 'rgb(252, 255, 252)',
+    color: 'white',
     marginBottom: 35,
     textAlign: 'center',
   },
@@ -169,12 +178,11 @@ const styles = StyleSheet.create({
   registerText: {
     textAlign: 'center',
     color: 'white',
-    fontSize: 19,
-    fontWeight: 'bold',
+    fontSize: 18,
   },
   registerLink: {
-    color: 'rgb(231, 117, 17)',
-    fontSize: 19,
+    color: 'orange',
+    fontSize: 18,
     textDecorationLine: 'underline',
     fontWeight: 'bold',
   },

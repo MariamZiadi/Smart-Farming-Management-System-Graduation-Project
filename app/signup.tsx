@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage'; // ✅ Make sure this is installed
 
 export default function SignUpScreen() {
   const router = useRouter();
@@ -41,22 +42,30 @@ export default function SignUpScreen() {
       );
     } else {
       try {
+<<<<<<< HEAD
         const response = await axios.post("https://1b98-41-199-183-199.ngrok-free.app/users/register", {
+=======
+        const response = await axios.post("https://fa4f-102-45-148-78.ngrok-free.app/users/register", {
+>>>>>>> 262fd47bcc4cb3bf4dc0637c3ae4cc337f5f18b9
           name,
           email,
           password,
         });
-  
+
+        const { token, userId } = response.data;
+
+        // ✅ Save token to AsyncStorage
+        await AsyncStorage.setItem("userToken", token);
+
         Alert.alert("Success", "User registered successfully!");
         console.log(response.data);
-  
-        router.push("./homepage"); // ✅ Navigate only on success
+
+        router.push("./homepage"); // ✅ Navigate after storing token
       } catch (error: any) {
         Alert.alert("Error", error.response?.data?.message || "Something went wrong");
       }
     }
   };
-  
 
   return (
     <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
@@ -106,10 +115,10 @@ export default function SignUpScreen() {
       </TouchableOpacity>
 
       <TouchableOpacity onPress={() => router.push('/login')}>
-              <Text style={styles.registerText}>
-              Already have an account? <Text style={styles.registerLink}>Sign In</Text>
-              </Text>
-            </TouchableOpacity>
+        <Text style={styles.registerText}>
+          Already have an account? <Text style={styles.registerLink}>Sign In</Text>
+        </Text>
+      </TouchableOpacity>
     </ImageBackground>
   );
 }
@@ -117,14 +126,63 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
   background: { flex: 1 },
   overlay: { ...StyleSheet.absoluteFillObject, backgroundColor: 'rgba(0, 0, 0, 0.4)' },
-  title: { top: 50, fontSize: 45, fontWeight: 'semibold', color: 'rgb(252, 255, 252)', marginBottom: 35, textAlign: 'center' },
-  inputContainer: { top: 70, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 25, height: 55 },
-  passContainer: { top: 70, flexDirection: 'row', alignItems: 'center', backgroundColor: '#f5f5f5', borderRadius: 8, paddingHorizontal: 10, marginHorizontal: 15, marginBottom: 55, height: 55 },
+  title: {
+    top: 50,
+    fontSize: 45,
+    fontWeight: 'semibold',
+    color: 'rgb(252, 255, 252)',
+    marginBottom: 35,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    top: 70,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    marginBottom: 25,
+    height: 55,
+  },
+  passContainer: {
+    top: 70,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: 8,
+    paddingHorizontal: 10,
+    marginHorizontal: 15,
+    marginBottom: 55,
+    height: 55,
+  },
   icon: { marginRight: 10 },
   input: { flex: 1, color: '#000', fontSize: 18 },
   eyeIcon: { paddingHorizontal: 5 },
-  loginButton: { backgroundColor: 'rgb(9, 71, 10)', paddingVertical: 12, borderRadius: 8, marginHorizontal: 50, marginBottom: 15, marginTop: 70 },
-  loginButtonText: { color: 'white', textAlign: 'center', fontSize: 20, fontWeight: 'bold' },
-  registerText: {textAlign: 'center', color: 'white', fontSize: 19, fontWeight: 'semibold' },
-  registerLink: { color: 'rgb(231, 117, 17)', fontSize: 19, textDecorationLine: 'underline', fontWeight: 'bold' },
+  loginButton: {
+    backgroundColor: 'rgb(9, 71, 10)',
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginHorizontal: 50,
+    marginBottom: 15,
+    marginTop: 70,
+  },
+  loginButtonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  registerText: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 19,
+    fontWeight: 'semibold',
+  },
+  registerLink: {
+    color: 'rgb(231, 117, 17)',
+    fontSize: 19,
+    textDecorationLine: 'underline',
+    fontWeight: 'bold',
+  },
 });
