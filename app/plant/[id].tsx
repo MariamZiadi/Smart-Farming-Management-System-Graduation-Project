@@ -46,7 +46,7 @@ export default function PlantDetails() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch(`https://1b98-41-199-183-199.ngrok-free.app/plants/${id}`)
+        fetch(`https://f2b6-41-199-4-67.ngrok-free.app/plants/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setPlant(data);
@@ -98,74 +98,75 @@ export default function PlantDetails() {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#f6fff7',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: 20,
-    },
-    card: {
-        width: width - 40,
-        backgroundColor: '#ffffff',
-        borderRadius: 20,
-        padding: 20,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 10,
-        elevation: 5,
-        borderWidth: 1,
-        borderColor: '#e0e0e0',
-        alignItems: 'center',
-        overflow: 'hidden',
-    },
-    plantImage: {
-        width: 140,
-        height: 140,
-        borderRadius: 70,
-        marginBottom: 12,
-        borderWidth: 3,
-        borderColor: '#4caf50',
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#2e7d32',
-        marginBottom: 15,
-        textAlign: 'center',
-        textTransform: 'capitalize',
-        letterSpacing: 0.5,
-    },
-    infoRow: {
-        width: '100%',
-        backgroundColor: '#f1f8f2',
-        padding: 12,
-        borderRadius: 12,
-        marginBottom: 10,
-        borderWidth: 1,
-        borderColor: '#e0e0e0',
-    },
-    label: {
-        fontWeight: '700',
-        color: '#388e3c',
-        fontSize: 16,
-        marginBottom: 4,
-    },
-    value: {
-        fontSize: 15,
-        color: '#555',
-        lineHeight: 22,
-    },
-    centered: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    errorText: {
-        color: '#d32f2f',
-        fontSize: 16,
-        textAlign: 'center',
-        marginTop: 20,
-    },
+  container: {
+    flex: 1,
+    backgroundColor: '#f9fdf9',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 20,
+  },
+  card: {
+    width: width - 40,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    elevation: 4,
+    borderWidth: 0.6,
+    borderColor: '#cdeac0',
+    alignItems: 'center',
+  },
+  plantImage: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    marginBottom: 16,
+    borderWidth: 2,
+    borderColor: 'rgb(9, 71, 10)',
+  },
+  title: {
+    fontSize: 26,
+    fontWeight: 'bold',
+    color: 'rgb(9, 71, 10)',
+    marginBottom: 20,
+    textAlign: 'center',
+    textTransform: 'capitalize',
+    letterSpacing: 0.5,
+  },
+  infoRow: {
+    width: '100%',
+    backgroundColor: '#f3f7f4',
+    padding: 16,
+    borderRadius: 12,
+    marginBottom: 14,
+    borderWidth: 0.8,
+    borderColor: 'rgba(9, 71, 10, 0.15)',
+  },
+  label: {
+    fontWeight: '600',
+    color: 'rgb(9, 71, 10)',
+    fontSize: 18,
+    marginBottom: 6,
+  },
+  value: {
+    fontSize: 17,
+    color: '#444',
+    lineHeight: 22,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#f9fdf9',
+  },
+  errorText: {
+    color: '#d32f2f',
+    fontSize: 16,
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });
+
