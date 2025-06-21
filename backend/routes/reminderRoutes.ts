@@ -1,56 +1,56 @@
 import express, { Request, Response } from 'express';
 import Farm from '../models/Farm';
 import Plant from '../models/Plant';
+import User from "../models/User";
+
 import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-router.get("/reminders", authMiddleware, async (req: Request, res: Response) => {
+// backend/routes/reminderRoutes.ts
+
+router.get("/reminders", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.userId;
-
-    const farms = await Farm.find({ 
-      $or: [{ owner: userId }, { members: userId }]
+    const user = await User.findById(userId).populate({
+      path: 'farms',
+      populate: {
+        path: 'crops.plantId',
+        model: 'Plant'
+      }
     });
 
-    const reminders = [];
-
-    for (const farm of farms) {
-      const cropsWithReminders = [];
-
-      for (const crop of farm.crops) {
-        const plant = await Plant.findOne({ name: crop.name });
-
-        let daysInterval = 0;
-        const match = plant?.wateringPlan?.match(/(\d+)/);
-        if (match) daysInterval = parseInt(match[1]);
-
-        let daysLeft = null;
-        if (daysInterval && crop.addedAt) {
-          const addedDate = new Date(crop.addedAt);
-          const now = new Date();
-          const diff = Math.floor((now.getTime() - addedDate.getTime()) / (1000 * 60 * 60 * 24));
-          daysLeft = daysInterval - (diff % daysInterval);
-        }
-
-        cropsWithReminders.push({
-          name: crop.name,
-          daysLeft: daysLeft ?? 'N/A',
-          wateringEvery: plant?.wateringPlan ?? 'Not available'
-        });
-      }
-
-      reminders.push({
-        farmName: farm.name,
-        crops: cropsWithReminders
-      });
+    if (!user) {
+      res.status(404).json({ message: "User not found" });
+      return;
     }
 
-    res.json({ reminders });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch reminders" });
+    const reminders = (user.farms as any[]).map((farm) => ({
+      farmName: farm.name,
+      crops: farm.crops
+        .filter((crop: any) => crop.plantId) // Ensure plant is valid
+        .map((crop: any) => {
+          const plant = crop.plantId;
+          const addedAt = new Date(crop.addedAt);
+          const today = new Date();
+          const wateringDays = parseInt(plant.wateringPlan); // Example: "7" means water every 7 days
+          const daysPassed = Math.floor((today.getTime() - addedAt.getTime()) / (1000 * 60 * 60 * 24));
+          const daysLeft = wateringDays - (daysPassed % wateringDays);
+
+          return {
+            name: plant.name, // or plant.arabicName based on locale
+            wateringEvery: `${wateringDays} days`,
+            daysLeft: daysLeft,
+          };
+        })
+    }));
+
+    res.status(200).json({ reminders });
+  } catch (error) {
+    console.error("❌ Reminder Fetch Error:", error);
+    res.status(500).json({ message: "Server error" });
   }
 });
+
 
 export default router;

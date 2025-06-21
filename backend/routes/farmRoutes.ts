@@ -25,10 +25,13 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
 
     const formattedCrops: { plantId: any; addedAt: Date }[] = [];
 
-    for (const crop of crops || []) {
-      const plant = await Plant.findOne({
-        $or: [{ name: crop }, { arabicName: crop }],
-      });
+    for (const cropObj of crops || []) {
+  const cropName = typeof cropObj === 'string' ? cropObj : cropObj.name;
+
+  const plant = await Plant.findOne({
+    $or: [{ name: cropName }, { arabicName: cropName }],
+  });
+
 
       if (plant) {
         formattedCrops.push({
@@ -122,11 +125,19 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
   }
 });
 
+
 // GET MY FARMS
 router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.userId;
-    const user = await User.findById(userId).populate("farms");
+
+    const user = await User.findById(userId).populate({
+      path: "farms",
+      populate: {
+        path: "crops.plantId",
+        model: "Plant",
+      },
+    });
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
@@ -136,8 +147,10 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
     const farmsWithPasswords = user.farms.map((farm: any) => ({
       _id: farm._id,
       name: farm.name,
-      crops: farm.crops,
       plainPassword: farm.plainPassword || "N/A",
+      crops: farm.crops.map((crop: any) => ({
+        name: crop.plantId?.name,
+      })),
     }));
 
     res.status(200).json({ farms: farmsWithPasswords });
@@ -146,6 +159,7 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 // DELETE FARM
 router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
