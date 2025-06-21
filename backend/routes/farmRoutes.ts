@@ -7,7 +7,6 @@ import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-// CREATE FARM
 router.post("/create", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, password, crops } = req.body;
@@ -24,11 +23,20 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
       return;
     }
 
-    // ✅ Save crops as plain Arabic names directly
-    const formattedCrops: { name: string; addedAt: Date }[] = (crops || []).map((crop: string) => ({
-      name: crop,
-      addedAt: new Date(),
-    }));
+    const formattedCrops: { plantId: any; addedAt: Date }[] = [];
+
+    for (const crop of crops || []) {
+      const plant = await Plant.findOne({
+        $or: [{ name: crop }, { arabicName: crop }],
+      });
+
+      if (plant) {
+        formattedCrops.push({
+          plantId: plant._id,
+          addedAt: new Date(),
+        });
+      }
+    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -42,15 +50,18 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
     });
 
     await newFarm.save();
+
     await User.findByIdAndUpdate(userId, { $push: { farms: newFarm._id } });
 
-    res.status(201).json({ message: "Farm created successfully", farmId: newFarm._id });
+    res.status(201).json({
+      message: "Farm created successfully",
+      farmId: newFarm._id,
+    });
   } catch (error: any) {
     console.error("❌ Farm Creation Error:", error);
     res.status(500).json({ message: error.message || "Server error" });
   }
 });
-
 
 
 // JOIN FARM

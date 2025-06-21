@@ -1,8 +1,8 @@
  import mongoose from "mongoose";
 
  const CropSchema = new mongoose.Schema({
-   name: { type: String, required: true },
-   addedAt: { type: Date, default: Date.now },
+   plantId: { type: mongoose.Schema.Types.ObjectId, ref: 'Plant' },
+   addedAt: { type: Date, default: Date.now }
  });
 
  const FarmSchema = new mongoose.Schema({
