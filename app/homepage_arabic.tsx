@@ -12,15 +12,20 @@ const HomePage = ({ navigation }: any) => {
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.topBar}>
-            <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
-            <Text style={styles.topBarText}>مرحبًا بك في AgriGuard</Text>
-            <Text style={styles.topdescription}>ابدأ الآن بإضافة أول نبتة لك!</Text>
-            <Link href="./chatbot_arabic" asChild>
-              <TouchableOpacity style={styles.chatbotIcon}>
-                <Ionicons name="chatbubble" size={24} color="white" />
-              </TouchableOpacity>
-            </Link>
-          </View>
+            <Link href="./weatherNotifier_arabic" asChild>
+            <TouchableOpacity>
+              <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
+            </TouchableOpacity>
+          </Link>
+            <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
+          <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
+          
+          <Link href="./chatbot_arabic" asChild>
+            <TouchableOpacity style={styles.chatbotIcon}>
+            <Ionicons name="chatbubble" size={24} color="white" />
+            </TouchableOpacity>
+          </Link>
+        </View>
   
           <View style={styles.boxontopbar}>
             <Text style={styles.waterreminder}>تذكير بالسقي</Text>
