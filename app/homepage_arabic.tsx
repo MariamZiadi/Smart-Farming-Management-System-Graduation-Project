@@ -4,10 +4,12 @@ import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Di
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import { useRouter } from 'expo-router';
 
 const screenWidth = Dimensions.get('window').width; 
 
 const HomePage = ({ navigation }: any) => {
+  const router = useRouter();
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -34,10 +36,14 @@ const HomePage = ({ navigation }: any) => {
               source={require('../assets/images/homeplant.png')}
               style={styles.plantImage} 
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push('./plantReminders_arabic')}
+            >
               <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
               <Text style={styles.buttonText}>الماء بعد 30 دقيقة</Text>
             </TouchableOpacity>
+
           </View>
   
           <View style={styles.garden}>

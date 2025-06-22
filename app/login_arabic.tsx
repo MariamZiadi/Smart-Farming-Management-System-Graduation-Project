@@ -30,7 +30,7 @@ export default function LoginScreenArabic() {
     }
 
     try {
-      const response = await axios.post('https://1b98-41-199-183-199.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post('https://c3c0-102-45-148-78.ngrok-free.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
