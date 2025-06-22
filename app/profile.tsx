@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,8 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
+  TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -28,41 +30,73 @@ interface Profile {
 
 const ProfileScreen = () => {
   const router = useRouter();
-
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [showFarms, setShowFarms] = useState(true);
+
+  const nameRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const response = await axios.get('https://07bc-102-45-148-78.ngrok-free.app/auth/profile', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setProfile(response.data);
+      setName(response.data.name);
+      setEmail(response.data.email);
+    } catch (error: any) {
+      console.error('❌ Error fetching profile:', error);
+      Alert.alert('Error', 'Failed to fetch profile. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = await AsyncStorage.getItem('userToken');
-        if (!token) {
-          Alert.alert('Authentication Error', 'No token found. Please log in again.');
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get('https://1b98-41-199-183-199.ngrok-free.app/auth/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setProfile(response.data);
-      } catch (error: any) {
-        console.error('❌ Error fetching profile:', error);
-        if (error.response?.status === 404) {
-          Alert.alert('Error', 'Profile not found (404).');
-        } else if (error.response?.status === 401) {
-          Alert.alert('Error', 'Unauthorized. Please log in again.');
-        } else {
-          Alert.alert('Error', 'Failed to fetch profile. Check your internet or try again.');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserProfile();
   }, []);
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      handleSave();
+    } else {
+      setIsEditing(true);
+      setShowFarms(false);
+
+      // Delay focus to let modal open first
+      setTimeout(() => {
+        nameRef.current?.focus();
+        nameRef.current?.setNativeProps({ selection: { start: 0, end: name.length } });
+      }, 200);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await axios.put('https://07bc-102-45-148-78.ngrok-free.app/auth/profile', {
+        name,
+        email,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Alert.alert("✅ Success", "Profile updated successfully.");
+      setIsEditing(false);
+      Keyboard.dismiss();
+      await fetchUserProfile(); // refetch to update farms
+      setShowFarms(true);
+    } catch (err) {
+      console.error("Profile update failed", err);
+      Alert.alert("❌ Error", "Failed to update profile.");
+    }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#fff" style={styles.loader} />;
@@ -91,33 +125,72 @@ const ProfileScreen = () => {
         </View>
 
         <View style={styles.inputContainer}>
-          {renderField('Name', profile.name)}
-          {renderField('Email', profile.email)}
+          <EditableField
+            label="Name"
+            value={name}
+            onChangeText={setName}
+            editable={isEditing}
+            inputRef={nameRef}
+          />
+          <EditableField
+            label="Email"
+            value={email}
+            onChangeText={setEmail}
+            editable={isEditing}
+            inputRef={emailRef}
+          />
 
-          <View style={styles.card}>
-            <Text style={styles.inputLabel}>Farms</Text>
-            {profile.farms.length > 0 ? (
-              <View style={styles.dropdown}>
-                {profile.farms.map((farm, index) => (
-                  <Text key={index} style={styles.dropdownItem}>
-                    🌿 {farm.name}
-                  </Text>
-                ))}
-              </View>
-            ) : (
-              <Text style={styles.noFarms}>No farms found.</Text>
-            )}
-          </View>
+          {showFarms && (
+            <View style={styles.card}>
+              <Text style={styles.inputLabel}>Farms</Text>
+              {profile.farms.length > 0 ? (
+                <View style={styles.dropdown}>
+                  {profile.farms.map((farm, index) => (
+                    <Text key={index} style={styles.dropdownItem}>
+                      🌿 {farm.name}
+                    </Text>
+                  ))}
+                </View>
+              ) : (
+                <Text style={styles.noFarms}>No farms found.</Text>
+              )}
+            </View>
+          )}
+
+          <TouchableOpacity onPress={handleEditToggle}>
+            <Text style={styles.saveButton}>
+              {isEditing ? 'Save Changes' : '✏️ Edit Profile'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </ImageBackground>
   );
 };
 
-const renderField = (label: string, value: string) => (
+const EditableField = ({
+  label,
+  value,
+  onChangeText,
+  editable,
+  inputRef,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  editable: boolean;
+  inputRef: React.RefObject<TextInput>;
+}) => (
   <View style={styles.card}>
     <Text style={styles.inputLabel}>{label}</Text>
-    <TextInput style={styles.input} value={value} editable={false} />
+    <TextInput
+      ref={inputRef}
+      style={styles.input}
+      value={value}
+      onChangeText={onChangeText}
+      editable={editable}
+      selectTextOnFocus={editable}
+    />
   </View>
 );
 
@@ -190,6 +263,17 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'italic',
     marginTop: 5,
+  },
+  saveButton: {
+    backgroundColor: '#1b5e20',
+    color: 'white',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 10,
   },
   errorText: {
     color: 'red',

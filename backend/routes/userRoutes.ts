@@ -5,7 +5,6 @@ import User from "../models/User";
 
 const router = express.Router();
 
-// Register a new user and return token
 router.post("/register", async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, email, password } = req.body;
@@ -22,7 +21,6 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
     const newUser = new User({ name, email, password: hashedPassword, farms: [] });
     await newUser.save();
 
-    // Generate token
     const token = jwt.sign(
       { userId: newUser._id },
       process.env.JWT_SECRET as string,
@@ -40,7 +38,6 @@ router.post("/register", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-// Get all users (for testing)
 router.get("/", async (req: Request, res: Response) => {
   try {
     const users = await User.find();

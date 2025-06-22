@@ -15,7 +15,7 @@ const authenticateToken = (
 
   if (!token) {
     res.status(401).json({ error: "Access denied. No token provided." });
-    return; // 👈 ensures function ends here, so no return value
+    return; 
   }
 
   try {
@@ -66,8 +66,7 @@ router.get("/profile", authenticateToken, async (
   try {
     const user = await User.findById(req.userId)
       .select("name email image farms")
-      .populate("farms", "name"); // This fetches farm names
-
+      .populate("farms", "name"); 
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -76,7 +75,7 @@ router.get("/profile", authenticateToken, async (
     res.status(200).json({
       name: user.name,
       email: user.email,
-      farms: user.farms || [], // Now contains objects with `_id` and `name`
+      farms: user.farms || [], 
     });
   } catch (error) {
     console.error("❌ Profile Fetch Error:", error);
@@ -84,7 +83,33 @@ router.get("/profile", authenticateToken, async (
   }
 });
 
+router.put("/profile", authenticateToken, async (
+  req: Request & { userId?: string },
+  res: Response
+): Promise<void> => {
+  try {
+    const { name, email } = req.body;
 
+    const updatedUser = await User.findByIdAndUpdate(
+      req.userId,
+      { name, email },
+      { new: true, runValidators: true }
+    ).select("name email image farms");
 
+    if (!updatedUser) {
+      res.status(404).json({ error: "User not found" });
+      return;
+    }
+
+    res.status(200).json({
+      name: updatedUser.name,
+      email: updatedUser.email,
+      farms: updatedUser.farms || [],
+    });
+  } catch (error) {
+    console.error("❌ Profile Update Error:", error);
+    res.status(500).json({ error: "Failed to update profile" });
+  }
+});
 
 export default router;
