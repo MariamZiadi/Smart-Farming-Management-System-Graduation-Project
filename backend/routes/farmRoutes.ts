@@ -125,8 +125,6 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
   }
 });
 
-
-// GET MY FARMS
 router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.userId;
@@ -160,8 +158,6 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
   }
 });
 
-
-// DELETE FARM
 router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { farmId } = req.params;
@@ -188,10 +184,9 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
   }
 });
 
-// UPDATE FARM
 router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, password, crops } = req.body;
+    const { name, password, crops } = req.body; // crops = array of crop names
     const { farmId } = req.params;
     const userId = (req as any).user?.userId;
 
@@ -214,7 +209,29 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     }
 
     if (name) farm.name = name;
-    if (crops) farm.crops = crops;
+
+    // 🌱 Convert crop names to full crop subdocuments with plantId + addedAt
+    if (crops && crops.length > 0) {
+      const plantDocs = await Plant.find({
+        $or: [
+          { name: { $in: crops } },
+          { arabicName: { $in: crops } },
+        ]
+      });
+
+      const foundNames = plantDocs.map((p: any) => p.name);
+      const notFound = crops.filter((name: any) => !foundNames.includes(name));
+      if (notFound.length > 0) {
+        res.status(400).json({ message: `Some plants not found: ${notFound.join(', ')}` });
+        return;
+      }
+
+    farm.set('crops', plantDocs.map(plant => ({
+      plantId: plant._id,
+      addedAt: new Date()
+    })));
+
+    }
 
     await farm.save();
     res.status(200).json({ message: "Farm updated", farm });
@@ -223,5 +240,6 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 export default router;

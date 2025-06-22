@@ -1,146 +1,132 @@
-import { Link } from 'expo-router';
-import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+import React, { useEffect, useState } from 'react';
 import {
   View,
-  Text,
-  Image,
+  FlatList,
+  ActivityIndicator,
   StyleSheet,
-  ScrollView,
-  Dimensions,
+  Text,
   TouchableOpacity,
+  Image,
+  ImageBackground,
+  I18nManager,
 } from 'react-native';
+import { useNavigation, useIsFocused } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { translateText } from './utils/translation';  // ✅ Confirm this path
 
-import post1 from '../assets/images/post1.jpg';
-import post2 from '../assets/images/post2.jpg';
-import post3 from '../assets/images/post3.png';
-import post from '../assets/images/post.jpg';
-import post4 from '../assets/images/sam.png';
-import poster from '../assets/images/poster.jpg';
-
-const posts = [
-  {
-    id: 1,
-    name: 'Emily Johnson',
-    date: '3 days ago',
-    text: 'Plants play an essential role in our lives, offering numerous benefits that go beyond their beauty.',
-    contentImage: post,
-    photo: post3,
-  },
-  {
-    id: 2,
-    name: 'Smith',
-    date: '1 day ago',
-    text: 'Plants are the Earth’s lungs, let’s protect them!',
-    contentImage: post2,
-    photo: post4,
-  },
-  {
-    id: 3,
-    name: 'John Doe',
-    date: '2 hours ago',
-    text: 'Taking care of plants is like therapy for the soul!',
-    contentImage: post1,
-    photo: poster,
-  },
-];
-
-export default function FeedPage() {
-  return (
-    <View style={styles.container}>
-      <ScrollView
-        style={styles.scrollContainer}
-        contentContainerStyle={{ paddingBottom: 100 }}
-      >
-        {/* Header */}
-        <View style={styles.headerContainer}>
-          <Text style={styles.title}>Feed</Text>
-          <TouchableOpacity style={styles.addButton}>
-            <Link href="./post">
-              <Text style={styles.addButtonText}>+</Text>
-            </Link>
-          </TouchableOpacity>
-        </View>
-
-        {/* Posts */}
-        {posts.map((post) => (
-          <View key={post.id} style={styles.postContainer}>
-            <View style={styles.header}>
-              <Image source={post.photo} style={styles.avatar} />
-              <View style={styles.headerText}>
-                <Text style={styles.name}>{post.name}</Text>
-                <Text style={styles.date}>{post.date}</Text>
-              </View>
-            </View>
-            <Text style={styles.postText}>{post.text}</Text>
-            <Image source={post.contentImage} style={styles.contentImage} />
-          </View>
-        ))}
-      </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity>
-          <Link href="./homepage_arabic">
-            <Icon name="home" size={30} color="#000" />
-          </Link>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Link href="./profile_arabic">
-            <Icon name="person" size={30} color="#000" />
-          </Link>
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Link href="./disease_detection_arabic">
-            <Icon2 name="leaf" size={30} color="#000" />
-          </Link>
-        </TouchableOpacity>
-
-        <View style={[styles.iconContainer, styles.shadow]}>
-          <TouchableOpacity>
-            <Link href="./feed_arabic">
-              <Icon2 name="file-document-outline" size={30} color="rgb(9, 71, 10)" />
-            </Link>
-          </TouchableOpacity>
-        </View>
-
-        <TouchableOpacity>
-          <Link href="./allFarms_arabic">
-            <Icon name="local-florist" size={30} color="#000" />
-          </Link>
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+interface User {
+  _id: string;
+  name: string;
+  image?: string;
 }
 
+interface PostType {
+  _id: string;
+  description: string;
+  image?: string;
+  user: User;
+}
+
+const PostCard = ({ post }: { post: PostType }) => (
+  <View style={styles.card}>
+    <View style={styles.userInfo}>
+      {post.user?.image ? (
+        <Image source={{ uri: post.user.image }} style={styles.avatarImage} />
+      ) : (
+        <View style={styles.avatarPlaceholder}>
+          <Text style={styles.avatarText}>{post.user?.name?.[0] ?? '?'}</Text>
+        </View>
+      )}
+      <Text style={styles.username}>{post.user?.name ?? 'مستخدم مجهول'}</Text>
+    </View>
+    <Text style={styles.description}>{post.description}</Text>
+    {post.image && <Image source={{ uri: post.image }} style={styles.postImage} />}
+  </View>
+);
+
+const FeedArabic = () => {
+  const [posts, setPosts] = useState<PostType[]>([]);
+  const [loading, setLoading] = useState(true);
+  const isFocused = useIsFocused();
+  const navigation = useNavigation<any>();
+
+  async function fetchPosts() {
+    setLoading(true);
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const resp = await axios.get('https://38dc-102-45-148-78.ngrok-free.app/posts', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const posts = resp.data as PostType[];
+
+      const translated = await Promise.all(
+        posts.map(async (p) => ({
+          ...p,
+          description: await translateText(p.description, 'ar')
+        }))
+      );
+
+      setPosts(translated.reverse());
+    } catch (err) {
+      console.error('Translation/fetch error:', err);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    if (isFocused) fetchPosts();
+  }, [isFocused]);
+
+  if (loading) return (
+    <View style={styles.loadingContainer}><ActivityIndicator size="large" color="#00aaff" /></View>
+  );
+
+  return (
+    <ImageBackground source={require('../assets/images/BG2.jpg')} style={{ flex: 1 }} resizeMode="cover">
+      {!posts.length ? (
+        <View style={styles.loadingContainer}>
+          <Text>لا توجد منشورات حالياً.</Text>
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('post')}>
+            <Text style={styles.addButtonText}>＋</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <>
+          <FlatList
+            data={posts}
+            ListHeaderComponent={
+              <View style={styles.headerContainer}>
+                <Text style={styles.headerTitle}>📖 مدونة النباتات</Text>
+                <Text style={styles.headerSubtitle}>شارك، تعلّم، وازرع</Text>
+              </View>
+            }
+            renderItem={({ item }) => <PostCard post={item} />}
+            keyExtractor={(item) => item._id}
+            contentContainerStyle={styles.container}
+          />
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('post')}>
+            <Text style={styles.addButtonText}>＋</Text>
+          </TouchableOpacity>
+        </>
+      )}
+    </ImageBackground>
+  );
+};
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#f9f9f9',
+    paddingHorizontal: 16,
+    paddingBottom: 100,
   },
-  scrollContainer: {
+  loadingContainer: {
     flex: 1,
-  },
-  headerContainer: {
-    marginTop: 25,
-    marginBottom: 25,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-  },
-  title: {
-    fontSize: 45,
-    fontWeight: 'bold',
-    color: 'rgb(9, 71, 10)',
-    flex: 1,
-    textAlign: 'center',
   },
   addButton: {
     position: 'absolute',
+    bottom: 20,
     right: 20,
     backgroundColor: 'rgb(9, 71, 10)',
     width: 50,
@@ -148,82 +134,93 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 3 },
-    shadowOpacity: 0.2,
-    shadowRadius: 5,
     elevation: 6,
   },
   addButtonText: {
     color: 'white',
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: 'bold',
-    textAlign: 'center',
+    lineHeight: 30,
+    position: 'absolute',
+    bottom: 7,
+    right: 11,
   },
-  postContainer: {
-    backgroundColor: '#fff',
-    marginHorizontal: 10,
-    marginVertical: 10,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  header: {
-    flexDirection: 'row',
-    padding: 10,
+  headerContainer: {
+    paddingTop: 60,
+    paddingBottom: 20,
+    paddingHorizontal: 10,
     alignItems: 'center',
   },
-  avatar: {
+  headerTitle: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'rgb(163, 222, 164)',
+  },
+  headerSubtitle: {
+    fontSize: 14,
+    color: 'white',
+    marginTop: 4,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: '#f9fdf9',
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 2 },
+    borderWidth: 1,
+    borderColor: 'rgba(9, 71, 10, 0.1)',
+  },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  avatarImage: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    marginRight: 10,
+    borderWidth: 1.5,
+    borderColor: 'rgb(9, 71, 10)',
   },
-  headerText: {
-    marginLeft: 10,
+  avatarPlaceholder: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgb(9, 71, 10)',
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  name: {
-    fontSize: 18,
+  avatarText: {
     fontWeight: 'bold',
+    color: '#fff',
+    fontSize: 18,
   },
-  date: {
-    fontSize: 12,
-    color: '#888',
-  },
-  postText: {
-    paddingHorizontal: 10,
-    paddingBottom: 10,
+  username: {
     fontSize: 16,
-    color: '#333',
+    fontWeight: 'bold',
+    color: 'rgb(9, 71, 10)',
   },
-  contentImage: {
+  description: {
+    fontSize: 14.5,
+    lineHeight: 22,
+    color: '#333',
+    marginBottom: 10,
+    textAlign: I18nManager.isRTL ? 'right' : 'left',
+  },
+  postImage: {
     width: '100%',
     height: 200,
-    resizeMode: 'cover',
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  bottomNav: {
-    position: 'absolute',
-    bottom: 0,
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    backgroundColor: '#D7E9D4',
-  },
-  iconContainer: {
-    padding: 10,
-    borderRadius: 40,
-    backgroundColor: 'white',
-  },
-  shadow: {
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 6,
-    elevation: 8,
+    borderRadius: 10,
+    marginTop: 8,
+    borderWidth: 0.5,
+    borderColor: 'rgba(9, 71, 10, 0.15)',
   },
 });
+
+export default FeedArabic;

@@ -9,7 +9,6 @@ import {
   ScrollView,
   TextInput,
   Modal,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,16 +16,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const plantSuggestions: string[] = [
-  'Apple', 'Barley', 'Basil', 'Blueberry', 'Strawberry', 'Cucumber',
-  'Grape', 'Lettuce', 'Mint', 'Oats', 'Orange', 'Pepper Bell',
-  'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato'
-];
-
-type Crop = {
-  name: string;
-};
-
+type Crop = { name: string };
 type Farm = {
   _id: string;
   name: string;
@@ -48,7 +38,7 @@ const AllFarmsPage = () => {
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const response = await axios.get("https://a799-102-45-148-78.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://b6a8-102-45-148-78.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {
@@ -67,7 +57,7 @@ const AllFarmsPage = () => {
   const handleDelete = async (farmId: string) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.delete(`https://a799-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
+      await axios.delete(`https://b6a8-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFarms();
@@ -88,10 +78,10 @@ const AllFarmsPage = () => {
     if (!currentFarm) return;
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.put(`https://a799-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`, {
+      await axios.put(`https://b6a8-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`, {
         name: newName,
         password: newPassword,
-        crops: updatedCrops.map(name => ({ name })),
+        crops: updatedCrops, // Send as list of names
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -119,8 +109,8 @@ const AllFarmsPage = () => {
 
   return (
     <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
-      <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
+        <View style={styles.overlay} />
         <Ionicons name="arrow-back" size={27} color="white" style={styles.backIcon} onPress={() => router.push('./homepage')} />
         <Text style={styles.title}>All your farms</Text>
 
@@ -129,10 +119,18 @@ const AllFarmsPage = () => {
         ) : farms.length > 0 ? (
           farms.map((farm) => (
             <View key={farm._id} style={styles.card}>
-              <TouchableOpacity style={{ position: 'absolute', top: 10, right: 10 }} onPress={() => handleDelete(farm._id)}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={{ position: 'absolute', top: 10, right: 10 }}
+                onPress={() => handleDelete(farm._id)}
+              >
                 <Ionicons name="trash" size={24} color="red" />
               </TouchableOpacity>
-              <TouchableOpacity style={{ position: 'absolute', top: 10, right: 35 }} onPress={() => openEditModal(farm)}>
+              <TouchableOpacity
+                activeOpacity={0.7}
+                style={{ position: 'absolute', top: 10, right: 40 }}
+                onPress={() => openEditModal(farm)}
+              >
                 <Ionicons name="create" size={24} color="green" />
               </TouchableOpacity>
               <View style={styles.cardContent}>
@@ -140,7 +138,11 @@ const AllFarmsPage = () => {
                 <Text style={styles.farmPassword}>Password: {farm.plainPassword}</Text>
                 <View style={styles.details}>
                   <Text style={styles.detailsHeader}>Plants</Text>
-                  <Text style={styles.detailsText}>{farm.crops.length > 0 ? farm.crops.map(crop => crop.name).join(", ") : "No crops listed"}</Text>
+                  <Text style={styles.detailsText}>
+                    {farm.crops.length > 0
+                      ? farm.crops.map(crop => crop.name).join(", ")
+                      : "No crops listed"}
+                  </Text>
                 </View>
               </View>
             </View>
@@ -153,29 +155,35 @@ const AllFarmsPage = () => {
           <Text style={styles.addFarmButtonText}>Add New Farm</Text>
         </Link>
 
-        {/* Edit Modal */}
         <Modal visible={editModalVisible} animationType="slide" transparent>
           <View style={styles.modalContainer}>
             <View style={styles.modalContent}>
               <Text style={styles.title}>Edit Farm</Text>
               <TextInput value={newName} onChangeText={setNewName} style={styles.input} placeholder="Farm Name" />
-              <TextInput value={newPassword} onChangeText={setNewPassword} style={styles.input} placeholder="Password"/>
+              <TextInput value={newPassword} onChangeText={setNewPassword} style={styles.input} placeholder="Password" />
               <TextInput value={newCrop} onChangeText={setNewCrop} style={styles.input} placeholder="Add Plant (e.g., Tomato)" />
-              <TouchableOpacity onPress={handleCropAdd} style={styles.addFarmButton}><Text style={styles.addFarmButtonText}>Add Crop</Text></TouchableOpacity>
+              <TouchableOpacity onPress={handleCropAdd} style={styles.addFarmButton}>
+                <Text style={styles.addFarmButtonText}>Add Crop</Text>
+              </TouchableOpacity>
               <ScrollView>
                 {updatedCrops.map(crop => (
                   <View key={crop} style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
                     <Text>{crop}</Text>
-                    <TouchableOpacity onPress={() => handleCropRemove(crop)}><Text style={{ color: 'red' }}>Remove</Text></TouchableOpacity>
+                    <TouchableOpacity onPress={() => handleCropRemove(crop)}>
+                      <Text style={{ color: 'red' }}>Remove</Text>
+                    </TouchableOpacity>
                   </View>
                 ))}
               </ScrollView>
-              <TouchableOpacity onPress={handleEditSave} style={styles.addFarmButton}><Text style={styles.addFarmButtonText}>Save</Text></TouchableOpacity>
-              <TouchableOpacity onPress={() => setEditModalVisible(false)}><Text style={{ color: 'red', textAlign: 'center', marginTop: 10 }}>Cancel</Text></TouchableOpacity>
+              <TouchableOpacity onPress={handleEditSave} style={styles.addFarmButton}>
+                <Text style={styles.addFarmButtonText}>Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={() => setEditModalVisible(false)}>
+                <Text style={{ color: 'red', textAlign: 'center', marginTop: 10 }}>Cancel</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </Modal>
-
       </ScrollView>
 
       <View style={styles.bottomNav}>
@@ -218,6 +226,8 @@ const styles = StyleSheet.create({
   overlay: {
     ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    pointerEvents: 'none',
+    zIndex: 0,
   },
   backIcon: {
     position: 'absolute',
@@ -233,12 +243,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'rgb(254, 254, 253)',
   },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 16,
-    marginBottom: 10,
-  },
   noFarmsText: {
     color: 'white',
     textAlign: 'center',
@@ -251,6 +255,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   card: {
+    position: 'relative',
+    zIndex: 1,
     backgroundColor: '#ffffff',
     borderRadius: 20,
     marginBottom: 20,
@@ -265,10 +271,6 @@ const styles = StyleSheet.create({
   },
   cardContent: {
     gap: 12,
-  },
-  info: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
   },
   plantName: {
     fontSize: 24,
@@ -317,9 +319,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 8,
-  },
-  navItem: {
-    fontSize: 24,
   },
   addFarmButton: {
     marginTop: 20,

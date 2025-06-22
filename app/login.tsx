@@ -19,21 +19,18 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('https://a799-102-45-148-78.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post('https://b6a8-102-45-148-78.ngrok-free.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
 
-        // ✅ Store token securely
         await AsyncStorage.setItem('userToken', token);
 
-        // ✅ Log the stored token for debugging
         const savedToken = await AsyncStorage.getItem('userToken');
         console.log('✅ Saved Token:', savedToken);
 
         Alert.alert('Success', 'Login Successful!');
         
-        // ✅ Redirect to homepage & prevent back navigation
         router.replace('/homepage');
       }
     } catch (error: any) {
