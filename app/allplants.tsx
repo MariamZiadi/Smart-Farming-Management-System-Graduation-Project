@@ -75,7 +75,7 @@ export default function AllPlants() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('https://f2b6-41-199-4-67.ngrok-free.app/plants')
+    fetch('https://cad5-102-45-148-78.ngrok-free.app/plants')
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);
@@ -107,7 +107,6 @@ export default function AllPlants() {
       <View style={styles.overlay}>
         <Text style={styles.title}>All Plants</Text>
 
-        {/* Filter Buttons */}
         <View style={styles.filterContainer}>
           {['All', 'Fruit', 'Vegetable', 'Herb', 'Grain'].map((cat) => (
             <TouchableOpacity

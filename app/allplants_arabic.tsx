@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
 
-// Plant interface
 interface Plant {
   _id: string;
   name: string;
+  wateringPlan: string;
+  fertilizerPlan: string;
 }
 
-// Plant images map (Assuming these paths are correct in your assets folder)
 const plantImages: Record<string, any> = {
   apple: require('assets/images/apple.png'),
   barley: require('assets/images/barley.jpeg'),
@@ -31,7 +31,6 @@ const plantImages: Record<string, any> = {
   peach: require('assets/images/peach.jpg'),
 };
 
-// Arabic name translations
 const arabicNames: Record<string, string> = {
   apple: 'تفاح',
   barley: 'شعير',
@@ -64,7 +63,7 @@ export default function AllPlants() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('https://1b98-41-199-183-199.ngrok-free.app/plants')
+    fetch('https://cad5-102-45-148-78.ngrok-free.app/plants')
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);
@@ -99,8 +98,7 @@ export default function AllPlants() {
           return (
             <TouchableOpacity
               style={styles.card}
-              // FIX: Change navigation path to plural "plant_arabics"
-              onPress={() => router.push(`/plant_arabics/${item._id}`)}
+              onPress={() => router.push(`/plant/arabic/${item._id}`)}
             >
               <Image source={plantImage} style={styles.plantImage} />
               <Text style={styles.plantName}>{arabicName}</Text>
