@@ -1,13 +1,9 @@
 import express, { Request, Response } from 'express';
 import Farm from '../models/Farm';
-import Plant from '../models/Plant';
-import User from "../models/User";
-
-import { authMiddleware } from "../middleware/authMiddleware";
+import User from '../models/User';
+import { authMiddleware } from '../middleware/authMiddleware';
 
 const router = express.Router();
-
-// backend/routes/reminderRoutes.ts
 
 router.get("/reminders", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -25,25 +21,37 @@ router.get("/reminders", authMiddleware, async (req: Request, res: Response): Pr
       return;
     }
 
-    const reminders = (user.farms as any[]).map((farm) => ({
-      farmName: farm.name,
-      crops: farm.crops
-        .filter((crop: any) => crop.plantId) // Ensure plant is valid
-        .map((crop: any) => {
-          const plant = crop.plantId;
+    const reminders = (user.farms as any[]).map((farm) => {
+      const crops = farm.crops.map((crop: any) => {
+        const plant = crop.plantId;
+        if (!plant) return null;
+
+        const wateringText = plant.wateringPlan || "";
+
+        // Match patterns like "every 2 days", "every 2–3 days", or "every 2-3 days"
+        const match = wateringText.match(/every\s+(\d+)(?:[\–\-]\d+)?\s+days?/i);
+        const wateringInterval = match ? parseInt(match[1]) : null;
+
+        let daysLeft: number | string = "N/A";
+        if (wateringInterval) {
           const addedAt = new Date(crop.addedAt);
           const today = new Date();
-          const wateringDays = parseInt(plant.wateringPlan); // Example: "7" means water every 7 days
           const daysPassed = Math.floor((today.getTime() - addedAt.getTime()) / (1000 * 60 * 60 * 24));
-          const daysLeft = wateringDays - (daysPassed % wateringDays);
+          daysLeft = wateringInterval - (daysPassed % wateringInterval);
+        }
 
-          return {
-            name: plant.name, // or plant.arabicName based on locale
-            wateringEvery: `${wateringDays} days`,
-            daysLeft: daysLeft,
-          };
-        })
-    }));
+        return {
+          name: plant.name,
+          wateringEvery: wateringText,
+          daysLeft,
+        };
+      }).filter(Boolean); // keep all valid crops
+
+      return {
+        farmName: farm.name,
+        crops: crops,
+      };
+    });
 
     res.status(200).json({ reminders });
   } catch (error) {
@@ -51,6 +59,5 @@ router.get("/reminders", authMiddleware, async (req: Request, res: Response): Pr
     res.status(500).json({ message: "Server error" });
   }
 });
-
 
 export default router;
