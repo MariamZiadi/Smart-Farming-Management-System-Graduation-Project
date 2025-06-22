@@ -47,11 +47,9 @@ const cropTranslations: { [key: string]: string } = {
   "Barley": "شعير",
   "Rice": "أرز",
   "Oats": "شوفان",
-  "Grape": "عنب", // in case singular is used separately from "Grapes"
+  "Grape": "عنب", 
 };
 
-
-// ✅ Translation helper function
 const getArabicName = (name: string): string => {
   return cropTranslations[name] || name;
 };
@@ -69,7 +67,7 @@ const AllFarmsPage = () => {
         return;
       }
 
-      const response = await axios.get("https://c3c0-102-45-148-78.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://07bc-102-45-148-78.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

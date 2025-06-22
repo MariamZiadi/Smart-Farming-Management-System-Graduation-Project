@@ -67,7 +67,6 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
 });
 
 
-// JOIN FARM
 router.post("/join", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { password } = req.body;
@@ -186,7 +185,7 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
 
 router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, password, crops } = req.body; // crops = array of crop names
+    const { name, password, crops } = req.body; 
     const { farmId } = req.params;
     const userId = (req as any).user?.userId;
 
@@ -210,7 +209,6 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
 
     if (name) farm.name = name;
 
-    // 🌱 Convert crop names to full crop subdocuments with plantId + addedAt
     if (crops && crops.length > 0) {
       const plantDocs = await Plant.find({
         $or: [

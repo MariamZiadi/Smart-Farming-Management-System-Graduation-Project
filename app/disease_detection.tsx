@@ -69,7 +69,7 @@ const PlantDiseaseDetection = () => {
       } as any);
       formData.append('crop', selectedCrop);
 
-      const response = await fetch(`https://7ed0-41-43-3-74.ngrok-free.app/predict`, {
+      const response = await fetch(`https://f992-102-45-148-78.ngrok-free.app/predict`, {
         method: 'POST',
         body: formData,
       });

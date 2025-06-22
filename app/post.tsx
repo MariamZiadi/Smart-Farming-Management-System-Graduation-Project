@@ -39,7 +39,7 @@ const PostScreen = () => {
       }
 
       await axios.post(
-        'https://f2b6-41-199-4-67.ngrok-free.app/posts',
+        'https://f992-102-45-148-78.ngrok-free.app/posts',
         {
           description,
           image,

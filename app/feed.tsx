@@ -62,7 +62,7 @@ const Feed = () => {
     try {
       console.log('📦 Fetching posts...');
       const token = await AsyncStorage.getItem('userToken');
-      const response = await axios.get('https://f2b6-41-199-4-67.ngrok-free.app/posts', {
+      const response = await axios.get('https://f992-102-45-148-78.ngrok-free.app/posts', {
         headers: {
           Authorization: `Bearer ${token}`,
         },
