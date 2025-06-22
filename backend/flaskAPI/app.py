@@ -47,9 +47,6 @@ def predict():
     image = request.files['file']
     crop_type = request.form['crop'].lower()
 
-    print("Received crop:", crop_type)
-    print("Received file:", image.filename)
-
     if crop_type not in model_map:
         return jsonify({"error": f"Crop '{crop_type}' not supported"}), 400
 
@@ -63,17 +60,21 @@ def predict():
         predicted_class = model_info["labels"][np.argmax(prediction)]
         probability = float(np.max(prediction))
 
-        return jsonify({
+        response = {
             "crop_type": crop_type,
             "prediction": predicted_class,
             "probability": probability
-        })
+        }
+        print("Returning JSON:", response)
+        return jsonify(response)
 
     except Exception as e:
+        print("Exception occurred:", str(e))
         return jsonify({"error": str(e)}), 500
 
     finally:
-        os.remove(image_path)
+        if os.path.exists(image_path):
+            os.remove(image_path)
 
 
 if __name__ == '__main__':
