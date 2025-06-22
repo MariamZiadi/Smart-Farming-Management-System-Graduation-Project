@@ -66,13 +66,7 @@ export default function JoinFarmScreen() {
           <Text style={styles.buttonText}>Join</Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.bottomNav}>
-        <Link href="./homepage"><Icon name="home" size={30} color="#000" /></Link>
-        <Link href="./profile"><Icon name="person" size={30} color="#000" /></Link>
-        <Link href="./disease_detection"><Icon2 name="leaf" size={30} color="#000" /></Link>
-        <Link href="./feed"><Icon2 name="file-document-outline" size={30} color="#000" /></Link>
-        <Link href="./allFarms"><Icon name="local-florist" size={30} color="#000" /></Link>
-      </View>
+      
     </ImageBackground>
   );
 }

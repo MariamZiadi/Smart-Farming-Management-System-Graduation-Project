@@ -37,7 +37,7 @@ const FarmRemindersPage = () => {
         return;
       }
 
-      const response = await axios.get("https://1b98-41-199-183-199.ngrok-free.app/farms/reminders", {
+      const response = await axios.get("https://1ed1-197-121-193-54.ngrok-free.app/farms/reminders", {
         headers: { Authorization: `Bearer ${token}` },
       });
 

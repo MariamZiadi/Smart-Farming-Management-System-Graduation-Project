@@ -59,7 +59,7 @@ const HomePage = ({ navigation }: any) => {
             style={styles.cornImage} 
           />
           <Text style={styles.cornplant}>Farm 1</Text>
-          <Link href ="./allFarms" style={styles.moreinfo}>
+          <Link href ="./mygarden" style={styles.moreinfo}>
           More Info
           </Link>
           
