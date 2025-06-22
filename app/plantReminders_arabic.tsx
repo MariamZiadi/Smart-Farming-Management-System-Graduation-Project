@@ -24,6 +24,43 @@ type FarmReminder = {
   crops: CropReminder[];
 };
 
+// 🌿 English to Arabic crop names
+const cropTranslations: { [key: string]: string } = {
+  "Strawberry": "فراولة",
+  "Cucumber": "خيار",
+  "Tomato": "طماطم",
+  "Potato": "بطاطس",
+  "Grapes": "عنب",
+  "Peach": "خوخ",
+  "Apple": "تفاح",
+  "Mint": "نعناع",
+  "Lettuce": "خس",
+  "Orange": "برتقال",
+  "Blueberry": "توت",
+  "Pepper bell": "فلفل",
+  "Basil": "ريحان",
+  "Thyme": "زعتر",
+  "Wheat": "قمح",
+  "Barley": "شعير",
+  "Rice": "أرز",
+  "Oats": "شوفان",
+  "Grape": "عنب"
+};
+
+// 🧠 Translation functions
+const getArabicCropName = (name: string): string => cropTranslations[name] || name;
+const getArabicDaysLeft = (value: number | string): string =>
+  typeof value === 'number' ? `${value} يوم` : value;
+const translateWateringPlan = (text: string): string => {
+  // Example: "Water lightly every 2–3 days to keep soil moist"
+  const everyMatch = text.match(/every\s+(\d+)/i);
+  if (everyMatch) {
+    const num = everyMatch[1];
+    return `يُنصح بالسقي كل ${num} أيام`;
+  }
+  return text; // fallback to original
+};
+
 const FarmRemindersPage = () => {
   const router = useRouter();
   const [reminders, setReminders] = useState<FarmReminder[]>([]);
@@ -38,7 +75,7 @@ const FarmRemindersPage = () => {
         return;
       }
 
-      const response = await axios.get("https://7c3a-41-43-3-74.ngrok-free.app/farms/reminders", {
+      const response = await axios.get("https://c3c0-102-45-148-78.ngrok-free.app/farms/reminders", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -84,12 +121,12 @@ const FarmRemindersPage = () => {
               <Text style={styles.farmName}>{farm.farmName}</Text>
               {farm.crops.map((crop, idx) => (
                 <View key={idx} style={styles.cropContainer}>
-                  <Text style={styles.cropName}>🌿 {crop.name}</Text>
+                  <Text style={styles.cropName}>🌿 {getArabicCropName(crop.name)}</Text>
                   <Text style={styles.cropText}>
-                    💧 خطة السقي: <Text style={styles.highlight}>{crop.wateringEvery}</Text>
+                    💧 خطة السقي: <Text style={styles.highlight}>{translateWateringPlan(crop.wateringEvery)}</Text>
                   </Text>
                   <Text style={styles.cropText}>
-                    ⏳ الأيام المتبقية: <Text style={styles.highlight}>{crop.daysLeft}</Text>
+                    ⏳ الأيام المتبقية: <Text style={styles.highlight}>{getArabicDaysLeft(crop.daysLeft)}</Text>
                   </Text>
                 </View>
               ))}

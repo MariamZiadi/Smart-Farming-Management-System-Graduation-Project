@@ -24,16 +24,13 @@ export default function LoginScreen() {
       if (response.status === 200) {
         const { token } = response.data;
 
-        // ✅ Store token securely
         await AsyncStorage.setItem('userToken', token);
 
-        // ✅ Log the stored token for debugging
         const savedToken = await AsyncStorage.getItem('userToken');
         console.log('✅ Saved Token:', savedToken);
 
         Alert.alert('Success', 'Login Successful!');
         
-        // ✅ Redirect to homepage & prevent back navigation
         router.replace('/homepage');
       }
     } catch (error: any) {

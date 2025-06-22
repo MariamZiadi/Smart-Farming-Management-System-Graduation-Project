@@ -27,6 +27,33 @@ type Farm = {
   plainPassword: string;
 };
 
+// ✅ Crop translation dictionary
+const cropTranslations: { [key: string]: string } = {
+  "Strawberry": "فراولة",
+  "Cucumber": "خيار",
+  "Tomato": "طماطم",
+  "Potato": "بطاطس",
+  "Grapes": "عنب",
+  "Peach": "خوخ",
+  "Apple": "تفاح",
+  "Mint": "نعناع",
+  "Lettuce": "خس",
+  "Orange": "برتقال",
+  "Blueberry": "توت",
+  "Pepper bell": "فلفل",
+  "Basil": "ريحان",
+  "Thyme": "زعتر",
+  "Wheat": "قمح",
+  "Barley": "شعير",
+  "Rice": "أرز",
+  "Oats": "شوفان",
+  "Grape": "عنب", 
+};
+
+const getArabicName = (name: string): string => {
+  return cropTranslations[name] || name;
+};
+
 const AllFarmsPage = () => {
   const router = useRouter();
   const [farms, setFarms] = useState<Farm[]>([]);
@@ -40,7 +67,7 @@ const AllFarmsPage = () => {
         return;
       }
 
-      const response = await axios.get("https://947b-41-43-3-74.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://07bc-102-45-148-78.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -83,7 +110,7 @@ const AllFarmsPage = () => {
                     <Text style={styles.detailsHeader}>المحاصيل</Text>
                     <Text style={styles.detailsText}>
                       {farm.crops.length > 0
-                        ? farm.crops.map((crop) => crop.name).join("، ")
+                        ? farm.crops.map((crop) => getArabicName(crop.name)).join("، ")
                         : "لا توجد محاصيل"}
                     </Text>
                   </View>

@@ -1,19 +1,16 @@
-import axios from "axios";
+import axios from 'axios';
 
-export async function translateText(text: string, targetLang: string = "ar") {
+export async function translateText(text: string, targetLang: string): Promise<string> {
   try {
-    const res = await axios.post("https://libretranslate.com/translate", {
-      q: text,
-      source: "en",
-      target: targetLang,
-      format: "text"
-    }, {
-      headers: { "accept": "application/json", "Content-Type": "application/json" }
+    const res = await axios.get('https://api.mymemory.translated.net/get', {
+      params: {
+        q: text,
+        langpair: `en|${targetLang}`,
+      },
     });
-
-    return res.data.translatedText;
+    return res.data.responseData.translatedText;
   } catch (error) {
-    console.error("Translation error:", error);
+    console.error('Translation error:', error.message);
     return text;
   }
 }

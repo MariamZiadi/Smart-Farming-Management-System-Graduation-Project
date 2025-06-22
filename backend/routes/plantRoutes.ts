@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get single plant by ID
 router.get("/:id", async (req, res) => {
     try {
         const plant = await Plant.findById(req.params.id);
@@ -24,6 +23,24 @@ router.get("/:id", async (req, res) => {
         }
     } catch (err) {
         res.status(500).json({ error: "Error fetching plant" });
+    }
+});
+
+// GET /arabic/:id - Returns Arabic watering and fertilizer plans
+router.get("/arabic/:id", async (req, res) => {
+    try {
+        const plant = await Plant.findById(req.params.id);
+        if (plant) {
+            res.json({
+                name: plant.arabicName,
+                wateringPlan: plant.wateringPlanArabic || "لا توجد خطة ري متاحة",
+                fertilizerPlan: plant.fertilizerPlanArabic || "لا توجد خطة تسميد متاحة"
+            });
+        } else {
+            res.status(404).json({ error: "النبات غير موجود" });
+        }
+    } catch (err) {
+        res.status(500).json({ error: "حدث خطأ أثناء جلب بيانات النبات" });
     }
 });
 

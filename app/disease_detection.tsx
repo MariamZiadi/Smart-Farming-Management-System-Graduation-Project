@@ -1,10 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'expo-router';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Link } from 'expo-router';
 import { Picker } from '@react-native-picker/picker';
-
 
 import {
   View,
@@ -26,8 +25,42 @@ const PlantDiseaseDetection = () => {
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [prediction, setPrediction] = useState<string | null>('');
+  const [treatment, setTreatment] = useState<string | null>(null);
   const [selectedCrop, setSelectedCrop] = useState("potato");
   const cropOptions = ["potato", "apple", "grape", "strawberry", "peach"];
+
+  const getTreatment = (crop: string, disease: string): string => {
+    const treatments: Record<string, Record<string, string>> = {
+      potato: {
+        'late blight': 'Use fungicides containing mancozeb or chlorothalonil. Ensure proper spacing and avoid overhead irrigation.',
+        'early blight': 'Apply fungicides like azoxystrobin or copper-based sprays. Rotate crops and remove infected debris.',
+        healthy: 'No treatments needed.',
+      },
+      apple: {
+        'cedar apple rust': 'Apply fungicides such as myclobutanil during early leaf development. Remove nearby junipers.',
+        'black rot': 'Prune affected branches and apply captan or thiophanate-methyl. Sanitize pruning tools.',
+        'scab': 'Use scab-resistant varieties or apply fungicides like captan or mancozeb.',
+        healthy: 'No treatments needed.',
+      },
+      grape: {
+        'black rot': 'Remove infected mummies and apply fungicides like myclobutanil or mancozeb.',
+        'esca': 'No chemical cure. Remove and destroy infected vines. Practice good vineyard sanitation.',
+        'leaf blight': 'Use copper-based fungicides and ensure good air circulation through pruning.',
+        healthy: 'No treatments needed.',
+      },
+      peach: {
+        'bacterial spot': 'Apply copper-based sprays early in the season. Use resistant varieties and avoid overhead watering.',
+        healthy: 'No treatments needed.',
+      },
+      strawberry: {
+        'leaf scorch': 'Use certified disease-free plants. Apply fungicides like myclobutanil if needed.',
+        healthy: 'No treatments needed.',
+      },
+    };
+
+    const normalizedDisease = disease.split('\n')[0].trim().toLowerCase();
+    return treatments[crop]?.[normalizedDisease] || 'No treatment recommendation available.';
+  };
 
   const pickImage = async () => {
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -44,7 +77,6 @@ const PlantDiseaseDetection = () => {
 
     if (!result.canceled) {
       const selectedUri = result.assets[0].uri;
-      console.log("Image URI:", selectedUri);
       setImageUri(selectedUri);
       sendToAPI(selectedUri);
     }
@@ -54,6 +86,7 @@ const PlantDiseaseDetection = () => {
     try {
       setIsLoading(true);
       setPrediction(null);
+      setTreatment(null);
 
       const fileInfo = await FileSystem.getInfoAsync(uri);
       if (!fileInfo.exists) throw new Error('Image file does not exist');
@@ -69,42 +102,41 @@ const PlantDiseaseDetection = () => {
       } as any);
       formData.append('crop', selectedCrop);
 
-      const response = await fetch(`https://7ed0-41-43-3-74.ngrok-free.app/predict`, {
+      const response = await fetch(`https://cad5-102-45-148-78.ngrok-free.app/predict`, {
         method: 'POST',
+        headers: {
+          Accept: 'application/json',
+        },
         body: formData,
       });
 
       const text = await response.text();
-      console.log("📦 Raw response from server:", text);
-
       try {
         const result = JSON.parse(text);
 
         if (response.ok) {
-          setPrediction(`${result.prediction}\n(${(result.probability * 100).toFixed(2)}%)`);
+          const formattedPrediction = `${result.prediction}\n(${(result.probability * 100).toFixed(2)}%)`;
+          setPrediction(formattedPrediction);
+          const treatmentText = getTreatment(selectedCrop, result.prediction);
+          setTreatment(treatmentText);
         } else {
-          console.error("❌ API error response:", result);
           throw new Error(result.error || 'Server returned an error.');
         }
       } catch (jsonError) {
-        console.error("🚨 JSON Parse Error:", jsonError);
-        console.log("📃 Full response that failed parsing:", text);
         Alert.alert("Error", "Invalid response from server. See console for details.");
+        console.error("JSON parse error:", jsonError);
+        console.log("Raw text:", text);
       }
-
     } catch (error) {
       Alert.alert('Error', 'Failed to get prediction from server.');
-      console.error("🚫 Outer error in sendToAPI:", error);
+      console.error("sendToAPI error:", error);
     } finally {
       setIsLoading(false);
     }
   };
 
   return (
-    <ImageBackground
-      source={require('../assets/images/BG2.jpg')}
-      style={styles.background}
-    >
+    <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
       <Ionicons
         name="arrow-back"
         size={27}
@@ -139,7 +171,7 @@ const PlantDiseaseDetection = () => {
             <Image source={{ uri: imageUri }} style={styles.image} />
           ) : (
             <Image
-              source={require('../assets/images/imageupload.png')} 
+              source={require('../assets/images/imageupload.png')}
               style={styles.imagePlaceholder}
             />
           )}
@@ -149,9 +181,16 @@ const PlantDiseaseDetection = () => {
         {isLoading ? (
           <ActivityIndicator size="large" color="#000" />
         ) : (
-          <Text style={styles.analysisText}>
-            {prediction || (imageUri ? 'Analyzing...' : 'Waiting for Image..')}
-          </Text>
+          <>
+            <Text style={styles.analysisText}>
+              {prediction || (imageUri ? 'Analyzing...' : 'Waiting for Image..')}
+            </Text>
+            {treatment && (
+              <Text style={styles.treatmentText}>
+                Recommended Treatment: {treatment}
+              </Text>
+            )}
+          </>
         )}
       </View>
 
@@ -209,7 +248,7 @@ const styles = StyleSheet.create({
     top: 195,
     left: 0,
     right: 0,
-    bottom: 50, 
+    bottom: 50,
     backgroundColor: 'white',
   },
   uploadButton: {
@@ -284,6 +323,14 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     color: '#333',
   },
+  treatmentText: {
+    fontSize: 18,
+    marginTop: 10,
+    marginHorizontal: 20,
+    color: '#444',
+    fontStyle: 'italic',
+    lineHeight: 24,
+  },
   bottomNav: {
     position: 'absolute',
     bottom: 0,
@@ -295,15 +342,15 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     padding: 10,
-    borderRadius: 40, 
-    backgroundColor: 'white', 
+    borderRadius: 40,
+    backgroundColor: 'white',
   },
   shadow: {
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
-    elevation: 8, 
+    elevation: 8,
   },
   navIcon: {
     fontSize: 30,

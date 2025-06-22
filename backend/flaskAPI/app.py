@@ -1,5 +1,4 @@
 
-
 from flask import Flask, request, jsonify
 import tensorflow as tf
 from tensorflow.keras.models import load_model
@@ -41,8 +40,6 @@ def prepare_image(image_path):
     return img
 
 @app.route('/predict', methods=['POST'])
-@app.route('/predict', methods=['POST'])
-@app.route('/predict', methods=['POST'])
 def predict():
     if 'file' not in request.files or 'crop' not in request.form:
         return jsonify({"error": "Missing file or crop selection"}), 400
@@ -63,17 +60,21 @@ def predict():
         predicted_class = model_info["labels"][np.argmax(prediction)]
         probability = float(np.max(prediction))
 
-        return jsonify({
+        response = {
             "crop_type": crop_type,
             "prediction": predicted_class,
             "probability": probability
-        })
+        }
+        print("Returning JSON:", response)
+        return jsonify(response)
 
     except Exception as e:
+        print("Exception occurred:", str(e))
         return jsonify({"error": str(e)}), 500
 
     finally:
-        os.remove(image_path)
+        if os.path.exists(image_path):
+            os.remove(image_path)
 
 
 if __name__ == '__main__':

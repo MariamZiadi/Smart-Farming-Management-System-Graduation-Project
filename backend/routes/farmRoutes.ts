@@ -7,7 +7,6 @@ import { authMiddleware } from "../middleware/authMiddleware";
 
 const router = express.Router();
 
-// CREATE FARM
 router.post("/create", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { name, password, crops } = req.body;
@@ -24,11 +23,23 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
       return;
     }
 
-    // ✅ Save crops as plain Arabic names directly
-    const formattedCrops: { name: string; addedAt: Date }[] = (crops || []).map((crop: string) => ({
-      name: crop,
-      addedAt: new Date(),
-    }));
+    const formattedCrops: { plantId: any; addedAt: Date }[] = [];
+
+    for (const cropObj of crops || []) {
+  const cropName = typeof cropObj === 'string' ? cropObj : cropObj.name;
+
+  const plant = await Plant.findOne({
+    $or: [{ name: cropName }, { arabicName: cropName }],
+  });
+
+
+      if (plant) {
+        formattedCrops.push({
+          plantId: plant._id,
+          addedAt: new Date(),
+        });
+      }
+    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
@@ -42,9 +53,13 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
     });
 
     await newFarm.save();
+
     await User.findByIdAndUpdate(userId, { $push: { farms: newFarm._id } });
 
-    res.status(201).json({ message: "Farm created successfully", farmId: newFarm._id });
+    res.status(201).json({
+      message: "Farm created successfully",
+      farmId: newFarm._id,
+    });
   } catch (error: any) {
     console.error("❌ Farm Creation Error:", error);
     res.status(500).json({ message: error.message || "Server error" });
@@ -52,8 +67,6 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
 });
 
 
-
-// JOIN FARM
 router.post("/join", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { password } = req.body;
@@ -111,11 +124,17 @@ router.post("/join", authMiddleware, async (req: Request, res: Response): Promis
   }
 });
 
-// GET MY FARMS
 router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = (req as any).user.userId;
-    const user = await User.findById(userId).populate("farms");
+
+    const user = await User.findById(userId).populate({
+      path: "farms",
+      populate: {
+        path: "crops.plantId",
+        model: "Plant",
+      },
+    });
 
     if (!user) {
       res.status(404).json({ message: "User not found" });
@@ -125,8 +144,10 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
     const farmsWithPasswords = user.farms.map((farm: any) => ({
       _id: farm._id,
       name: farm.name,
-      crops: farm.crops,
       plainPassword: farm.plainPassword || "N/A",
+      crops: farm.crops.map((crop: any) => ({
+        name: crop.plantId?.name,
+      })),
     }));
 
     res.status(200).json({ farms: farmsWithPasswords });
@@ -136,7 +157,6 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
   }
 });
 
-// DELETE FARM
 router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
     const { farmId } = req.params;
@@ -163,10 +183,9 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
   }
 });
 
-// UPDATE FARM
 router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, password, crops } = req.body;
+    const { name, password, crops } = req.body; 
     const { farmId } = req.params;
     const userId = (req as any).user?.userId;
 
@@ -189,7 +208,28 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     }
 
     if (name) farm.name = name;
-    if (crops) farm.crops = crops;
+
+    if (crops && crops.length > 0) {
+      const plantDocs = await Plant.find({
+        $or: [
+          { name: { $in: crops } },
+          { arabicName: { $in: crops } },
+        ]
+      });
+
+      const foundNames = plantDocs.map((p: any) => p.name);
+      const notFound = crops.filter((name: any) => !foundNames.includes(name));
+      if (notFound.length > 0) {
+        res.status(400).json({ message: `Some plants not found: ${notFound.join(', ')}` });
+        return;
+      }
+
+    farm.set('crops', plantDocs.map(plant => ({
+      plantId: plant._id,
+      addedAt: new Date()
+    })));
+
+    }
 
     await farm.save();
     res.status(200).json({ message: "Farm updated", farm });
@@ -198,5 +238,6 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 export default router;

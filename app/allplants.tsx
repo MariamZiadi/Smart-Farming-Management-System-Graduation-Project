@@ -107,7 +107,6 @@ export default function AllPlants() {
       <View style={styles.overlay}>
         <Text style={styles.title}>All Plants</Text>
 
-        {/* Filter Buttons */}
         <View style={styles.filterContainer}>
           {['All', 'Fruit', 'Vegetable', 'Herb', 'Grain'].map((cat) => (
             <TouchableOpacity

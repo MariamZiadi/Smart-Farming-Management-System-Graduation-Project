@@ -4,23 +4,30 @@ import { View, Text, Button, StyleSheet, Image, TouchableOpacity, ScrollView, Di
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons'; 
+import { useRouter } from 'expo-router';
 
 const screenWidth = Dimensions.get('window').width; 
 
 const HomePage = ({ navigation }: any) => {
+  const router = useRouter();
     return (
       <View style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
           <View style={styles.topBar}>
-            <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
-            <Text style={styles.topBarText}>مرحبًا بك في AgriGuard</Text>
-            <Text style={styles.topdescription}>ابدأ الآن بإضافة أول نبتة لك!</Text>
-            <Link href="./chatbot_arabic" asChild>
-              <TouchableOpacity style={styles.chatbotIcon}>
-                <Ionicons name="chatbubble" size={24} color="white" />
-              </TouchableOpacity>
-            </Link>
-          </View>
+            <Link href="./weatherNotifier_arabic" asChild>
+            <TouchableOpacity>
+              <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
+            </TouchableOpacity>
+          </Link>
+            <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
+          <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
+          
+          <Link href="./chatbot_arabic" asChild>
+            <TouchableOpacity style={styles.chatbotIcon}>
+            <Ionicons name="chatbubble" size={24} color="white" />
+            </TouchableOpacity>
+          </Link>
+        </View>
   
           <View style={styles.boxontopbar}>
             <Text style={styles.waterreminder}>تذكير بالسقي</Text>
@@ -29,10 +36,14 @@ const HomePage = ({ navigation }: any) => {
               source={require('../assets/images/homeplant.png')}
               style={styles.plantImage} 
             />
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => router.push('./plantReminders_arabic')}
+            >
               <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
               <Text style={styles.buttonText}>الماء بعد 30 دقيقة</Text>
             </TouchableOpacity>
+
           </View>
   
           <View style={styles.garden}>

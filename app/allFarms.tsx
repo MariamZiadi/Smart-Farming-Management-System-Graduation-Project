@@ -9,7 +9,6 @@ import {
   ScrollView,
   TextInput,
   Modal,
-  Alert,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/MaterialIcons';
@@ -17,16 +16,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const plantSuggestions: string[] = [
-  'Apple', 'Barley', 'Basil', 'Blueberry', 'Strawberry', 'Cucumber',
-  'Grape', 'Lettuce', 'Mint', 'Oats', 'Orange', 'Pepper Bell',
-  'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato'
-];
-
-type Crop = {
-  name: string;
-};
-
+type Crop = { name: string };
 type Farm = {
   _id: string;
   name: string;
@@ -48,7 +38,7 @@ const AllFarmsPage = () => {
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const response = await axios.get("https://fa4f-102-45-148-78.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get("https://07bc-102-45-148-78.ngrok-free.app/farms/my-farms", {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {
@@ -67,7 +57,7 @@ const AllFarmsPage = () => {
   const handleDelete = async (farmId: string) => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.delete(`https://fa4f-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
+      await axios.delete(`https://07bc-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFarms();
@@ -88,10 +78,10 @@ const AllFarmsPage = () => {
     if (!currentFarm) return;
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.put(`https://fa4f-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`, {
+      await axios.put(`https://07bc-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`, {
         name: newName,
         password: newPassword,
-        crops: updatedCrops.map(name => ({ name })),
+        crops: updatedCrops,
       }, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -119,63 +109,83 @@ const AllFarmsPage = () => {
 
   return (
     <ImageBackground source={require('../assets/images/BG2.jpg')} style={styles.background}>
-      <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.scrollContainer} keyboardShouldPersistTaps="handled">
-        <Ionicons name="arrow-back" size={27} color="white" style={styles.backIcon} onPress={() => router.push('./homepage')} />
-        <Text style={styles.title}>All your farms</Text>
+        <View style={{ paddingTop: 50 }}>
+          <Ionicons name="arrow-back" size={27} color="white" style={styles.backIcon} onPress={() => router.push('./homepage')} />
+          <Text style={styles.title}>All your farms</Text>
 
-        {error ? (
-          <Text style={styles.noFarmsText}>{error}</Text>
-        ) : farms.length > 0 ? (
-          farms.map((farm) => (
-            <View key={farm._id} style={styles.card}>
-              <TouchableOpacity style={{ position: 'absolute', top: 10, right: 10 }} onPress={() => handleDelete(farm._id)}>
-                <Ionicons name="trash" size={24} color="red" />
-              </TouchableOpacity>
-              <TouchableOpacity style={{ position: 'absolute', top: 10, right: 35 }} onPress={() => openEditModal(farm)}>
-                <Ionicons name="create" size={24} color="green" />
-              </TouchableOpacity>
-              <View style={styles.cardContent}>
-                <Text style={styles.plantName}>{farm.name}</Text>
-                <Text style={styles.farmPassword}>Password: {farm.plainPassword}</Text>
-                <View style={styles.details}>
-                  <Text style={styles.detailsHeader}>Plants</Text>
-                  <Text style={styles.detailsText}>{farm.crops.length > 0 ? farm.crops.map(crop => crop.name).join(", ") : "No crops listed"}</Text>
+          {error ? (
+            <Text style={styles.noFarmsText}>{error}</Text>
+          ) : farms.length > 0 ? (
+            farms.map((farm) => (
+              <View key={farm._id} style={styles.card}>
+                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => openEditModal(farm)}
+                    style={{ marginRight: 10 }}
+                  >
+                    <Ionicons name="create" size={24} color="green" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    activeOpacity={0.7}
+                    onPress={() => handleDelete(farm._id)}
+                  >
+                    <Ionicons name="trash" size={24} color="red" />
+                  </TouchableOpacity>
+                </View>
+                <View style={styles.cardContent}>
+                  <Text style={styles.plantName}>{farm.name}</Text>
+                  <Text style={styles.farmPassword}>Password: {farm.plainPassword}</Text>
+                  <View style={styles.details}>
+                    <Text style={styles.detailsHeader}>Plants</Text>
+                    <Text style={styles.detailsText}>
+                      {farm.crops.length > 0
+                        ? farm.crops.map(crop => crop.name).join(", ")
+                        : "No crops listed"}
+                    </Text>
+                  </View>
                 </View>
               </View>
+            ))
+          ) : (
+            <Text style={styles.noFarmsText}>No farms found.</Text>
+          )}
+
+          <Link href="./add_farm" style={styles.addFarmButton}>
+            <Text style={styles.addFarmButtonText}>Add New Farm</Text>
+          </Link>
+
+          <Modal visible={editModalVisible} animationType="slide" transparent>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <Text style={styles.title}>Edit Farm</Text>
+                <TextInput value={newName} onChangeText={setNewName} style={styles.input} placeholder="Farm Name" />
+                <TextInput value={newPassword} onChangeText={setNewPassword} style={styles.input} placeholder="Password" />
+                <TextInput value={newCrop} onChangeText={setNewCrop} style={styles.input} placeholder="Add Plant (e.g., Tomato)" />
+                <TouchableOpacity onPress={handleCropAdd} style={styles.addFarmButton}>
+                  <Text style={styles.addFarmButtonText}>Add Crop</Text>
+                </TouchableOpacity>
+                <ScrollView>
+                  {updatedCrops.map(crop => (
+                    <View key={crop} style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
+                      <Text>{crop}</Text>
+                      <TouchableOpacity onPress={() => handleCropRemove(crop)}>
+                        <Text style={{ color: 'red' }}>Remove</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                </ScrollView>
+                <TouchableOpacity onPress={handleEditSave} style={styles.addFarmButton}>
+                  <Text style={styles.addFarmButtonText}>Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={() => setEditModalVisible(false)}>
+                  <Text style={{ color: 'red', textAlign: 'center', marginTop: 10 }}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          ))
-        ) : (
-          <Text style={styles.noFarmsText}>No farms found.</Text>
-        )}
-
-        <Link href="./add_farm" style={styles.addFarmButton}>
-          <Text style={styles.addFarmButtonText}>Add New Farm</Text>
-        </Link>
-
-        {/* Edit Modal */}
-        <Modal visible={editModalVisible} animationType="slide" transparent>
-          <View style={styles.modalContainer}>
-            <View style={styles.modalContent}>
-              <Text style={styles.title}>Edit Farm</Text>
-              <TextInput value={newName} onChangeText={setNewName} style={styles.input} placeholder="Farm Name" />
-              <TextInput value={newPassword} onChangeText={setNewPassword} style={styles.input} placeholder="Password"/>
-              <TextInput value={newCrop} onChangeText={setNewCrop} style={styles.input} placeholder="Add Plant (e.g., Tomato)" />
-              <TouchableOpacity onPress={handleCropAdd} style={styles.addFarmButton}><Text style={styles.addFarmButtonText}>Add Crop</Text></TouchableOpacity>
-              <ScrollView>
-                {updatedCrops.map(crop => (
-                  <View key={crop} style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
-                    <Text>{crop}</Text>
-                    <TouchableOpacity onPress={() => handleCropRemove(crop)}><Text style={{ color: 'red' }}>Remove</Text></TouchableOpacity>
-                  </View>
-                ))}
-              </ScrollView>
-              <TouchableOpacity onPress={handleEditSave} style={styles.addFarmButton}><Text style={styles.addFarmButtonText}>Save</Text></TouchableOpacity>
-              <TouchableOpacity onPress={() => setEditModalVisible(false)}><Text style={{ color: 'red', textAlign: 'center', marginTop: 10 }}>Cancel</Text></TouchableOpacity>
-            </View>
-          </View>
-        </Modal>
-
+          </Modal>
+        </View>
       </ScrollView>
 
       <View style={styles.bottomNav}>
@@ -215,29 +225,15 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-  },
   backIcon: {
-    position: 'absolute',
-    top: 20,
-    left: 15,
-    zIndex: 10,
     padding: 10,
   },
   title: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: 'bold',
-    marginBottom: 18,
     textAlign: 'center',
-    color: 'rgb(254, 254, 253)',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
-    fontSize: 16,
-    marginBottom: 10,
+    color: 'white',
+    marginBottom: 15,
   },
   noFarmsText: {
     color: 'white',
@@ -246,7 +242,6 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   scrollContainer: {
-    top: 40,
     paddingBottom: 20,
     paddingHorizontal: 16,
   },
@@ -264,16 +259,11 @@ const styles = StyleSheet.create({
     borderColor: '#e0e0e0',
   },
   cardContent: {
-    gap: 12,
-  },
-  info: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
+    marginTop: 10,
   },
   plantName: {
     fontSize: 24,
     fontWeight: '700',
-    marginBottom: 4,
     color: '#2e7d32',
   },
   farmPassword: {
@@ -283,7 +273,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   details: {
-    marginTop: 6,
     backgroundColor: '#f1f8e9',
     borderRadius: 10,
     padding: 10,
@@ -305,6 +294,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     alignItems: 'center',
     backgroundColor: '#D7E9D4',
+    paddingVertical: 10,
   },
   iconContainer: {
     padding: 10,
@@ -317,9 +307,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 8,
-  },
-  navItem: {
-    fontSize: 24,
   },
   addFarmButton: {
     marginTop: 20,
