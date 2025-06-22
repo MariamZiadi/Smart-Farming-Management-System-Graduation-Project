@@ -113,7 +113,7 @@ const FeedArabic = () => {
             keyExtractor={(item) => item._id}
             contentContainerStyle={styles.container}
           />
-          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('post')}>
+          <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('post_arabic')}>
             <Text style={styles.addButtonText}>＋</Text>
           </TouchableOpacity>
         </>

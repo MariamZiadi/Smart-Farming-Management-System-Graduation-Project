@@ -3,193 +3,169 @@ import {
   View,
   Text,
   TextInput,
+  Image,
   StyleSheet,
   TouchableOpacity,
-  Image,
-  ScrollView,
   Alert,
-  I18nManager,
+  ImageBackground,
 } from 'react-native';
-import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
-import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { useNavigation } from '@react-navigation/native';
 
-export default function PostPage() {
+const PostScreen = () => {
   const [description, setDescription] = useState('');
-  const [photo, setPhoto] = useState<string | null>(null);
-  const router = useRouter();
+  const [image, setImage] = useState<string | null>(null);
+  const navigation = useNavigation();
 
-  const handleChoosePhoto = async () => {
-    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (!permissionResult.granted) {
-      alert('يجب السماح بالوصول إلى مكتبة الصور!');
-      return;
-    }
-
+  const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
       quality: 1,
     });
 
     if (!result.canceled) {
-      setPhoto(result.assets[0].uri);
+      setImage(result.assets[0].uri);
     }
   };
 
-  const handlePost = async () => {
-    if (!description.trim()) {
-      alert('يرجى إدخال وصف قبل النشر.');
-      return;
-    }
-
+  const handlePostUpload = async () => {
     try {
-      const token = 'YOUR_AUTH_TOKEN'; // Replace with actual logic
-
-      const response = await fetch('https://8c75-41-43-3-74.ngrok-free.app/posts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          description,
-          photo,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorDetails = await response.text();
-        console.error('تفاصيل الخطأ:', errorDetails);
-        throw new Error('فشل إرسال المنشور');
+      const token = await AsyncStorage.getItem('userToken');
+      if (!token) {
+        Alert.alert('Error', 'You must be logged in to post.');
+        return;
       }
 
-      const result = await response.json();
-      console.log('تم إنشاء المنشور:', result);
+      await axios.post(
+        'https://4f93-102-45-148-78.ngrok-free.app/posts',
+        {
+          description,
+          image,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      alert('تم نشر تجربتك بنجاح!');
-
-      setDescription('');
-      setPhoto(null);
-      router.push('./feed_arabic');
-    } catch (error) {
-      console.error('خطأ أثناء النشر:', error);
-      Alert.alert('خطأ', 'حدث خطأ أثناء إرسال المنشور.');
+      navigation.goBack();
+    } catch (error: any) {
+      console.error('❌ Post upload error:', error);
+      Alert.alert('Upload Error', error.response?.data?.message || 'Failed to upload post.');
     }
   };
 
   return (
-    <ScrollView style={styles.container}>
-      <Ionicons
-        name="arrow-back"
-        size={27}
-        style={styles.backIcon}
-        onPress={() => router.push('./feed_arabic')}
-      />
-      <Text style={styles.title}>شارك تجربتك معنا!</Text>
-      <View style={styles.form}>
-        <Text style={styles.label}>الوصف</Text>
+    <ImageBackground
+      source={require('../assets/images/BG2.jpg')}
+      style={{ flex: 1 }}
+      resizeMode="cover"
+    >
+      <View style={styles.container}>
+        <Text style={styles.pageTitle}>انشر مدونتك</Text>
+
+        <Text style={styles.label}>محتوى المدونة</Text>
         <TextInput
           style={styles.input}
-          placeholder="اكتب هنا..."
-          placeholderTextColor="#777"
-          multiline
+          placeholder="شارك خبراتك و افكارك.."
           value={description}
-          onChangeText={(text) => setDescription(text)}
-          textAlign={I18nManager.isRTL ? 'right' : 'left'}
+          onChangeText={setDescription}
+          multiline
         />
 
-        <Text style={styles.label}>أرفق صورة</Text>
-        <TouchableOpacity style={styles.photoButton} onPress={handleChoosePhoto}>
-          {photo ? (
-            <Image source={{ uri: photo }} style={styles.photoPreview} />
+        <TouchableOpacity style={styles.imageUploadArea} onPress={pickImage}>
+          {image ? (
+            <Image source={{ uri: image }} style={styles.uploadedImage} />
           ) : (
-            <Image
-              source={require('../assets/images/imageupload.png')}
-              style={styles.imagePlaceholder}
-            />
+            <View style={styles.placeholderContent}>
+              <Text style={styles.placeholderIcon}>📸</Text>
+              <Text style={styles.placeholderText}>اضغط لتحميل صورة</Text>
+            </View>
           )}
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.postButton} onPress={handlePost}>
-          <Text style={styles.postButtonText}>نشر</Text>
+        <TouchableOpacity style={styles.uploadButton} onPress={handlePostUpload}>
+          <Text style={styles.uploadButtonText}>نشر</Text>
         </TouchableOpacity>
       </View>
-    </ScrollView>
+    </ImageBackground>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
+    padding: 20,
     flex: 1,
-    backgroundColor: 'white',
   },
-  backIcon: {
-    color: 'rgb(9, 71, 10)',
-    marginTop: 30,
-    marginLeft: 10,
-  },
-  title: {
-    marginTop: 25,
-    fontSize: 30,
+  pageTitle: {
+    fontSize: 24,
     fontWeight: 'bold',
-    color: 'rgb(9, 71, 10)',
+    color: 'rgb(163, 222, 164)',
     marginBottom: 20,
     textAlign: 'center',
   },
-  form: {
-    paddingHorizontal: 20,
-  },
   label: {
-    fontSize: 20,
-    color: '#333',
-    marginBottom: 5,
-    fontWeight: 'bold',
-    textAlign: I18nManager.isRTL ? 'right' : 'left',
+    fontSize: 16,
+    color: 'rgb(255, 255, 255)',
+    fontWeight: '600',
+    marginBottom: 8,
   },
   input: {
-    height: 100,
-    backgroundColor: 'rgb(241, 241, 241)',
+    height: 120,
+    borderColor: 'rgba(9, 71, 10, 0.3)',
+    borderWidth: 1,
     borderRadius: 10,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    fontSize: 18,
+    paddingHorizontal: 12,
+    backgroundColor: '#fff',
+    marginBottom: 15,
+    textAlignVertical: 'top',
+    fontSize: 14.5,
     color: '#333',
-    marginBottom: 20,
   },
-  photoButton: {
+  imageUploadArea: {
     height: 200,
+    borderWidth: 1.5,
+    borderColor: 'rgba(9, 71, 10, 0.3)',
+    borderStyle: 'dashed',
+    borderRadius: 12,
+    backgroundColor: '#fff',
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 10,
-    marginBottom: 20,
+    marginBottom: 15,
     overflow: 'hidden',
   },
-  photoPreview: {
+  uploadedImage: {
     width: '100%',
     height: '100%',
-    resizeMode: 'cover',
+    borderRadius: 10,
   },
-  imagePlaceholder: {
-    width: '100%',
-    height: '100%',
-    resizeMode: 'cover',
-  },
-  postButton: {
-    top: 20,
-    backgroundColor: 'rgb(9, 71, 10)',
-    marginHorizontal: 45,
-    height: 50,
-    borderRadius: 20,
-    justifyContent: 'center',
+  placeholderContent: {
     alignItems: 'center',
-    elevation: 5,
   },
-  postButtonText: {
+  placeholderIcon: {
+    fontSize: 32,
+    marginBottom: 6,
+    color: 'rgb(9, 71, 10)',
+  },
+  placeholderText: {
+    fontSize: 14,
+    color: '#555',
+  },
+  uploadButton: {
+    backgroundColor: 'rgb(9, 71, 10)',
+    padding: 14,
+    borderRadius: 8,
+  },
+  uploadButtonText: {
     color: '#fff',
-    fontSize: 18,
+    textAlign: 'center',
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
+
+export default PostScreen;
