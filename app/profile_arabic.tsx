@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -8,12 +8,14 @@ import {
   ScrollView,
   Alert,
   ActivityIndicator,
-  I18nManager
+  TouchableOpacity,
+  Keyboard,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
 
 interface Farm {
   _id: string;
@@ -29,41 +31,72 @@ interface Profile {
 
 const ProfileScreen = () => {
   const router = useRouter();
-
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [showFarms, setShowFarms] = useState(true);
+
+  const nameRef = useRef<TextInput>(null);
+  const emailRef = useRef<TextInput>(null);
+
+  const fetchUserProfile = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      const response = await axios.get(`${API_URL}/auth/profile`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      setProfile(response.data);
+      setName(response.data.name);
+      setEmail(response.data.email);
+    } catch (error: any) {
+      console.error('❌ خطأ أثناء جلب الملف الشخصي:', error);
+      Alert.alert('خطأ', 'فشل في تحميل الملف الشخصي. حاول مرة أخرى.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchUserProfile = async () => {
-      try {
-        const token = await AsyncStorage.getItem('userToken');
-        if (!token) {
-          Alert.alert('خطأ في التحقق', 'لم يتم العثور على رمز. يرجى تسجيل الدخول مرة أخرى.');
-          setLoading(false);
-          return;
-        }
-
-        const response = await axios.get('https://1b98-41-199-183-199.ngrok-free.app/auth/profile', {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        setProfile(response.data);
-      } catch (error: any) {
-        console.error('❌ خطأ في جلب الملف الشخصي:', error);
-        if (error.response?.status === 404) {
-          Alert.alert('خطأ', 'الملف الشخصي غير موجود (404).');
-        } else if (error.response?.status === 401) {
-          Alert.alert('خطأ', 'غير مصرح. يرجى تسجيل الدخول مرة أخرى.');
-        } else {
-          Alert.alert('خطأ', 'فشل في جلب الملف الشخصي. تحقق من الإنترنت أو حاول لاحقًا.');
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchUserProfile();
   }, []);
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      handleSave();
+    } else {
+      setIsEditing(true);
+      setShowFarms(false);
+
+      setTimeout(() => {
+        nameRef.current?.focus();
+        nameRef.current?.setNativeProps({ selection: { start: 0, end: name.length } });
+      }, 200);
+    }
+  };
+
+  const handleSave = async () => {
+    try {
+      const token = await AsyncStorage.getItem('userToken');
+      await axios.put(`${API_URL}/auth/profile`, {
+        name,
+        email,
+      }, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      Alert.alert("✅ تم", "تم تحديث الملف الشخصي بنجاح.");
+      setIsEditing(false);
+      Keyboard.dismiss();
+      await fetchUserProfile();
+      setShowFarms(true);
+    } catch (err) {
+      console.error("فشل في تحديث الملف الشخصي", err);
+      Alert.alert("❌ خطأ", "فشل في تحديث البيانات.");
+    }
+  };
 
   if (loading) {
     return <ActivityIndicator size="large" color="#fff" style={styles.loader} />;
@@ -80,7 +113,7 @@ const ProfileScreen = () => {
         size={27}
         color="white"
         style={styles.backIcon}
-        onPress={() => router.push('./homepage_arabic')}
+        onPress={() => router.push('./homepage')}
       />
       <View style={styles.overlay} />
 
@@ -92,37 +125,71 @@ const ProfileScreen = () => {
         </View>
 
         <View style={styles.inputContainer}>
-          {renderField('الاسم', profile.name)}
-          {renderField('البريد الإلكتروني', profile.email)}
+          <EditableField
+            label="الاسم"
+            value={name}
+            onChangeText={setName}
+            editable={isEditing}
+            inputRef={nameRef}
+          />
+          <EditableField
+            label="البريد الإلكتروني"
+            value={email}
+            onChangeText={setEmail}
+            editable={isEditing}
+            inputRef={emailRef}
+          />
 
-          <View style={styles.card}>
-            <Text style={styles.inputLabel}>المزارع</Text>
-            {profile.farms.length > 0 ? (
-              <View style={styles.dropdown}>
-                {profile.farms.map((farm, index) => (
-                  <Text key={index} style={styles.dropdownItem}>
-                    🌿 {farm.name}
-                  </Text>
-                ))}
-              </View>
-            ) : (
-              <Text style={styles.noFarms}>لا توجد مزارع.</Text>
-            )}
-          </View>
+          {showFarms && (
+            <View style={styles.card}>
+              <Text style={styles.inputLabel}>المزارع</Text>
+              {profile.farms.length > 0 ? (
+                <View style={styles.dropdown}>
+                  {profile.farms.map((farm, index) => (
+                    <Text key={index} style={styles.dropdownItem}>
+                      🌿 {farm.name}
+                    </Text>
+                  ))}
+                </View>
+              ) : (
+                <Text style={styles.noFarms}>لا توجد مزارع مسجلة.</Text>
+              )}
+            </View>
+          )}
+
+          <TouchableOpacity onPress={handleEditToggle}>
+            <Text style={styles.saveButton}>
+              {isEditing ? '💾 حفظ التعديلات' : '✏️ تعديل الملف الشخصي'}
+            </Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </ImageBackground>
   );
 };
 
-const renderField = (label: string, value: string) => (
+const EditableField = ({
+  label,
+  value,
+  onChangeText,
+  editable,
+  inputRef,
+}: {
+  label: string;
+  value: string;
+  onChangeText: (text: string) => void;
+  editable: boolean;
+  inputRef: React.RefObject<TextInput>;
+}) => (
   <View style={styles.card}>
     <Text style={styles.inputLabel}>{label}</Text>
     <TextInput
+      ref={inputRef}
       style={styles.input}
       value={value}
-      editable={false}
-      textAlign={I18nManager.isRTL ? 'right' : 'left'}
+      onChangeText={onChangeText}
+      editable={editable}
+      selectTextOnFocus={editable}
     />
   </View>
 );
@@ -179,6 +246,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     fontSize: 16,
     color: '#333',
+    textAlign: 'right', // to align text for Arabic
   },
   dropdown: {
     backgroundColor: '#f0f0f0',
@@ -196,6 +264,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontStyle: 'italic',
     marginTop: 5,
+    textAlign: 'right',
+  },
+  saveButton: {
+    backgroundColor: '#1b5e20',
+    color: 'white',
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: '600',
+    marginTop: 10,
   },
   errorText: {
     color: 'red',

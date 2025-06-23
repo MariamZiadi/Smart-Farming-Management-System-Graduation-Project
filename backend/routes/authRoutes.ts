@@ -5,6 +5,10 @@ import User from "../models/User";
 
 const router = express.Router();
 
+// Debug: confirm this file is loaded
+console.log("✅ authRoutes loaded");
+
+// Token middleware
 const authenticateToken = (
   req: Request & { userId?: string },
   res: Response,
@@ -15,21 +19,22 @@ const authenticateToken = (
 
   if (!token) {
     res.status(401).json({ error: "Access denied. No token provided." });
-    return; 
+    return;
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as { userId: string };
     req.userId = decoded.userId;
-    next(); 
+    next();
   } catch (err) {
     res.status(403).json({ error: "Invalid token." });
-    return; 
   }
 };
 
-
+// ✅ Login route
 router.post("/login", async (req: Request, res: Response): Promise<void> => {
+  console.log("🔐 /auth/login hit");
+
   try {
     const { email, password } = req.body;
 
@@ -45,11 +50,9 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
       return;
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET as string,
-      { expiresIn: "1h" }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET as string, {
+      expiresIn: "1h",
+    });
 
     res.status(200).json({ message: "Login successful", token });
   } catch (error) {
@@ -58,7 +61,7 @@ router.post("/login", async (req: Request, res: Response): Promise<void> => {
   }
 });
 
-
+// GET profile
 router.get("/profile", authenticateToken, async (
   req: Request & { userId?: string },
   res: Response
@@ -66,7 +69,8 @@ router.get("/profile", authenticateToken, async (
   try {
     const user = await User.findById(req.userId)
       .select("name email image farms")
-      .populate("farms", "name"); 
+      .populate("farms", "name");
+
     if (!user) {
       res.status(404).json({ error: "User not found" });
       return;
@@ -75,7 +79,7 @@ router.get("/profile", authenticateToken, async (
     res.status(200).json({
       name: user.name,
       email: user.email,
-      farms: user.farms || [], 
+      farms: user.farms || [],
     });
   } catch (error) {
     console.error("❌ Profile Fetch Error:", error);
@@ -83,6 +87,7 @@ router.get("/profile", authenticateToken, async (
   }
 });
 
+// PUT profile (update name/email)
 router.put("/profile", authenticateToken, async (
   req: Request & { userId?: string },
   res: Response
@@ -94,7 +99,7 @@ router.put("/profile", authenticateToken, async (
       req.userId,
       { name, email },
       { new: true, runValidators: true }
-    ).select("name email image farms");
+    ).select("name email farms");
 
     if (!updatedUser) {
       res.status(404).json({ error: "User not found" });
@@ -102,6 +107,7 @@ router.put("/profile", authenticateToken, async (
     }
 
     res.status(200).json({
+      message: "Profile updated successfully",
       name: updatedUser.name,
       email: updatedUser.email,
       farms: updatedUser.farms || [],
