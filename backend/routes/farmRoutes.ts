@@ -185,7 +185,7 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
 
 router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, password, crops } = req.body; 
+    const { name, password, crops } = req.body;
     const { farmId } = req.params;
     const userId = (req as any).user?.userId;
 
@@ -210,25 +210,34 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     if (name) farm.name = name;
 
     if (crops && crops.length > 0) {
-      const plantDocs = await Plant.find({
-        $or: [
-          { name: { $in: crops } },
-          { arabicName: { $in: crops } },
-        ]
-      });
+      // Normalize input
+      const normalizedCrops = crops.map((crop: string) => crop.trim().toLowerCase());
 
-      const foundNames = plantDocs.map((p: any) => p.name);
-      const notFound = crops.filter((name: any) => !foundNames.includes(name));
+      // Fetch plants matching either name or arabicName
+      const plantDocs = await Plant.find({
+  $or: normalizedCrops.flatMap((crop: string) => [
+    { name: new RegExp(`^${crop}$`, 'i') },
+    { arabicName: new RegExp(`^${crop}$`, 'i') },
+  ])
+});
+
+
+      // Extract all matched values for comparison
+      const matchedInputs = new Set([
+        ...plantDocs.map((p: any) => p.name?.toLowerCase()),
+        ...plantDocs.map((p: any) => p.arabicName?.toLowerCase())
+      ]);
+
+      const notFound = normalizedCrops.filter((input: string) => !matchedInputs.has(input));
       if (notFound.length > 0) {
-        res.status(400).json({ message: `Some plants not found: ${notFound.join(', ')}` });
+        res.status(400).json({ message: `Some crops not found: ${notFound.join(', ')}` });
         return;
       }
 
-    farm.set('crops', plantDocs.map(plant => ({
-      plantId: plant._id,
-      addedAt: new Date()
-    })));
-
+      farm.set('crops', plantDocs.map(plant => ({
+        plantId: plant._id,
+        addedAt: new Date()
+      })));
     }
 
     await farm.save();
@@ -238,6 +247,7 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 
 export default router;
