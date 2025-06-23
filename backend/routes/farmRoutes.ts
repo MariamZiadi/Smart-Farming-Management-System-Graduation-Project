@@ -26,18 +26,12 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
     const formattedCrops: { plantId: any; addedAt: Date }[] = [];
 
     for (const cropObj of crops || []) {
-  const cropName = typeof cropObj === 'string' ? cropObj : cropObj.name;
-
-  const plant = await Plant.findOne({
-    $or: [{ name: cropName }, { arabicName: cropName }],
-  });
-
-
+      const cropName = typeof cropObj === 'string' ? cropObj : cropObj.name;
+      const plant = await Plant.findOne({
+        $or: [{ name: cropName }, { arabicName: cropName }],
+      });
       if (plant) {
-        formattedCrops.push({
-          plantId: plant._id,
-          addedAt: new Date(),
-        });
+        formattedCrops.push({ plantId: plant._id, addedAt: new Date() });
       }
     }
 
@@ -53,19 +47,14 @@ router.post("/create", authMiddleware, async (req: Request, res: Response): Prom
     });
 
     await newFarm.save();
-
     await User.findByIdAndUpdate(userId, { $push: { farms: newFarm._id } });
 
-    res.status(201).json({
-      message: "Farm created successfully",
-      farmId: newFarm._id,
-    });
+    res.status(201).json({ message: "Farm created successfully", farmId: newFarm._id });
   } catch (error: any) {
     console.error("❌ Farm Creation Error:", error);
     res.status(500).json({ message: error.message || "Server error" });
   }
 });
-
 
 router.post("/join", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -130,10 +119,7 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
 
     const user = await User.findById(userId).populate({
       path: "farms",
-      populate: {
-        path: "crops.plantId",
-        model: "Plant",
-      },
+      populate: { path: "crops.plantId", model: "Plant" },
     });
 
     if (!user) {
@@ -145,9 +131,7 @@ router.get("/my-farms", authMiddleware, async (req: Request, res: Response): Pro
       _id: farm._id,
       name: farm.name,
       plainPassword: farm.plainPassword || "N/A",
-      crops: farm.crops.map((crop: any) => ({
-        name: crop.plantId?.name,
-      })),
+      crops: farm.crops.map((crop: any) => ({ name: crop.plantId?.name })),
     }));
 
     res.status(200).json({ farms: farmsWithPasswords });
@@ -168,20 +152,29 @@ router.delete("/:farmId", authMiddleware, async (req: Request, res: Response): P
       return;
     }
 
-    if (farm.owner.toString() !== userId) {
+    const isOwner = farm.owner.toString() === userId;
+    const isMember = farm.members.map((id) => id.toString()).includes(userId);
+
+    if (!isOwner && !isMember) {
       res.status(403).json({ message: "Unauthorized" });
       return;
     }
 
-    await User.updateMany({ farms: farmId }, { $pull: { farms: farmId } });
-    await Farm.findByIdAndDelete(farmId);
-
-    res.status(200).json({ message: "Farm deleted successfully" });
+    if (isOwner) {
+      await User.updateMany({ farms: farmId }, { $pull: { farms: farmId } });
+      await Farm.findByIdAndDelete(farmId);
+      res.status(200).json({ message: "Farm deleted permanently by owner" });
+    } else {
+      await User.findByIdAndUpdate(userId, { $pull: { farms: farmId } });
+      await Farm.findByIdAndUpdate(farmId, { $pull: { members: userId } });
+      res.status(200).json({ message: "You left the farm" });
+    }
   } catch (error) {
     console.error("❌ Delete Farm Error:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Promise<void> => {
   try {
@@ -195,7 +188,10 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
       return;
     }
 
-    if (farm.owner.toString() !== userId) {
+    if (
+      farm.owner.toString() !== userId &&
+      !farm.members.map((id) => id.toString()).includes(userId)
+    ) {
       res.status(403).json({ message: "Unauthorized" });
       return;
     }
@@ -210,22 +206,18 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     if (name) farm.name = name;
 
     if (crops && crops.length > 0) {
-      // Normalize input
       const normalizedCrops = crops.map((crop: string) => crop.trim().toLowerCase());
 
-      // Fetch plants matching either name or arabicName
       const plantDocs = await Plant.find({
-  $or: normalizedCrops.flatMap((crop: string) => [
-    { name: new RegExp(`^${crop}$`, 'i') },
-    { arabicName: new RegExp(`^${crop}$`, 'i') },
-  ])
-});
+        $or: normalizedCrops.flatMap((crop: string) => [
+          { name: new RegExp(`^${crop}$`, 'i') },
+          { arabicName: new RegExp(`^${crop}$`, 'i') },
+        ]),
+      });
 
-
-      // Extract all matched values for comparison
       const matchedInputs = new Set([
         ...plantDocs.map((p: any) => p.name?.toLowerCase()),
-        ...plantDocs.map((p: any) => p.arabicName?.toLowerCase())
+        ...plantDocs.map((p: any) => p.arabicName?.toLowerCase()),
       ]);
 
       const notFound = normalizedCrops.filter((input: string) => !matchedInputs.has(input));
@@ -236,7 +228,7 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
 
       farm.set('crops', plantDocs.map(plant => ({
         plantId: plant._id,
-        addedAt: new Date()
+        addedAt: new Date(),
       })));
     }
 
@@ -247,7 +239,5 @@ router.put("/:farmId", authMiddleware, async (req: Request, res: Response): Prom
     res.status(500).json({ message: "Server error" });
   }
 });
-
-
 
 export default router;

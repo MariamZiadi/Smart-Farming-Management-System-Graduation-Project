@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { API_BASE_URL } from '@env';
+const API_URL = "http://10.0.2.2:5000";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -19,7 +20,7 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('https://smart-farming-management-system-graduation-proje-production.up.railway.app/auth/login', { email, password });
+      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;

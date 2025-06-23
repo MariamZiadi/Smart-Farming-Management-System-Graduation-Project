@@ -9,6 +9,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+const API_URL = "http://10.0.2.2:5000";
 
 type PlantItem = {
   name: string;
@@ -61,7 +62,7 @@ export default function AddFarmPage() {
       const cropNames = plants.filter(p => p.name.trim()).map(p => ({ name: p.name.trim() }));
 
       const response = await axios.post(
-        'https://07bc-102-45-148-78.ngrok-free.app/farms/create',
+        `${API_URL}/farms/create`,
         {
           name: farmName,
           password: farmPassword,

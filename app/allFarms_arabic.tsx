@@ -62,7 +62,7 @@ const AllFarmsPageArabic = () => {
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      const response = await axios.get(`https://2c7d-102-45-148-78.ngrok-free.app/farms/my-farms`, {
+      const response = await axios.get(`https://fbfb-102-45-148-78.ngrok-free.app/farms/my-farms`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {
@@ -81,7 +81,7 @@ const AllFarmsPageArabic = () => {
   const handleDelete = async (farmId: string) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      await axios.delete(`https://2c7d-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
+      await axios.delete(`https://fbfb-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFarms();
@@ -103,7 +103,7 @@ const AllFarmsPageArabic = () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await axios.put(
-        `https://2c7d-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`,
+        `https://fbfb-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`,
         {
           name: newName,
           password: newPassword,

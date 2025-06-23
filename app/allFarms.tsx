@@ -15,6 +15,9 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Picker } from '@react-native-picker/picker';
+const API_URL = "http://10.0.2.2:5000";
+
 
 type Crop = { name: string };
 type Farm = {
@@ -35,10 +38,16 @@ const AllFarmsPage = () => {
   const [newCrop, setNewCrop] = useState('');
   const [updatedCrops, setUpdatedCrops] = useState<string[]>([]);
 
+  const plantSuggestions: string[] = [
+    'Apple', 'Barley', 'Basil', 'Blueberry', 'Strawberry', 'Cucumber',
+    'Grape', 'Lettuce', 'Mint', 'Oats', 'Orange', 'Pepper Bell',
+    'Rice', 'Thyme', 'Tomato', 'Wheat', 'Peach', 'Potato'
+  ];
+
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem("userToken");
-      const response = await axios.get("https://07bc-102-45-148-78.ngrok-free.app/farms/my-farms", {
+      const response = await axios.get(`${API_URL}/farms/my-farms`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {
@@ -55,16 +64,17 @@ const AllFarmsPage = () => {
   };
 
   const handleDelete = async (farmId: string) => {
-    try {
-      const token = await AsyncStorage.getItem("userToken");
-      await axios.delete(`https://07bc-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      fetchFarms();
-    } catch (err) {
-      console.error("Failed to delete farm", err);
-    }
-  };
+  try {
+    const token = await AsyncStorage.getItem("userToken");
+    await axios.delete(`${API_URL}/farms/${farmId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    fetchFarms();
+  } catch (err) {
+    console.error("Failed to delete farm", err);
+  }
+};
+
 
   const openEditModal = (farm: Farm) => {
     setCurrentFarm(farm);
@@ -78,7 +88,7 @@ const AllFarmsPage = () => {
     if (!currentFarm) return;
     try {
       const token = await AsyncStorage.getItem("userToken");
-      await axios.put(`https://07bc-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`, {
+      await axios.put(`${API_URL}/farms/${currentFarm._id}`, {
         name: newName,
         password: newPassword,
         crops: updatedCrops,
@@ -162,11 +172,23 @@ const AllFarmsPage = () => {
                 <Text style={styles.title}>Edit Farm</Text>
                 <TextInput value={newName} onChangeText={setNewName} style={styles.input} placeholder="Farm Name" />
                 <TextInput value={newPassword} onChangeText={setNewPassword} style={styles.input} placeholder="Password" />
-                <TextInput value={newCrop} onChangeText={setNewCrop} style={styles.input} placeholder="Add Plant (e.g., Tomato)" />
+
+                <Picker
+                  selectedValue={newCrop}
+                  onValueChange={(value) => setNewCrop(value)}
+                  style={[styles.input, { height: 50 }]}
+                >
+                  <Picker.Item label="Select a plant to add" value="" />
+                  {plantSuggestions.map((plant, idx) => (
+                    <Picker.Item key={idx} label={plant} value={plant} />
+                  ))}
+                </Picker>
+
                 <TouchableOpacity onPress={handleCropAdd} style={styles.addFarmButton}>
                   <Text style={styles.addFarmButtonText}>Add Crop</Text>
                 </TouchableOpacity>
-                <ScrollView>
+
+                <ScrollView style={{ maxHeight: 150 }}>
                   {updatedCrops.map(crop => (
                     <View key={crop} style={{ flexDirection: 'row', justifyContent: 'space-between', marginVertical: 5 }}>
                       <Text>{crop}</Text>
@@ -176,6 +198,7 @@ const AllFarmsPage = () => {
                     </View>
                   ))}
                 </ScrollView>
+
                 <TouchableOpacity onPress={handleEditSave} style={styles.addFarmButton}>
                   <Text style={styles.addFarmButtonText}>Save</Text>
                 </TouchableOpacity>
@@ -221,6 +244,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     marginVertical: 8,
+    backgroundColor: '#fff',
   },
   background: {
     flex: 1,

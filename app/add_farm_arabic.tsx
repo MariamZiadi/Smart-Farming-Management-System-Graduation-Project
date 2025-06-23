@@ -47,7 +47,7 @@ export default function AddFarmPageAr() {
         const storedToken = await AsyncStorage.getItem('userToken');
         setToken(storedToken);
 
-        const res = await axios.get('https://c3c0-102-45-148-78.ngrok-free.app/plants');
+        const res = await axios.get('https://fbfb-102-45-148-78.ngrok-free.app/plants');
         const mapped = res.data.map((plant: any) => ({
           _id: plant._id,
           name: plant.name,
@@ -82,7 +82,7 @@ export default function AddFarmPageAr() {
         .map(p => p.selectedArabicName);
 
       const response = await axios.post(
-        'https://c3c0-102-45-148-78.ngrok-free.app/farms/create',
+        'https://fbfb-102-45-148-78.ngrok-free.app/farms/create',
         {
           name: farmName,
           password: farmPassword,
