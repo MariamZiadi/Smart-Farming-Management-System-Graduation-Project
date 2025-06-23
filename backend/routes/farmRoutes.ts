@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import Farm from "../models/Farm";
-import User from "../models/User";
+import { User } from "../models/User";
 import Plant from "../models/Plant";
 import bcrypt from "bcryptjs";
 import { authMiddleware } from "../middleware/authMiddleware";

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import Farm from '../models/Farm';
-import User from '../models/User';
+import { User } from '../models/User'; // ✅ CORRECT
 import { authMiddleware } from '../middleware/authMiddleware';
 
 const router = express.Router();

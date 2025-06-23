@@ -10,6 +10,7 @@ import farmsRoutes from "./routes/farmRoutes";
 import postRoutes from "./routes/postRoutes"; // Import post routes
 import plantRoutes_arabic from "./routes/plantRoutes_arabic"; // adjust path as needed
 import reminderRoutes from './routes/reminderRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 
 dotenv.config();
@@ -37,7 +38,7 @@ app.use("/users", userRoutes); // User routes
 app.use("/farms", farmsRoutes);
 app.use("/posts", postRoutes); // This will handle routes like POST /posts
 app.use("/farms", reminderRoutes);
-
+app.use('/api', adminRoutes);
 
 
 // Gemini AI Chat Route
@@ -69,6 +70,9 @@ app.post("/chat", async (req: Request, res: Response): Promise<void> => {
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error("❌ Server Error:", err.message);
   res.status(500).json({ error: "Internal Server Error", details: err.message });
+});
+app.get("/api/test", (req, res) => {
+  res.send({ message: "API is working!" });
 });
 
 

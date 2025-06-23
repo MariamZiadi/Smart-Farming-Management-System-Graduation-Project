@@ -19,7 +19,7 @@ export default function LoginScreen() {
     }
 
     try {
-      const response = await axios.post('https://1ed1-197-121-193-54.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post('https://smart-farming-management-system-graduation-proje-production.up.railway.app/auth/login', { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
