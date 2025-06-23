@@ -24,7 +24,11 @@ const authenticateToken = async (req: Request, res: Response, next: NextFunction
       return;
     }
 
-    req.user = user;
+    // ✅ Set req.user correctly
+    req.user = {
+      userId: user._id.toString(),
+    };
+
     next();
   } catch {
     res.status(403).json({ message: 'Invalid token' });

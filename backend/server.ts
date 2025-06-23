@@ -10,7 +10,6 @@ import farmsRoutes from "./routes/farmRoutes";
 import postRoutes from "./routes/postRoutes"; // Import post routes
 import plantRoutes_arabic from "./routes/plantRoutes_arabic"; // adjust path as needed
 import reminderRoutes from './routes/reminderRoutes';
-import adminRoutes from './routes/adminRoutes';
 
 
 dotenv.config();
@@ -38,7 +37,6 @@ app.use("/users", userRoutes); // User routes
 app.use("/farms", farmsRoutes);
 app.use("/posts", postRoutes); // This will handle routes like POST /posts
 app.use("/farms", reminderRoutes);
-app.use('/api', adminRoutes);
 
 
 // Gemini AI Chat Route

@@ -5,7 +5,6 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   farms: [{ type: mongoose.Schema.Types.ObjectId, ref: "Farm" }],
-  isAdmin: { type: Boolean, default: false }, // ✅ Add this
 });
 
 export interface IUser extends Document {
@@ -13,6 +12,5 @@ export interface IUser extends Document {
   email: string;
   password: string;
   farms: mongoose.Types.ObjectId[];
-  isAdmin: boolean; // ✅ Add this
 }
 export const User = mongoose.model("User", UserSchema); // ✅ NAMED EXPORT
