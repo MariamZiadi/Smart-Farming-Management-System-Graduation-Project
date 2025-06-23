@@ -13,6 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import axios from 'axios';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+const API_URL = "http://10.0.2.2:5000";
 
 I18nManager.allowRTL(true);
 
@@ -29,7 +30,7 @@ export default function LoginScreenArabic() {
     }
 
     try {
-      const response = await axios.post('https://4f93-102-45-148-78.ngrok-free.app/auth/login', { email, password });
+      const response = await axios.post(`${API_URL}/auth/login`, { email, password });
 
       if (response.status === 200) {
         const { token } = response.data;
