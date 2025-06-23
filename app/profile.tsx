@@ -15,6 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
 
 interface Farm {
   _id: string;
@@ -43,7 +44,7 @@ const ProfileScreen = () => {
   const fetchUserProfile = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      const response = await axios.get('https://07bc-102-45-148-78.ngrok-free.app/auth/profile', {
+      const response = await axios.get(`${API_URL}/auth/profile`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -69,7 +70,6 @@ const ProfileScreen = () => {
       setIsEditing(true);
       setShowFarms(false);
 
-      // Delay focus to let modal open first
       setTimeout(() => {
         nameRef.current?.focus();
         nameRef.current?.setNativeProps({ selection: { start: 0, end: name.length } });
@@ -80,7 +80,7 @@ const ProfileScreen = () => {
   const handleSave = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      await axios.put('https://07bc-102-45-148-78.ngrok-free.app/auth/profile', {
+      await axios.put(`${API_URL}/auth/profile`, {
         name,
         email,
       }, {
@@ -90,7 +90,7 @@ const ProfileScreen = () => {
       Alert.alert("✅ Success", "Profile updated successfully.");
       setIsEditing(false);
       Keyboard.dismiss();
-      await fetchUserProfile(); // refetch to update farms
+      await fetchUserProfile(); 
       setShowFarms(true);
     } catch (err) {
       console.error("Profile update failed", err);

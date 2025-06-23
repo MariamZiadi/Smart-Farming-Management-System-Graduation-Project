@@ -9,6 +9,7 @@ import { useRouter, useFocusEffect } from 'expo-router';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
+const API_URL = "http://10.0.2.2:5000";
 
 I18nManager.allowRTL(true);
 
@@ -47,7 +48,7 @@ export default function AddFarmPageAr() {
         const storedToken = await AsyncStorage.getItem('userToken');
         setToken(storedToken);
 
-        const res = await axios.get('https://fbfb-102-45-148-78.ngrok-free.app/plants');
+        const res = await axios.get(`${API_URL}/plants`);
         const mapped = res.data.map((plant: any) => ({
           _id: plant._id,
           name: plant.name,
@@ -82,7 +83,7 @@ export default function AddFarmPageAr() {
         .map(p => p.selectedArabicName);
 
       const response = await axios.post(
-        'https://fbfb-102-45-148-78.ngrok-free.app/farms/create',
+        `${API_URL}/farms/create`,
         {
           name: farmName,
           password: farmPassword,
@@ -93,7 +94,7 @@ export default function AddFarmPageAr() {
         }
       );
 
-      Alert.alert('✅ تم بنجاح', response.data.message || 'تمت إضافة المزرعة بنجاح.');
+      Alert.alert('✅تمت إضافة المزرعة بنجاح.');
       router.replace('./allFarms_arabic');
     } catch (error: any) {
       console.error('❌ خطأ في إنشاء المزرعة:', error?.response || error);

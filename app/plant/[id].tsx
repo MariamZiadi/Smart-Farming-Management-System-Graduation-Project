@@ -2,6 +2,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
+
 
 interface Plant {
     _id: string;
@@ -10,10 +12,8 @@ interface Plant {
     fertilizerPlan: string;
 }
 
-// Define window width for responsive design
 const { width } = Dimensions.get('window');
 
-// Map of plant names to local images (adjust paths if needed)
 const plantImages: Record<string, any> = {
     apple: require('assets/images/apple.png'),
     barley: require('assets/images/barley.jpeg'),
@@ -36,7 +36,6 @@ const plantImages: Record<string, any> = {
     peach: require('assets/images/peach.jpg')
 };
 
-// Optional fallback image
 const defaultImage = require('assets/images/wheat.jpg'); 
 
 export default function PlantDetails() {
@@ -46,7 +45,7 @@ export default function PlantDetails() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
-        fetch(`https://1ed1-197-121-193-54.ngrok-free.app/plants/${id}`)
+        fetch(`${API_URL}/plants/${id}`)
             .then((res) => res.json())
             .then((data) => {
                 setPlant(data);

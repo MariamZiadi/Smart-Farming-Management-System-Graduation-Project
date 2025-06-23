@@ -12,6 +12,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+const API_URL = "http://10.0.2.2:5000";
 
 type CropReminder = {
   name: string;
@@ -47,18 +48,16 @@ const cropTranslations: { [key: string]: string } = {
   "Grape": "عنب"
 };
 
-// 🧠 Translation functions
 const getArabicCropName = (name: string): string => cropTranslations[name] || name;
 const getArabicDaysLeft = (value: number | string): string =>
   typeof value === 'number' ? `${value} يوم` : value;
 const translateWateringPlan = (text: string): string => {
-  // Example: "Water lightly every 2–3 days to keep soil moist"
   const everyMatch = text.match(/every\s+(\d+)/i);
   if (everyMatch) {
     const num = everyMatch[1];
     return `يُنصح بالسقي كل ${num} أيام`;
   }
-  return text; // fallback to original
+  return text; 
 };
 
 const FarmRemindersPage = () => {
@@ -75,7 +74,7 @@ const FarmRemindersPage = () => {
         return;
       }
 
-      const response = await axios.get("https://c3c0-102-45-148-78.ngrok-free.app/farms/reminders", {
+      const response = await axios.get(`${API_URL}/farms/reminders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -101,11 +100,11 @@ const FarmRemindersPage = () => {
       <View style={styles.overlay} />
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Ionicons
-          name="arrow-forward" // flipped for RTL
+          name="arrow-forward" 
           size={27}
           color="white"
           style={styles.backIcon}
-          onPress={() => router.push('./homepage')}
+          onPress={() => router.push('./homepage_arabic')}
         />
         <Text style={styles.title}>تذكيرات مزارعك</Text>
 

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, Image, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
 
 interface Plant {
   _id: string;
@@ -63,7 +64,7 @@ export default function AllPlants() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('https://cad5-102-45-148-78.ngrok-free.app/plants')
+    fetch(`${API_URL}/plants`)
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);

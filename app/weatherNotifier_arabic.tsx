@@ -13,7 +13,6 @@ import { Picker } from '@react-native-picker/picker';
 
 const bg = require('../assets/images/BG2.jpg');
 
-// Convert numbers to Arabic digits
 const toArabicDigits = (num: number | string) => {
   const map = ['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
   return num.toString().replace(/\d/g, d => map[parseInt(d)]);

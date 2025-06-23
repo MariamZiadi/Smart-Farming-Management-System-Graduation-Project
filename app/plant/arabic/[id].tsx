@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ActivityIndicator, StyleSheet, Dimensions } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
 
 interface Plant_arabic {
   _id: string;
@@ -43,7 +44,7 @@ export default function PlantDetails() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch(`https://cad5-102-45-148-78.ngrok-free.app/plants/arabic/${id}`)
+    fetch(`${API_URL}/plants/arabic/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setPlant(data);

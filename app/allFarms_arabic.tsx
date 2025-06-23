@@ -17,6 +17,7 @@ import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Picker } from '@react-native-picker/picker';
+const API_URL = "http://10.0.2.2:5000";
 
 const cropTranslations: Record<string, string> = {
   apple: 'تفاح',
@@ -38,6 +39,7 @@ const cropTranslations: Record<string, string> = {
   tomato: 'طماطم',
   wheat: 'قمح',
   peach: 'خوخ',
+  potato:'بطاطس',
 };
 
 type Crop = { name: string };
@@ -62,7 +64,7 @@ const AllFarmsPageArabic = () => {
   const fetchFarms = async () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      const response = await axios.get(`https://fbfb-102-45-148-78.ngrok-free.app/farms/my-farms`, {
+      const response = await axios.get(`${API_URL}/farms/my-farms`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (response.data.message) {
@@ -81,7 +83,7 @@ const AllFarmsPageArabic = () => {
   const handleDelete = async (farmId: string) => {
     try {
       const token = await AsyncStorage.getItem('userToken');
-      await axios.delete(`https://fbfb-102-45-148-78.ngrok-free.app/farms/${farmId}`, {
+      await axios.delete(`${API_URL}/farms/${farmId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       fetchFarms();
@@ -103,7 +105,7 @@ const AllFarmsPageArabic = () => {
     try {
       const token = await AsyncStorage.getItem('userToken');
       await axios.put(
-        `https://fbfb-102-45-148-78.ngrok-free.app/farms/${currentFarm._id}`,
+        `${API_URL}/farms/${currentFarm._id}`,
         {
           name: newName,
           password: newPassword,

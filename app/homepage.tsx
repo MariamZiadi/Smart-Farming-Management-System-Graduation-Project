@@ -39,7 +39,7 @@ const HomePage = ({ navigation }: any) => {
           />
           <TouchableOpacity 
             style={styles.button}
-            onPress={() => router.push('/plantReminders')} // <-- navigate here
+            onPress={() => router.push('/plantReminders')} 
           >
             <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
             <Text style={styles.buttonText}>30min Next Watering</Text>
@@ -90,14 +90,7 @@ const HomePage = ({ navigation }: any) => {
           <Text style={styles.cornwater}>Water in 3 Days</Text> */}
         </View>
 
-        <View>
-          <Image 
-            source={require('../assets/images/diseasehome.jpg')} 
-            style={styles.diseaseimg} 
-          />
-          <Link href="./disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
-        </View>
-
+        
         <View>
           <Text style={styles.allergies}>Plants For Allergies</Text>
           <Link href="./allergies_plants" style={styles.viewallallergies}>View All</Link>
@@ -238,6 +231,14 @@ const HomePage = ({ navigation }: any) => {
   </Text>
       <Link href ="./groupchat" style={[styles.joinFarmButton, styles.joinFarmButtonText]}>Join Now</Link>
 </View>
+<View>
+          <Image 
+            source={require('../assets/images/diseasehome.jpg')} 
+            style={styles.diseaseimg} 
+          />
+          <Link href="./disease_detection" style={[styles.buttonText, styles.buttondisease]}>Disease Detection</Link>
+        </View>
+
         </ScrollView>
       <View style={styles.bottomNav}>
         <View style={[styles.iconContainer, styles.shadow]}>

@@ -33,13 +33,12 @@ app.use(express.json());
 app.use("/plants", plantRoutes);
 app.use("/plant_arabics", plantRoutes_arabic);
 app.use("/auth", authRoutes);
-app.use("/users", userRoutes); // User routes
+app.use("/users", userRoutes); 
 app.use("/farms", farmsRoutes);
-app.use("/posts", postRoutes); // This will handle routes like POST /posts
+app.use("/posts", postRoutes); 
 app.use("/farms", reminderRoutes);
 
 
-// Gemini AI Chat Route
 app.post("/chat", async (req: Request, res: Response): Promise<void> => {
   try {
     const { message } = req.body;
@@ -49,22 +48,34 @@ app.post("/chat", async (req: Request, res: Response): Promise<void> => {
     }
 
     const apiKey = process.env.GEMINI_API_KEY;
+
+    if (!apiKey) {
+      console.error("❌ Missing GEMINI_API_KEY in environment");
+      res.status(500).json({ error: "API key is missing" });
+      return;
+    }
+
     const response = await axios.post(
       `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro-002:generateContent?key=${apiKey}`,
-      { contents: [{ parts: [{ text: message }] }] },
-      { headers: { "Content-Type": "application/json" } }
+      {
+        contents: [{ parts: [{ text: message }] }]
+      },
+      {
+        headers: { "Content-Type": "application/json" }
+      }
     );
 
     const reply = response.data?.candidates?.[0]?.content?.parts?.[0]?.text || "No response";
-
     res.status(200).json({ reply });
-  } catch (error) {
-    console.error("❌ Gemini API Error:", error);
+  } catch (error: any) {
+    console.error("❌ Gemini API Error:", error?.response?.data || error.message);
     res.status(500).json({ error: "Failed to process request" });
   }
 });
 
-// Global Error Handling Middleware
+
+
+
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error("❌ Server Error:", err.message);
   res.status(500).json({ error: "Internal Server Error", details: err.message });
@@ -77,7 +88,4 @@ app.get("/api/test", (req, res) => {
  app.listen(PORT, () => {
    console.log(`🚀 Server running on http://localhost:${PORT}`);
  });
-// app.listen(5000, '0.0.0.0', () => {
-//   console.log('Server running on http://0.0.0.0:5000');
-// });
 

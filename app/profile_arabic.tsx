@@ -113,7 +113,7 @@ const ProfileScreen = () => {
         size={27}
         color="white"
         style={styles.backIcon}
-        onPress={() => router.push('./homepage')}
+        onPress={() => router.push('./homepage_arabic')}
       />
       <View style={styles.overlay} />
 

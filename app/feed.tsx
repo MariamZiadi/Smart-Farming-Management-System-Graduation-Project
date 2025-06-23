@@ -12,6 +12,7 @@ import {
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+const API_URL = "http://10.0.2.2:5000";
 
 interface User {
   _id: string;
@@ -26,7 +27,6 @@ interface PostType {
   user: User;
 }
 
-// PostCard Component
 const PostCard = ({ post }: { post: PostType }) => {
   const { description, image, user } = post;
 
@@ -62,7 +62,7 @@ const Feed = () => {
     try {
       console.log('📦 Fetching posts...');
       const token = await AsyncStorage.getItem('userToken');
-      const response = await axios.get('https://1ed1-197-121-193-54.ngrok-free.app/posts', {
+      const response = await axios.get(`${API_URL}/posts`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

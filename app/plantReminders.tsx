@@ -11,6 +11,7 @@ import {
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+const API_URL = "http://10.0.2.2:5000";
 
 type CropReminder = {
   name: string;
@@ -37,7 +38,7 @@ const FarmRemindersPage = () => {
         return;
       }
 
-      const response = await axios.get("https://1ed1-197-121-193-54.ngrok-free.app/farms/reminders", {
+      const response = await axios.get(`${API_URL}/farms/reminders`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 

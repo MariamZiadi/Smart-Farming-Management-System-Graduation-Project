@@ -18,6 +18,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import * as FileSystem from 'expo-file-system';
 import { Ionicons } from '@expo/vector-icons';
+const API_URL = "http://10.0.2.2:5000";
 
 const PlantDiseaseDetection = () => {
   const router = useRouter();
@@ -102,7 +103,7 @@ const PlantDiseaseDetection = () => {
       } as any);
       formData.append('crop', selectedCrop);
 
-      const response = await fetch(`https://cad5-102-45-148-78.ngrok-free.app/predict`, {
+      const response = await fetch(`${API_URL}/predict`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

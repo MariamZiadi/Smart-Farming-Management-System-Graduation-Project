@@ -19,8 +19,7 @@ const HomePage = ({ navigation }: any) => {
               <Ionicons name="notifications" size={24} color="white" style={styles.notificationIcon} />
             </TouchableOpacity>
           </Link>
-            <Text style={styles.topBarText}>Welcome to AgriGuard</Text>
-          <Text style={styles.topdescription}>Let’s get started by adding your first plant!</Text>
+            <Text style={styles.topBarText}>اهلا بك في AgriGuard</Text>
           
           <Link href="./chatbot_arabic" asChild>
             <TouchableOpacity style={styles.chatbotIcon}>
@@ -31,7 +30,7 @@ const HomePage = ({ navigation }: any) => {
   
           <View style={styles.boxontopbar}>
             <Text style={styles.waterreminder}>تذكير بالسقي</Text>
-            <Text style={styles.waterreminderdesc}>لا تنسَ أن تسقي البطاطس</Text>
+            <Text style={styles.waterreminderdesc}>لا تنسَ أن تسقي المحاصيل</Text>
             <Image 
               source={require('../assets/images/homeplant.png')}
               style={styles.plantImage} 
@@ -41,7 +40,7 @@ const HomePage = ({ navigation }: any) => {
               onPress={() => router.push('./plantReminders_arabic')}
             >
               <Ionicons name="water" size={20} color="white" style={styles.buttonIcon} />
-              <Text style={styles.buttonText}>الماء بعد 30 دقيقة</Text>
+              <Text style={styles.buttonText}>اضغط للتذكيرات</Text>
             </TouchableOpacity>
 
           </View>
@@ -67,16 +66,6 @@ const HomePage = ({ navigation }: any) => {
             />
             <Text style={styles.cornplant}>مزرعة ٢</Text>
             <Link href="./mygarden" style={styles.moreinfo}>مزيد من المعلومات</Link>
-          </View>
-  
-          <View>
-            <Image 
-              source={require('../assets/images/diseasehome.jpg')} 
-              style={styles.diseaseimg} 
-            />
-            <Link href="./disease_detection_arabic" style={[styles.buttonText, styles.buttondisease]}>
-              كشف الأمراض
-            </Link>
           </View>
   
           <View>
@@ -222,6 +211,16 @@ const HomePage = ({ navigation }: any) => {
             </Text>
             <Link href="./groupchat_arabic" style={[styles.joinFarmButton, styles.joinFarmButtonText]}>
               انضم الآن
+            </Link>
+          </View>
+          
+          <View>
+            <Image 
+              source={require('../assets/images/diseasehome.jpg')} 
+              style={styles.diseaseimg} 
+            />
+            <Link href="./disease_detection_arabic" style={[styles.buttonText, styles.buttondisease]}>
+              كشف الأمراض
             </Link>
           </View>
         </ScrollView>
@@ -571,7 +570,7 @@ const styles = StyleSheet.create({
   },
   notificationIcon: {
     position: 'absolute',
-    top: 25,
+    top: -100,
     left: 350,
   },
 

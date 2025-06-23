@@ -12,6 +12,8 @@ import {
   ScrollView,
 } from 'react-native';
 import { useRouter } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
+
 
 interface Plant {
   _id: string;
@@ -75,7 +77,7 @@ export default function AllPlants() {
   const router = useRouter();
 
   useEffect(() => {
-    fetch('https://79a6-154-237-249-163.ngrok-free.app/plants')
+    fetch(`${API_URL}/plants`)
       .then((res) => res.json())
       .then((data) => {
         setPlants(data);

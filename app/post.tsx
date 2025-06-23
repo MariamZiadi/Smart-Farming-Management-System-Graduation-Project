@@ -13,6 +13,7 @@ import * as ImagePicker from 'expo-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+const API_URL = "http://10.0.2.2:5000";
 
 const PostScreen = () => {
   const [description, setDescription] = useState('');
@@ -39,7 +40,7 @@ const PostScreen = () => {
       }
 
       await axios.post(
-        'https://1ed1-197-121-193-54.ngrok-free.app/posts',
+        `${API_URL}/posts`,
         {
           description,
           image,

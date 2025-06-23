@@ -13,7 +13,8 @@ import {
 import { useNavigation, useIsFocused } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { translateText } from './utils/translation'; // Use MyMemory version
+import { translateText } from './utils/translation'; 
+const API_URL = "http://10.0.2.2:5000";
 
 interface User {
   _id: string;
@@ -42,13 +43,12 @@ const FeedArabic = () => {
     setLoading(true);
     try {
       const token = await AsyncStorage.getItem('userToken');
-      const resp = await axios.get('https://4f93-102-45-148-78.ngrok-free.app/posts', {
+      const resp = await axios.get(`${API_URL}/posts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       const fetchedPosts = resp.data as PostType[];
 
-      // Translate posts sequentially to avoid overload
       const translatedPosts: PostType[] = [];
       for (const p of fetchedPosts) {
         const isArabic = /[\u0600-\u06FF]/.test(p.description);

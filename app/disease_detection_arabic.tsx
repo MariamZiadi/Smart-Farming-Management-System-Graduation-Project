@@ -200,7 +200,15 @@ const styles = StyleSheet.create({
   imagePlaceholder: { width: '100%', height: '100%', resizeMode: 'cover' },
   analysisHeader: { fontSize: 24, fontWeight: 'bold', marginBottom: 8, left: 140, color: 'rgb(2, 91, 4)' },
   analysisText: { fontSize: 20, textAlign: 'center', marginHorizontal: 20, color: '#333' },
-  treatmentText: { fontSize: 18, marginTop: 10, marginHorizontal: 20, color: '#444', fontStyle: 'italic', lineHeight: 24 },
+treatmentText: {
+  fontSize: 20,              
+  marginTop: 10,
+  marginHorizontal: 20,
+  color: '#222',             
+  fontStyle: 'italic',
+  fontWeight: '600',         
+  lineHeight: 28             
+},
   bottomNav: { position: 'absolute', bottom: 0, width: '100%', flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', backgroundColor: '#D7E9D4' },
   iconContainer: { padding: 10, borderRadius: 40, backgroundColor: 'white' },
   shadow: { shadowColor: '#000', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 6, elevation: 8 }

@@ -7,6 +7,7 @@ import { useRouter } from "expo-router";
 import { Link } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+const API_URL = "http://10.0.2.2:5000";
 
 const ChatBot = () => {
   const router = useRouter();
@@ -30,7 +31,7 @@ const ChatBot = () => {
     setLoading(true);
   
     try {
-      const response = await fetch("https://nice-barnacle-complete.ngrok-free.app/chat", {
+      const response = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
@@ -52,8 +53,6 @@ const ChatBot = () => {
       setLoading(false);
     }
   };
-  
-  
   
 
   return (

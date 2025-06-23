@@ -16,8 +16,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import Icon2 from 'react-native-vector-icons/MaterialCommunityIcons';
 import { Link } from 'expo-router';
+const API_URL = "http://10.0.2.2:5000";
 
-// Ensure RTL layout is enabled
 I18nManager.allowRTL(true);
 
 export default function JoinFarmScreenAr() {
@@ -34,7 +34,7 @@ export default function JoinFarmScreenAr() {
       }
 
       const response = await axios.post(
-        "https://1b98-41-199-183-199.ngrok-free.app/farms/join",
+        `${API_URL}/farms/join`,
         { password: farmPassword },
         { headers: { Authorization: `Bearer ${token}` } }
       );

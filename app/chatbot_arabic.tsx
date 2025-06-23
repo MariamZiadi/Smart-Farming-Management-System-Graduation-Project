@@ -5,8 +5,9 @@ import { useRouter } from "expo-router";
 import { Link } from "expo-router";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import Icon2 from "react-native-vector-icons/MaterialCommunityIcons";
+const API_URL = "http://10.0.2.2:5000";
 
-I18nManager.forceRTL(true); // Force RTL for Arabic layout
+I18nManager.forceRTL(true); 
 
 const ChatBot = () => {
   const router = useRouter();
@@ -28,7 +29,7 @@ const ChatBot = () => {
     setLoading(true);
 
     try {
-      const response = await fetch("https://8c75-41-43-3-74.ngrok-free.app/chat", {
+      const response = await fetch(`${API_URL}/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message }),
